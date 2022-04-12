@@ -7,9 +7,6 @@ public class MovementScript : MonoBehaviour
     public float MovementSpeed = 5.0f;
     public float JumpSpeed = 8.0f;
     public float GroundCheckDistance = 2.0f;
-    public float DashSpeed = 5.0f;
-    public float DashTime = 0.1f;
-    public float DashCooldown = 2.0f;
 
     private bool _jumping;
     private Rigidbody2D _rb;
@@ -22,7 +19,7 @@ public class MovementScript : MonoBehaviour
     private SpriteRenderer _renderer;
     public delegate void Action(bool value);
     public event Action Fliped;
-
+    private Movement_Dash _dash;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +27,7 @@ public class MovementScript : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _collider = GetComponent<Collider2D>();
         _renderer = GetComponent<SpriteRenderer>();
+        _dash = GetComponent<Movement_Dash>();
     }
 
     private void Update()
@@ -51,30 +49,13 @@ public class MovementScript : MonoBehaviour
         }
 
         //LR movement
-        if (Input.GetKeyDown(KeyCode.LeftShift) && _dashCooldown <= 0f)
-        {
-            _currentDashTime = DashTime;
-            _dashCooldown = DashCooldown;
-            DashUI.instance.Dashed(DashCooldown);
-        }
-
-        if (_currentDashTime > 0f)
-        {
-            _currentDashTime -= Time.deltaTime;
-        }
-
-        if (_dashCooldown > 0f)
-        {
-            _dashCooldown -= Time.deltaTime;
-        }
-
         var dir = MovementSpeed * _horizontal;
         _rb.velocity = new Vector2(dir, _rb.velocity.y);
 
-
-        if (_currentDashTime > 0f)
+        //Dash
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            Dash();
+            _dash.Dash(_horizontal, _rb);
         }
 
         IsGrounded();
@@ -97,11 +78,6 @@ public class MovementScript : MonoBehaviour
         Debug.DrawLine(right, new Vector3(right.x, right.y - GroundCheckDistance), Color.red);
 
         _grounded = (leftHit || rightHit || centerHit);
-    }
-
-    void Dash()
-    {
-        _rb.velocity = new Vector2(_horizontal, 0).normalized * DashSpeed;
     }
 
     void FlipSprite()

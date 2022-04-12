@@ -4,48 +4,36 @@ using UnityEngine;
 
 public class Movement_Dash : MonoBehaviour
 {
-    public float DashSpeed = 5.0f;
-    public float DashCooldown = 2.0f;
-    public float DashTickrate = 0.1f;
+    public float DashSpeed = 25.0f;
+    public float DashCooldown = 1.0f;
 
     private float _currentCooldown;
-    private float _currentTickrate;
-    private Rigidbody2D _rb;
-    private float _hDirection;
-
-    private void Awake()
-    {
-        _rb = GetComponent<Rigidbody2D>();
-    }
 
     // Update is called once per frame
     void Update()
     {
         if (_currentCooldown > 0f) {
             _currentCooldown -= Time.deltaTime;
-            _currentTickrate -= Time.deltaTime;
-
-            if (_currentTickrate > 0) {
-                Dash();
-            }
         }
     }
 
-    public void BeginDash(float horizontalValue)
+    private void BeginDash()
     {
         if (_currentCooldown > 0f) {
             return;
         }
-        _hDirection = horizontalValue;
+        Debug.Log("Dashing");
         _currentCooldown = DashCooldown;
-        _currentTickrate = DashTickrate;
+        DashUI.instance.Dashed(DashCooldown);
     }
 
-    private void Dash()
+    public void Dash(float horizontalValue, Rigidbody2D rb)
     {
         if (_currentCooldown > 0f) {
             return;
         }
-        _rb.velocity = new Vector2(_hDirection, 0).normalized * DashSpeed;
+
+        BeginDash();
+        rb.AddForce(new Vector2(horizontalValue, 0).normalized * DashSpeed, ForceMode2D.Impulse);
     }
 }
