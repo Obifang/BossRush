@@ -8,7 +8,6 @@ public class DashUI : MonoBehaviour
     public MovementScript _movementScript;
     public Slider _slider;
 
-    private MovementScript _movement;
     private float _currentValue;
 
 
@@ -23,7 +22,7 @@ public class DashUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _slider.value = 1;
+        _slider.value = 0;
     }
 
     private IEnumerator CoolDown(float value)
@@ -36,6 +35,8 @@ public class DashUI : MonoBehaviour
             _slider.value = _currentValue;
             yield return new WaitForEndOfFrame();
         }
+
+        _slider.value = 0;
     }
 
     public void Dashed(float value)

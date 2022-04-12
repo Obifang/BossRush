@@ -37,6 +37,10 @@ public class Attack : MonoBehaviour
 
         foreach(Collider2D hitObject in hitObjects)
         {
+            var health =  hitObject.GetComponent<Health>();
+            if (health != null) {
+                health.CalculateHealthChange(1f);
+            }
             Debug.Log("Hit Object");
         }
 
