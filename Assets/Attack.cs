@@ -35,10 +35,8 @@ public class Attack : MonoBehaviour
         yield return new WaitForEndOfFrame();
         Collider2D [] hitObjects = Physics2D.OverlapCircleAll(AttackPoint.position, 1.0f, HitableLayers);
 
-        foreach(Collider2D hitObject in hitObjects)
-        {
-            var health =  hitObject.GetComponent<Health>();
-            if (health != null) {
+        foreach(Collider2D hitObject in hitObjects) {
+            if (hitObject.TryGetComponent<Health>(out Health health)) {
                 health.CalculateHealthChange(1f);
             }
             Debug.Log("Hit Object");

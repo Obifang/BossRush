@@ -677,7 +677,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36aed7ea775122f4bb48560b5bfbe73f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthObject: {fileID: 1827914501}
+  HealthObject: {fileID: 1464072420}
   Slider: {fileID: 1521187069}
 --- !u!1 &324727415
 GameObject:
@@ -2385,6 +2385,7 @@ GameObject:
   - component: {fileID: 1464072418}
   - component: {fileID: 1464072417}
   - component: {fileID: 1464072416}
+  - component: {fileID: 1464072420}
   m_Layer: 3
   m_Name: Square (14)
   m_TagString: Enemy
@@ -2499,11 +2500,25 @@ Transform:
   m_GameObject: {fileID: 1464072415}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -7.700001, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 2.1625, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1464072420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464072415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e269f2b93c296e4881048b4cfe9e4b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StartingHealthValue: 10
+  MaxHealthValue: 10
 --- !u!1 &1521187067
 GameObject:
   m_ObjectHideFlags: 0
@@ -3264,6 +3279,7 @@ GameObject:
   - component: {fileID: 1827914499}
   - component: {fileID: 1827914500}
   - component: {fileID: 1827914501}
+  - component: {fileID: 1827914502}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3435,6 +3451,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StartingHealthValue: 10
   MaxHealthValue: 10
+--- !u!114 &1827914502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827914493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47951480681573b45963505b6cb32f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HitableLayers:
+    serializedVersion: 2
+    m_Bits: 8
+  Player: {fileID: 1827914494}
+  Distance: 5
+  Damage: 1
 --- !u!1 &1855703659
 GameObject:
   m_ObjectHideFlags: 0
