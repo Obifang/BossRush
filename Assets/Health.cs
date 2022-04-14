@@ -30,7 +30,5 @@ public class Health : MonoBehaviour
         if (ChangeInHealth != null) {
             ChangeInHealth.Invoke(_currentHealth);
         }
-
-        
     }
 }

@@ -101,6 +101,5 @@ public class MovementScript : MonoBehaviour
         {
             Fliped.Invoke(_renderer.flipX);
         }
-        
     }
 }

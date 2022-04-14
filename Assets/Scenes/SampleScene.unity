@@ -3280,6 +3280,7 @@ GameObject:
   - component: {fileID: 1827914500}
   - component: {fileID: 1827914501}
   - component: {fileID: 1827914502}
+  - component: {fileID: 1827914503}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3469,6 +3470,20 @@ MonoBehaviour:
   Player: {fileID: 1827914494}
   Distance: 5
   Damage: 1
+--- !u!114 &1827914503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827914493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94a6c87106868a24e9eeab93137cca84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player: {fileID: 1827914494}
+  projectileType: {fileID: 3599111512274175943, guid: 471031e71c1eccc45bf534e6b5182fdf, type: 3}
 --- !u!1 &1855703659
 GameObject:
   m_ObjectHideFlags: 0
