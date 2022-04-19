@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attack : MonoBehaviour
+public class Attack : MonoBehaviour, IActionable
 {
     public LayerMask HitableLayers;
     public Transform AttackPoint;
     public float AttackRange;
     public SpriteRenderer AttackerRenderer;
 
+    private IFlippable Flippable;
     // Start is called before the first frame update
     void Start()
     {
-        DashUI.instance._movementScript.Fliped += FlipAttackPoint;
+        Flippable = GetComponent<IFlippable>();
+        Flippable.Fliped += FlipAttackPoint;
     }
 
     void FlipAttackPoint(bool value)
@@ -20,13 +22,9 @@ public class Attack : MonoBehaviour
         AttackPoint.localPosition = new Vector2(AttackPoint.localPosition.x * -1f, AttackPoint.localPosition.y);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Activate(Vector2 direction)
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            StartCoroutine(Use());
-        }
+        StartCoroutine(Use());
     }
 
     private IEnumerator Use()
@@ -41,7 +39,6 @@ public class Attack : MonoBehaviour
             }
             Debug.Log("Hit Object");
         }
-
     }
 
     private void OnDrawGizmos()

@@ -14,51 +14,51 @@ public class MovementScript : MonoBehaviour
     private Collider2D _collider;
     private float _currentDashTime = 0f;
     private float _dashCooldown;
-    private float _horizontal;
-    private float _vertical;
-    private SpriteRenderer _renderer;
-    public delegate void Action(bool value);
-    public event Action Fliped;
     private Movement_Dash _dash;
+    private Animator _animator;
     // Start is called before the first frame update
     void Start()
     {
         _jumping = false;
         _rb = GetComponent<Rigidbody2D>();
         _collider = GetComponent<Collider2D>();
-        _renderer = GetComponent<SpriteRenderer>();
-        _dash = GetComponent<Movement_Dash>();
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        _horizontal = Input.GetAxisRaw("Horizontal");
-        _vertical = Input.GetAxisRaw("Vertical");
-
-        FlipSprite();
-
         //Falling
         if (_rb.velocity.y < 0.0f) {
-            _jumping = false;
-        }
-
-        //Jump
-        if (Input.GetKeyDown(KeyCode.Space) && _grounded) {
-            _rb.AddForce(Vector2.up * JumpSpeed, ForceMode2D.Impulse);
-            _jumping = true;
-        }
-
-        //LR movement
-        var dir = MovementSpeed * _horizontal;
-        _rb.velocity = new Vector2(dir, _rb.velocity.y);
-
-        //Dash
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            _dash.Dash(_horizontal, _rb);
+            _animator.SetFloat("AirSpeedY", _rb.velocity.y);
+           _jumping = false;
         }
 
         IsGrounded();
+
+        if (_grounded && !_jumping) {
+            _animator.SetBool("Grounded", true);
+        }
+    }
+
+    public void Move(float horizontal, float vertical)
+    {
+        var dir = MovementSpeed * horizontal;
+        _rb.velocity = new Vector2(dir, _rb.velocity.y);
+        if (horizontal != 0) {
+            _animator.SetInteger("AnimState", 1);
+        } else {
+            _animator.SetInteger("AnimState", 0);
+        }
+    }
+
+    public void Jump()
+    {
+        if (_grounded && !_jumping) {
+            _rb.AddForce(Vector2.up * JumpSpeed, ForceMode2D.Impulse);
+            _jumping = true;
+            _animator.SetTrigger("Jump");
+            _animator.SetBool("Grounded", false);
+        }
     }
 
     //Grounded Check
@@ -78,28 +78,5 @@ public class MovementScript : MonoBehaviour
         Debug.DrawLine(right, new Vector3(right.x, right.y - GroundCheckDistance), Color.red);
 
         _grounded = (leftHit || rightHit || centerHit);
-    }
-
-    void FlipSprite()
-    {
-        if (_horizontal == 0)
-        {
-            return;
-        }
-
-        bool oldValue = _renderer.flipX;
-
-        if (_horizontal < 0) {
-            _renderer.flipX = true;
-
-        }
-        else if (_horizontal > 0) {
-            _renderer.flipX = false;
-        }
-
-        if (oldValue != _renderer.flipX)
-        {
-            Fliped.Invoke(_renderer.flipX);
-        }
     }
 }

@@ -59,6 +59,7 @@ public class Projectile : MonoBehaviour
         }
 
         if (1 << collision.gameObject.layer != IgnoreLayers) {
+            Debug.Log("Hit something! " + collision.name);
             Destroy(gameObject);
         }
     }
