@@ -53,6 +53,10 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.isTrigger) {
+            return;
+        }
+
         if (1 << collision.gameObject.layer == HitableLayers && collision.transform.TryGetComponent<Health>(out Health health)) {
             health.CalculateHealthChange(1f);
             Debug.Log("Hit Object");

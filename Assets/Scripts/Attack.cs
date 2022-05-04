@@ -29,15 +29,13 @@ public class Attack : MonoBehaviour, IActionable
 
     private IEnumerator Use()
     {
-        Debug.Log("Attack!");
         yield return new WaitForEndOfFrame();
-        Collider2D [] hitObjects = Physics2D.OverlapCircleAll(AttackPoint.position, 1.0f, HitableLayers);
+        Collider2D [] hitObjects = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, HitableLayers);
 
         foreach(Collider2D hitObject in hitObjects) {
             if (hitObject.TryGetComponent<Health>(out Health health)) {
                 health.CalculateHealthChange(1f);
             }
-            Debug.Log("Hit Object");
         }
     }
 

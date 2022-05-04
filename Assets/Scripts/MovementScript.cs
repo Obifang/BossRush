@@ -29,14 +29,16 @@ public class MovementScript : MonoBehaviour
     {
         //Falling
         if (_rb.velocity.y < 0.0f) {
-            _animator.SetFloat("AirSpeedY", _rb.velocity.y);
+            if (_animator != null)
+                _animator.SetFloat("AirSpeedY", _rb.velocity.y);
            _jumping = false;
         }
 
         IsGrounded();
 
         if (_grounded && !_jumping) {
-            _animator.SetBool("Grounded", true);
+            if (_animator != null)
+                _animator.SetBool("Grounded", true);
         }
     }
 
@@ -45,10 +47,20 @@ public class MovementScript : MonoBehaviour
         var dir = MovementSpeed * horizontal;
         _rb.velocity = new Vector2(dir, _rb.velocity.y);
         if (horizontal != 0) {
-            _animator.SetInteger("AnimState", 1);
+            if (_animator != null)
+                _animator.SetInteger("AnimState", 1);
         } else {
-            _animator.SetInteger("AnimState", 0);
+            if (_animator != null)
+                _animator.SetInteger("AnimState", 0);
         }
+    }
+
+    public void StopMoving()
+    {
+        _rb.velocity = Vector2.zero;
+        if (_animator != null)
+            _animator.SetInteger("AnimState", 0);
+
     }
 
     public void Jump()
@@ -56,8 +68,10 @@ public class MovementScript : MonoBehaviour
         if (_grounded && !_jumping) {
             _rb.AddForce(Vector2.up * JumpSpeed, ForceMode2D.Impulse);
             _jumping = true;
-            _animator.SetTrigger("Jump");
-            _animator.SetBool("Grounded", false);
+            if (_animator != null) {
+                _animator.SetTrigger("Jump");
+                _animator.SetBool("Grounded", false);
+            }
         }
     }
 
