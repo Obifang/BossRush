@@ -35,7 +35,6 @@ public class Projectile : MonoBehaviour
                 break;
             case State.Fired:
                 transform.position += (Vector3)(_direction * Speed * Time.deltaTime);
-                Debug.Log("Moving");
                 _lifetime += Time.deltaTime;
 
                 if (_lifetime >= LifeTime) {
@@ -59,11 +58,9 @@ public class Projectile : MonoBehaviour
 
         if (1 << collision.gameObject.layer == HitableLayers && collision.transform.TryGetComponent<Health>(out Health health)) {
             health.CalculateHealthChange(1f);
-            Debug.Log("Hit Object");
         }
 
         if (1 << collision.gameObject.layer != IgnoreLayers) {
-            Debug.Log("Hit something! " + collision.name);
             Destroy(gameObject);
         }
     }

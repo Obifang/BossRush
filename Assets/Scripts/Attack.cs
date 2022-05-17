@@ -8,8 +8,18 @@ public class Attack : MonoBehaviour, IActionable
     public Transform AttackPoint;
     public float AttackRange;
     public SpriteRenderer AttackerRenderer;
-
+    public float Cooldown = 1f;
     private IFlippable Flippable;
+
+    public int ID;
+    public string Name;
+
+    public int GetID { get => ID;}
+
+    public string GetName { get => Name;}
+
+    public bool IsActive { get; private set; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +34,11 @@ public class Attack : MonoBehaviour, IActionable
 
     public void Activate(Vector2 direction)
     {
+        if (IsActive) {
+            return;
+        }
+
+        StartCoroutine(StartCooldown(Cooldown));
         StartCoroutine(Use());
     }
 
@@ -37,6 +52,13 @@ public class Attack : MonoBehaviour, IActionable
                 health.CalculateHealthChange(1f);
             }
         }
+    }
+
+    private IEnumerator StartCooldown(float value)
+    {
+        IsActive = true;
+        yield return new WaitForSecondsRealtime(value);
+        IsActive = false;
     }
 
     private void OnDrawGizmos()

@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IFlippable
 {
+    enum MovementState
+    {
+        Idle,
+        Moving,
+        Dashing
+    }
+
     public MovementScript _movement;
     private Movement_Dash _dash;
 
@@ -17,6 +24,7 @@ public class PlayerController : MonoBehaviour, IFlippable
 
     private float _horizontal;
     private float _vertical;
+    private MovementState _movementState = MovementState.Idle;
 
     public event IFlippable.Action Fliped;
 
@@ -40,15 +48,35 @@ public class PlayerController : MonoBehaviour, IFlippable
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
 
+        switch (_movementState){
+            case MovementState.Idle:
+                if (_horizontal != 0 || _vertical != 0) {
+                    _movementState = MovementState.Moving;
+                }
+                _movement.Move(_horizontal, _vertical);
+                break;
+            case MovementState.Moving:
+                if (_horizontal == 0 && _vertical == 0) {
+                    _movementState = MovementState.Idle;
+                }
+                _movement.Move(_horizontal, _vertical);
+                break;
+            case MovementState.Dashing:
+                if (!_dash.IsDashing) {
+                    _movementState = MovementState.Idle;
+                }
+                break;
+        }
+
+        //Jump
         if (Input.GetKeyDown(KeyCode.Space)) {
             _movement.Jump();
         }
 
-        _movement.Move(_horizontal, _vertical);
-
         //Dash
         if (Input.GetKeyDown(KeyCode.LeftShift)) {
-            _dash.Dash(_horizontal, _rb);
+            _movementState = MovementState.Dashing;
+            _dash.Dash(_facingDirection.x, _rb);
             _animator.SetTrigger("Roll");
         }
 

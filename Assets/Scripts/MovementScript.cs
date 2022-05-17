@@ -57,7 +57,21 @@ public class MovementScript : MonoBehaviour
 
     public void StopMoving()
     {
-        _rb.velocity = Vector2.zero;
+        StopMovingHorizontally();
+        StopMovingVertically();
+    }
+
+    public void StopMovingHorizontally()
+    {
+        _rb.velocity = new Vector2(0, _rb.velocity.y);
+        if (_animator != null)
+            _animator.SetInteger("AnimState", 0);
+
+    }
+
+    public void StopMovingVertically()
+    {
+        _rb.velocity = new Vector2(_rb.velocity.x, 0);
         if (_animator != null)
             _animator.SetInteger("AnimState", 0);
 

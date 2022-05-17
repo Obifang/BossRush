@@ -8,6 +8,14 @@ public class AttackRangeHitScan : MonoBehaviour, IActionable
     public float Distance;
     public float Damage = 1.0f;
 
+    public int ID;
+    public string Name;
+
+    public int GetID { get => ID; }
+
+    public string GetName { get => Name; }
+    public bool IsActive { get; private set; }
+
     private bool Flipped;
     // Start is called before the first frame update
     void Start()
