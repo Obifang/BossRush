@@ -25,9 +25,23 @@ public class AIComplexController : MonoBehaviour, IFlippable
         Waiting
     }
 
+    private enum States
+    {
+        MoveTowardsEnemy,
+        Attacking,
+        Evading,
+        Roaming,
+        Dead
+    }
+
     [SerializeField]
     public List<Pattern> Patterns;
     public event IFlippable.Action Fliped;
+    public float RandomDirectionMoveTime;
+    public float DistanceToAgro;
+    public float DistanceToSwitchToAttackState;
+    public float DistanceForMeleeAttack = 2.0f;
+
 
     private Dictionary<int, Pattern> _patternsByID;
     private Dictionary<int, IActionable> _actionables;
@@ -39,6 +53,13 @@ public class AIComplexController : MonoBehaviour, IFlippable
     private Animator _animator;
     private int _actionIndex = 0;
     private ActionState _actionState;
+    private States _states = States.Roaming;
+    private GameObject _enemy;
+    private MovementScript _movement;
+    private Vector2 _movementDirection = Vector2.right;
+    private float _timer;
+    private float DistanceToEnemy;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -52,12 +73,85 @@ public class AIComplexController : MonoBehaviour, IFlippable
         _health.ChangeInHealth += RemovePatterns;
         _health.ChangeInHealth += AddPatterns;
         _animator = GetComponent<Animator>();
+        _enemy = FindObjectOfType<PlayerController>().gameObject;
+        _movement = GetComponent<MovementScript>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        HandleAttack();
+        HandleStates();
+    }
+
+    void HandleStates()
+    {
+        if (_enemy == null) {
+            return;
+        }
+
+        HandleDistanceFromPlayer();
+        DistanceToEnemy = Vector2.Distance(_enemy.transform.position, transform.position);
+
+        switch (_states) {
+            case States.MoveTowardsEnemy:
+                MoveTowardsPlayer();
+                break;
+            case States.Roaming:
+                Roaming();
+                break;
+            case States.Attacking:
+                HandleAttack();
+                break;
+            case States.Evading:
+                break;
+            case States.Dead:
+                break;
+        }
+    }
+
+    void MoveTowardsPlayer()
+    {
+        _movementDirection = (_enemy.transform.position - transform.position).normalized;
+        _horizontal = _movementDirection.x;
+        _movement.Move(_movementDirection.x, _movementDirection.y);
+
+        if (DistanceToEnemy < DistanceForMeleeAttack) {
+            _states = States.Attacking;
+            _movement.StopMoving();
+            return;
+        }
+    }
+
+    void HandleDistanceFromPlayer()
+    {
+        if (DistanceToEnemy > DistanceToAgro) {
+            _states = States.Roaming;
+            return;
+        }
+    }
+
+    void Roaming()
+    {
+        if (_movement.enabled) {
+            _timer += Time.deltaTime;
+
+            if (_timer <= RandomDirectionMoveTime) {
+                _movement.Move(_movementDirection.x, _movementDirection.y);
+                _horizontal = _movementDirection.x;
+            } else {
+                _timer = 0;
+                var rand = Random.Range(-1, 1);
+                if (rand != 0) {
+                    _movementDirection = new Vector2(rand, 0);
+                }
+            }
+        }
+
+        if (DistanceToEnemy < DistanceToAgro) {
+            _states = States.MoveTowardsEnemy;
+            Debug.Log("Deagro Player");
+            return;
+        }
     }
 
     void HandleAttack()
@@ -144,5 +238,12 @@ public class AIComplexController : MonoBehaviour, IFlippable
         }
 
         return (health / _health.MaxHealthValue * 100);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (_states == States.Roaming) {
+            _movementDirection = new Vector2(_movementDirection.x * -1f, 0);
+        }
     }
 }
