@@ -43,6 +43,7 @@ public class PatternHandler : MonoBehaviour
         _potentialPatterns = new List<Pattern>();
         _unUsedPatterns = new List<Pattern>();
         _actionHandler = GetComponent<ActionHandler>();
+        _health = GetComponent<Health>();
         SetupPatterns();
         _health.ChangeInHealth += RemovePatterns;
         _health.ChangeInHealth += AddPatterns;
@@ -55,32 +56,30 @@ public class PatternHandler : MonoBehaviour
         if (_actionState == ActionState.Ready) {
             if (!_actionHandler.IsActive) {
                 _actionHandler.ActivateActionByID(Vector2.right, pattern.ActionIDs[_actionIndex]);
-                Debug.Log("Action Index: " + _actionHandler.CurrentAction.GetName);
+                Debug.Log("Pattern Index: " + _patternIndex);
                 _actionState = ActionState.Waiting;
             }
         } else if (_actionState == ActionState.Waiting) {
             if (!_actionHandler.IsActive) {
                 _actionIndex++;
-
                 var potPatterns = _potentialPatterns.Where(x => Vector2.Distance(transform.position, target) <= x.UsableRangeFromTarget).ToArray();
-
-                if (potPatterns.Length != 0) {
-                    if (RandomPatternIndex)
-                        _patternIndex = Random.Range(0, potPatterns.Length);
-                    else {
-                        _patternIndex++;
-                        if (_patternIndex >= potPatterns.Length) {
-                            _patternIndex = 0;
-                        }
-                    }
-                } else {
-                    _patternIndex = 0;
-                }
-
                 pattern = potPatterns[_patternIndex];
 
                 if (_actionIndex >= pattern.ActionIDs.Count) {
                     _actionIndex = 0;
+
+                    if (potPatterns.Length != 0) {
+                        if (RandomPatternIndex)
+                            _patternIndex = Random.Range(0, potPatterns.Length);
+                        else {
+                            _patternIndex++;
+                            if (_patternIndex >= potPatterns.Length) {
+                                _patternIndex = 0;
+                            }
+                        }
+                    } else {
+                        _patternIndex = 0;
+                    }
                 }
                 _actionState = ActionState.Ready;
             }
@@ -100,20 +99,20 @@ public class PatternHandler : MonoBehaviour
         } else if (_actionState == ActionState.Waiting) {
             if (!_actionHandler.IsActive) {
                 _actionIndex++;
-
-                if (RandomPatternIndex)
-                    _patternIndex = Random.Range(0, _potentialPatterns.Count);
-                else {
-                    _patternIndex++;
-                    if (_patternIndex >= _potentialPatterns.Count) {
-                        _patternIndex = 0;
-                    }
-                }
-
                 pattern = _potentialPatterns[_patternIndex];
 
                 if (_actionIndex >= pattern.ActionIDs.Count) { 
                     _actionIndex = 0;
+
+                    if (RandomPatternIndex)
+                        _patternIndex = Random.Range(0, _potentialPatterns.Count);
+                    else {
+                        _patternIndex++;
+                        if (_patternIndex >= _potentialPatterns.Count) {
+                            _patternIndex = 0;
+                        }
+                    }
+
                 }
                 _actionState = ActionState.Ready;
             }
@@ -132,7 +131,7 @@ public class PatternHandler : MonoBehaviour
     void AddPatterns(float healthThreshold)
     {
         var hp = ConvertHPtoPercentage(healthThreshold);
-        var temp = _unUsedPatterns.Where(x => x.ActivatableRangeMax <= hp && hp > x.ActivatableRangeMin).ToArray();
+        var temp = _unUsedPatterns.Where(x => hp <= x.ActivatableRangeMax && hp > x.ActivatableRangeMin).ToArray();
         foreach (Pattern i in temp) {
             _potentialPatterns.Add(i);
             _unUsedPatterns.Remove(i);

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour, IActionable
 {
+    public string AssociatedAnimationName;
     public LayerMask HitableLayers;
     public Transform AttackPoint;
     public float AttackRange;
@@ -19,10 +20,12 @@ public class Attack : MonoBehaviour, IActionable
     public string GetName { get => Name;}
 
     public bool IsActive { get; private set; }
+    private Animator _animator;
 
     // Start is called before the first frame update
     void Start()
     {
+        _animator = GetComponent<Animator>();
         Flippable = GetComponent<IFlippable>();
         Flippable.Fliped += FlipAttackPoint;
     }
@@ -44,6 +47,9 @@ public class Attack : MonoBehaviour, IActionable
 
     private IEnumerator Use()
     {
+        if (AssociatedAnimationName != "") {
+            _animator.SetTrigger(AssociatedAnimationName);
+        }
         yield return new WaitForEndOfFrame();
         Collider2D [] hitObjects = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, HitableLayers);
 

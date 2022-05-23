@@ -420,6 +420,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7e7822fd5a017644ac4f533167f096d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &562859421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 562859419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ac932444ba1a824db14c7bd11684fd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Patterns:
+  - ActionIDs: 0100000001000000
+    UsableRangeFromTarget: 10
+    ActivatableRangeMax: 100
+    ActivatableRangeMin: 0
+  - ActionIDs: 000000000000000000000000
+    UsableRangeFromTarget: 2
+    ActivatableRangeMax: 100
+    ActivatableRangeMin: 0
+  RandomPatternIndex: 1
 --- !u!1001 &925942693
 PrefabInstance:
   m_ObjectHideFlags: 0
