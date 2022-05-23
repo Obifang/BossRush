@@ -32,7 +32,10 @@ public class Movement_Dash : MonoBehaviour
         }
         IsDashing = true;
         _currentCooldown = DashCooldown;
-        DashUI.instance.Dashed(DashCooldown);
+        if (DashUI.instance != null) {
+            DashUI.instance.Dashed(DashCooldown);
+        }
+        
         _rb = rb;
         _dir = new Vector2(horizontalValue, 0).normalized;
     }

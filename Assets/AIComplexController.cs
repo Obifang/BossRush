@@ -44,7 +44,6 @@ public class AIComplexController : MonoBehaviour, IFlippable
 
 
     private Dictionary<int, Pattern> _patternsByID;
-    private Dictionary<int, IActionable> _actionables;
     private List<int> _potentialPatterns;
     private List<int> _unUsedPatterns;
     private float _horizontal;
@@ -59,22 +58,24 @@ public class AIComplexController : MonoBehaviour, IFlippable
     private Vector2 _movementDirection = Vector2.right;
     private float _timer;
     private float DistanceToEnemy;
+    private SpriteRenderer _renderer;
+    private ActionHandler _actionHandler;
 
     // Start is called before the first frame update
     void Start()
     {
         _patternsByID = new Dictionary<int, Pattern>();
-        _actionables = new Dictionary<int, IActionable>();
         _potentialPatterns = new List<int>();
         _unUsedPatterns = new List<int>();
         _health = GetComponent<Health>();
-        SetupIActionables();
         SetupPatterns();
         _health.ChangeInHealth += RemovePatterns;
         _health.ChangeInHealth += AddPatterns;
         _animator = GetComponent<Animator>();
         _enemy = FindObjectOfType<PlayerController>().gameObject;
         _movement = GetComponent<MovementScript>();
+        _renderer = GetComponent<SpriteRenderer>();
+        _actionHandler = GetComponent<ActionHandler>();
     }
 
     // Update is called once per frame
@@ -107,6 +108,8 @@ public class AIComplexController : MonoBehaviour, IFlippable
             case States.Dead:
                 break;
         }
+
+        FlipSprite();
     }
 
     void MoveTowardsPlayer()
@@ -157,40 +160,22 @@ public class AIComplexController : MonoBehaviour, IFlippable
     void HandleAttack()
     {
         var pattern = _patternsByID[_potentialPatterns[0]];
-        var action = _actionables[pattern.ActionIDs[_actionIndex]];
 
         if (_actionState == ActionState.Ready) {
-            if (!action.IsActive) {
-                Debug.Log("Action Index: " + action.GetName);
-                action.Activate(Vector2.right);
+            if (!_actionHandler.IsActive) {
+                _actionHandler.ActivateActionByID(Vector2.right, pattern.ActionIDs[_actionIndex]);
+                Debug.Log("Action Index: " + _actionHandler.CurrentAction.GetName);
                 _animator.SetTrigger("Attack" + 1);
                 _actionState = ActionState.Waiting;
             }
         } else if (_actionState ==  ActionState.Waiting) {
-            if (!action.IsActive) {
+            if (!_actionHandler.IsActive) {
                 _actionIndex++;
                 if (_actionIndex >= pattern.ActionIDs.Count) {
                     _actionIndex = 0;
                 }
                 _actionState = ActionState.Ready;
             }
-        }
-    }
-
-    void ExecuteCurrentPattern()
-    {
-
-    }
-
-    /// <summary>
-    /// Gets a list of all "IActionable" Components attached to this object and adds them to a dictionary based on ID.
-    /// </summary>
-    void SetupIActionables()
-    {
-        var actionables = GetComponents<IActionable>().ToList();
-
-        foreach (var actionable in actionables) {
-            _actionables.Add(actionable.GetID, actionable);
         }
     }
 
@@ -228,6 +213,19 @@ public class AIComplexController : MonoBehaviour, IFlippable
     {
         if (_horizontal == 0) {
             return;
+        }
+
+        bool oldValue = _renderer.flipX;
+
+        if (_horizontal < 0) {
+            _renderer.flipX = true;
+
+        } else if (_horizontal > 0) {
+            _renderer.flipX = false;
+        }
+
+        if (oldValue != _renderer.flipX && Fliped != null) {
+            Fliped.Invoke(_renderer.flipX);
         }
     }
 

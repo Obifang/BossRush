@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour, IFlippable
     {
         Idle,
         Moving,
-        Dashing
+        Dashing,
+        PerformingAction
     }
 
     public MovementScript _movement;
@@ -16,11 +17,9 @@ public class PlayerController : MonoBehaviour, IFlippable
 
     private Rigidbody2D _rb;
     private SpriteRenderer _renderer;
-    private IActionable _attackRangeProjectile;
-    private IActionable _attackRangeHitScan;
-    private IActionable _attack;
     private Vector2 _facingDirection = Vector2.right;
     private Animator _animator;
+    private ActionHandler _actionHandler;
 
     private float _horizontal;
     private float _vertical;
@@ -34,10 +33,8 @@ public class PlayerController : MonoBehaviour, IFlippable
         _rb = GetComponent<Rigidbody2D>();
         _renderer = GetComponent<SpriteRenderer>();
         _dash = GetComponent<Movement_Dash>();
-        _attack = GetComponent<Attack>();
-        _attackRangeHitScan = GetComponent<AttackRangeHitScan>();
-        _attackRangeProjectile = GetComponent<AttackRangeProjectile>();
         _animator = GetComponent<Animator>();
+        _actionHandler = GetComponent<ActionHandler>();
     }
 
     // Update is called once per frame
@@ -53,7 +50,7 @@ public class PlayerController : MonoBehaviour, IFlippable
                 if (_horizontal != 0 || _vertical != 0) {
                     _movementState = MovementState.Moving;
                 }
-                _movement.Move(_horizontal, _vertical);
+                _movement.Move(0, 0);
                 break;
             case MovementState.Moving:
                 if (_horizontal == 0 && _vertical == 0) {
@@ -64,6 +61,14 @@ public class PlayerController : MonoBehaviour, IFlippable
             case MovementState.Dashing:
                 if (!_dash.IsDashing) {
                     _movementState = MovementState.Idle;
+                }
+                break;
+            case MovementState.PerformingAction:
+                if (!_actionHandler.IsActive) {
+                    _movementState = MovementState.Idle;
+                }
+                if (_movement.Grounded && !_movement.Jumping) {
+                    _movement.StopMoving();
                 }
                 break;
         }
@@ -80,15 +85,22 @@ public class PlayerController : MonoBehaviour, IFlippable
             _animator.SetTrigger("Roll");
         }
 
+        if (_actionHandler.IsActive) {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0)) {
             _animator.SetTrigger("Attack" + 2);
-            _attackRangeProjectile.Activate(_facingDirection);
+            _movementState = MovementState.PerformingAction;
+            _actionHandler.ActivateActionByID(_facingDirection, 1);
         } else if (Input.GetMouseButtonDown(2)) {
             _animator.SetTrigger("Attack" + 3);
-            _attackRangeHitScan.Activate(_facingDirection);
+            _movementState = MovementState.PerformingAction;
+            _actionHandler.ActivateActionByID(_facingDirection, 2);
         } else if (Input.GetKeyDown(KeyCode.Mouse1)) {
             _animator.SetTrigger("Attack" + 1);
-            _attack.Activate(_facingDirection);
+            _movementState = MovementState.PerformingAction;
+            _actionHandler.ActivateActionByID(_facingDirection, 0);
         }
     }
 

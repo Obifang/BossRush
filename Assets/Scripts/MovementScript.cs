@@ -16,6 +16,9 @@ public class MovementScript : MonoBehaviour
     private float _dashCooldown;
     private Movement_Dash _dash;
     private Animator _animator;
+    public bool Grounded { get => _grounded;}
+    public bool Jumping { get => _jumping;}
+
     // Start is called before the first frame update
     void Start()
     {
