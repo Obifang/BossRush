@@ -10,6 +10,7 @@ public class Attack : MonoBehaviour, IActionable
     public float AttackRange;
     public SpriteRenderer AttackerRenderer;
     public float Cooldown = 1f;
+    public float Damage = 1.0f;
     private IFlippable Flippable;
 
     public int ID;
@@ -55,7 +56,7 @@ public class Attack : MonoBehaviour, IActionable
 
         foreach(Collider2D hitObject in hitObjects) {
             if (hitObject.TryGetComponent<Health>(out Health health)) {
-                health.CalculateHealthChange(1f);
+                health.CalculateHealthChange(Damage);
             }
         }
     }

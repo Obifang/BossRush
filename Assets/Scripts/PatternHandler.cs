@@ -12,7 +12,8 @@ public class PatternHandler : MonoBehaviour
     public struct Pattern
     {
         public List<int> ActionIDs;
-        public float UsableRangeFromTarget;
+        public float MaxUsableRangeFromTarget;
+        public float MinUsableRangeFromTarget;
         [Range(0, 100)]
         public int ActivatableRangeMax;
         [Range(0, 100)]
@@ -30,6 +31,7 @@ public class PatternHandler : MonoBehaviour
     public bool RandomPatternIndex = true;
 
     private List<Pattern> _potentialPatterns;
+    private List<Pattern> _distancePatterns;
     private List<Pattern> _unUsedPatterns;
     private Health _health;
     private ActionHandler _actionHandler;
@@ -42,6 +44,7 @@ public class PatternHandler : MonoBehaviour
     {
         _potentialPatterns = new List<Pattern>();
         _unUsedPatterns = new List<Pattern>();
+        _distancePatterns = new List<Pattern>();
         _actionHandler = GetComponent<ActionHandler>();
         _health = GetComponent<Health>();
         SetupPatterns();
@@ -51,38 +54,47 @@ public class PatternHandler : MonoBehaviour
 
     public void HandlePatternsWithinRange(Vector2 target)
     {
-        var pattern = _potentialPatterns[_patternIndex];
+        if (_distancePatterns.Count == 0) {
+            var distance = Vector2.Distance(transform.position, target);
+            AddPatternsDistance(distance);
+            _patternIndex = 0;
+        }
+        var pattern = _distancePatterns[_patternIndex];
 
-        if (_actionState == ActionState.Ready) {
-            if (!_actionHandler.IsActive) {
-                _actionHandler.ActivateActionByID(Vector2.right, pattern.ActionIDs[_actionIndex]);
-                Debug.Log("Pattern Index: " + _patternIndex);
-                _actionState = ActionState.Waiting;
-            }
-        } else if (_actionState == ActionState.Waiting) {
-            if (!_actionHandler.IsActive) {
+        switch (_actionState) {
+            case ActionState.Ready:
+                if (!_actionHandler.IsActive) {
+                    _actionHandler.ActivateActionByID((target - (Vector2)transform.position).normalized, pattern.ActionIDs[_actionIndex]);
+                    Debug.Log("Pattern Index: " + _patternIndex);
+                    _actionState = ActionState.Waiting;
+                }
+                break;
+            case ActionState.Waiting:
+                if (_actionHandler.IsActive) {
+                    break;
+                }
+
                 _actionIndex++;
-                var potPatterns = _potentialPatterns.Where(x => Vector2.Distance(transform.position, target) <= x.UsableRangeFromTarget).ToArray();
-                pattern = potPatterns[_patternIndex];
+                var distance = Vector2.Distance(transform.position, target);
+                AddPatternsDistance(distance);
+                pattern = _distancePatterns[_patternIndex];
 
                 if (_actionIndex >= pattern.ActionIDs.Count) {
                     _actionIndex = 0;
 
-                    if (potPatterns.Length != 0) {
+                    if (_distancePatterns.Count != 0) {
                         if (RandomPatternIndex)
-                            _patternIndex = Random.Range(0, potPatterns.Length);
+                            _patternIndex = Random.Range(0, _distancePatterns.Count);
                         else {
                             _patternIndex++;
-                            if (_patternIndex >= potPatterns.Length) {
-                                _patternIndex = 0;
-                            }
                         }
-                    } else {
+                    }
+                    if (_patternIndex >= _distancePatterns.Count) {
                         _patternIndex = 0;
                     }
                 }
                 _actionState = ActionState.Ready;
-            }
+                break;
         }
     }
 
@@ -90,32 +102,36 @@ public class PatternHandler : MonoBehaviour
     {
         var pattern = _potentialPatterns[_patternIndex];
 
-        if (_actionState == ActionState.Ready) {
-            if (!_actionHandler.IsActive) {
-                _actionHandler.ActivateActionByID(Vector2.right, pattern.ActionIDs[_actionIndex]);
-                Debug.Log("Action Index: " + _actionHandler.CurrentAction.GetName);
-                _actionState = ActionState.Waiting;
-            }
-        } else if (_actionState == ActionState.Waiting) {
-            if (!_actionHandler.IsActive) {
-                _actionIndex++;
-                pattern = _potentialPatterns[_patternIndex];
+        switch (_actionState) {
+            case ActionState.Ready:
+                if (!_actionHandler.IsActive) {
+                    _actionHandler.ActivateActionByID(Vector2.right, pattern.ActionIDs[_actionIndex]);
+                    Debug.Log("Action Index: " + _actionHandler.CurrentAction.GetName);
+                    _actionState = ActionState.Waiting;
+                }
+                break;
+            case ActionState.Waiting:
+                if (_actionHandler.IsActive) {
+                    break;
+                }
 
-                if (_actionIndex >= pattern.ActionIDs.Count) { 
+                _actionIndex++;
+
+                if (_actionIndex >= pattern.ActionIDs.Count) {
                     _actionIndex = 0;
 
                     if (RandomPatternIndex)
                         _patternIndex = Random.Range(0, _potentialPatterns.Count);
                     else {
-                        _patternIndex++;
-                        if (_patternIndex >= _potentialPatterns.Count) {
-                            _patternIndex = 0;
-                        }
+                        _patternIndex++; 
                     }
 
+                    if (_patternIndex >= _potentialPatterns.Count) {
+                        _patternIndex = 0;
+                    }
                 }
                 _actionState = ActionState.Ready;
-            }
+                break;
         }
     }
 
@@ -126,6 +142,16 @@ public class PatternHandler : MonoBehaviour
         }
 
         AddPatterns(_health.MaxHealthValue);
+    }
+
+    void AddPatternsDistance(float distance)
+    {
+        _distancePatterns = _potentialPatterns.Where(x => distance <= x.MaxUsableRangeFromTarget &&
+                                                                distance > x.MinUsableRangeFromTarget).ToList();
+
+        if (_distancePatterns.Count == 0) {
+            _distancePatterns = _potentialPatterns;
+        }
     }
 
     void AddPatterns(float healthThreshold)
@@ -144,6 +170,7 @@ public class PatternHandler : MonoBehaviour
         var temp = _potentialPatterns.Where(x => x.ActivatableRangeMin > hp).ToArray();
         foreach (Pattern i in temp) {
             _potentialPatterns.Remove(i);
+            _unUsedPatterns.Add(i);
         }
     }
 

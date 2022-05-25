@@ -59,6 +59,8 @@ public class AIComplexController : MonoBehaviour, IFlippable
 
         HandleDistanceFromPlayer();
         DistanceToEnemy = Vector2.Distance(_enemy.transform.position, transform.position);
+        _movementDirection = (_enemy.transform.position - transform.position).normalized;
+        _horizontal = _movementDirection.x;
 
         switch (_states) {
             case States.MoveTowardsEnemy:
@@ -81,8 +83,7 @@ public class AIComplexController : MonoBehaviour, IFlippable
 
     void MoveTowardsPlayer()
     {
-        _movementDirection = (_enemy.transform.position - transform.position).normalized;
-        _horizontal = _movementDirection.x;
+        
         _movement.Move(_movementDirection.x, _movementDirection.y);
 
         if (DistanceToEnemy < DistanceForMeleeAttack) {
