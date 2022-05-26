@@ -65,7 +65,7 @@ public class PatternHandler : MonoBehaviour
             case ActionState.Ready:
                 if (!_actionHandler.IsActive) {
                     _actionHandler.ActivateActionByID((target - (Vector2)transform.position).normalized, pattern.ActionIDs[_actionIndex]);
-                    Debug.Log("Pattern Index: " + _patternIndex);
+                    
                     _actionState = ActionState.Waiting;
                 }
                 break;
@@ -77,21 +77,22 @@ public class PatternHandler : MonoBehaviour
                 _actionIndex++;
                 var distance = Vector2.Distance(transform.position, target);
                 AddPatternsDistance(distance);
+
+                if (_distancePatterns.Count != 0) {
+                    if (RandomPatternIndex)
+                        _patternIndex = Random.Range(0, _distancePatterns.Count);
+                    else {
+                        _patternIndex++;
+                    }
+                }
+                if (_patternIndex >= _distancePatterns.Count) {
+                    _patternIndex = 0;
+                }
+
                 pattern = _distancePatterns[_patternIndex];
 
                 if (_actionIndex >= pattern.ActionIDs.Count) {
                     _actionIndex = 0;
-
-                    if (_distancePatterns.Count != 0) {
-                        if (RandomPatternIndex)
-                            _patternIndex = Random.Range(0, _distancePatterns.Count);
-                        else {
-                            _patternIndex++;
-                        }
-                    }
-                    if (_patternIndex >= _distancePatterns.Count) {
-                        _patternIndex = 0;
-                    }
                 }
                 _actionState = ActionState.Ready;
                 break;
