@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour, IFlippable
+public class PlayerController : MonoBehaviour, IFlippable, IController
 {
     enum MovementState
     {
@@ -124,5 +124,11 @@ public class PlayerController : MonoBehaviour, IFlippable
         if (oldValue != _renderer.flipX && Fliped != null) {
             Fliped.Invoke(_renderer.flipX);
         }
+    }
+
+    public void SetActive(bool value)
+    {
+        this.enabled = value;
+        _actionHandler.CurrentAction.Deactivate(Vector2.zero);
     }
 }

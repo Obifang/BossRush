@@ -64,4 +64,9 @@ public class Movement_Dash : MonoBehaviour, IActionable
     {
         Dash(direction.x, _rb);
     }
+
+    public void Deactivate(Vector2 direction)
+    {
+        StopAllCoroutines();
+    }
 }

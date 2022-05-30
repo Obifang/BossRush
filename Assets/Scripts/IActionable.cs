@@ -6,6 +6,15 @@ public interface IActionable
 {
     public int GetID { get;}
     public string GetName { get;}
+    /// <summary>
+    /// Use to start an Action. Should not require Deactivate to stop once completed.
+    /// </summary>
+    /// <param name="direction"></param>
     public void Activate(Vector2 direction);
+    /// <summary>
+    /// Use to stop an Action.
+    /// </summary>
+    /// <param name="direction"></param>
+    public void Deactivate(Vector2 direction);
     public bool IsActive { get;}
 }

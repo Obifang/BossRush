@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Health : MonoBehaviour
 {
+    public string DeathAnimationName;
     public float StartingHealthValue = 10.0f;
     public float MaxHealthValue = 10.0f;
 
     private float _currentHealth;
+    private Animator _animator;
+    private IController _controller;
+    private bool _deathTriggered = false;
 
     public delegate void HealthChange(float value);
     public event HealthChange ChangeInHealth;
@@ -16,19 +21,46 @@ public class Health : MonoBehaviour
     void Start()
     {
         _currentHealth = StartingHealthValue;
+        _animator = GetComponent<Animator>();
+        _controller = GetComponent<IController>();
     }
 
     public void CalculateHealthChange(float damage)
     {
+        if (_deathTriggered) {
+            return;
+        }
+
         _currentHealth -= damage;
 
-        if (_currentHealth <= 0f || _currentHealth - damage < 0f) {
+        if (_currentHealth <= 0f) {
             _currentHealth = 0f;
+            Death();
             Debug.Log("Dead");
         }
 
         if (ChangeInHealth != null) {
             ChangeInHealth.Invoke(_currentHealth);
         }
+    }
+
+    public void Death()
+    {
+        _deathTriggered = true;
+        _controller.SetActive(false);
+        if (_animator != null) {
+            _animator.SetBool(DeathAnimationName, true);
+        }
+        StartCoroutine(Dying());
+    }
+
+    private IEnumerator Dying()
+    {
+        if (_animator != null) {
+            yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length *  (1 - _animator.GetCurrentAnimatorStateInfo(0).normalizedTime));
+            yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length);
+        }
+
+        Destroy(gameObject);
     }
 }

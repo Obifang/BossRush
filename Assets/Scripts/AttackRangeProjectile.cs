@@ -28,6 +28,11 @@ public class AttackRangeProjectile : MonoBehaviour, IActionable
         StartCoroutine(Use(direction));
     }
 
+    public void Deactivate(Vector2 direction)
+    {
+        StopAllCoroutines();
+    }
+
     private IEnumerator Use(Vector2 direction)
     {
         yield return new WaitForEndOfFrame();

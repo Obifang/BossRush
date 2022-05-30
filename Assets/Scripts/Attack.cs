@@ -46,6 +46,11 @@ public class Attack : MonoBehaviour, IActionable
         StartCoroutine(Use());
     }
 
+    public void Deactivate(Vector2 direction)
+    {
+        StopAllCoroutines();
+    }
+
     private IEnumerator Use()
     {
         if (AssociatedAnimationName != "") {

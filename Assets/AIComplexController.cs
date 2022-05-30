@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class AIComplexController : MonoBehaviour, IFlippable
+public class AIComplexController : MonoBehaviour, IFlippable, IController
 {
     private enum States
     {
@@ -150,5 +150,11 @@ public class AIComplexController : MonoBehaviour, IFlippable
         if (_states == States.Roaming) {
             _movementDirection = new Vector2(_movementDirection.x * -1f, 0);
         }
+    }
+
+    public void SetActive(bool value)
+    {
+        _patterns.StopCurrentAction();
+        this.enabled = value;
     }
 }

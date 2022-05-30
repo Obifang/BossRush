@@ -92,4 +92,17 @@ public class Action_ChargeSlam : MonoBehaviour, IActionable
         Gizmos.DrawWireSphere(AttackPoint.position, AttackRange);
     }
 
+    public void Deactivate(Vector2 direction)
+    {
+        StopAllCoroutines();
+        if (ChargeParticles != null) {
+            ChargeParticles.Stop();
+        }
+
+        if (SlamParticles != null) {
+            SlamParticles.Stop();
+        }
+
+        _animator.SetBool(ChargeAnimation, false);
+    }
 }

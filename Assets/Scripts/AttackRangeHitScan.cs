@@ -41,4 +41,9 @@ public class AttackRangeHitScan : MonoBehaviour, IActionable
             health.CalculateHealthChange(Damage);
         }
     }
+
+    public void Deactivate(Vector2 direction)
+    {
+        StopAllCoroutines();
+    }
 }

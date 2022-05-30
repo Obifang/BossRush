@@ -52,6 +52,11 @@ public class PatternHandler : MonoBehaviour
         _health.ChangeInHealth += AddPatterns;
     }
 
+    public void StopCurrentAction()
+    {
+        _actionHandler.CurrentAction.Deactivate(Vector2.zero);
+    }
+
     public void HandlePatternsWithinRange(Vector2 target)
     {
         if (_distancePatterns.Count == 0) {
