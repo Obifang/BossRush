@@ -12,6 +12,7 @@ public class PatternHandler : MonoBehaviour
     public struct Pattern
     {
         public List<int> ActionIDs;
+        public int Weighting;
         public float MaxUsableRangeFromTarget;
         public float MinUsableRangeFromTarget;
         [Range(0, 100)]
@@ -52,6 +53,11 @@ public class PatternHandler : MonoBehaviour
         _health.ChangeInHealth += AddPatterns;
     }
 
+    public bool IsCurrentActionActive()
+    {
+        return _actionHandler.CurrentAction.IsActive;
+    }
+
     public void StopCurrentAction()
     {
         _actionHandler.CurrentAction.Deactivate(Vector2.zero);
@@ -84,8 +90,12 @@ public class PatternHandler : MonoBehaviour
                 AddPatternsDistance(distance);
 
                 if (_distancePatterns.Count != 0) {
-                    if (RandomPatternIndex)
-                        _patternIndex = Random.Range(0, _distancePatterns.Count);
+                    if (RandomPatternIndex) {
+                        var patternSet = _distancePatterns.ToDictionary(x => x, x => x.Weighting);
+                        pattern = Random_Weighted<Pattern>.GetRandomObject(patternSet);
+
+                        _patternIndex = _distancePatterns.IndexOf(pattern);
+                    }
                     else {
                         _patternIndex++;
                     }

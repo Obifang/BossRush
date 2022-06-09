@@ -27,7 +27,7 @@ public class ActionHandler : MonoBehaviour
             if (!_actionsByID.ContainsKey(actionable.GetID)) {
                 _actionsByID.Add(actionable.GetID, actionable);
             } else {
-                Debug.LogWarning("Warning: Multiple Actions share the same ID.");
+                Debug.LogWarning("Warning: Multiple Actions share the same ID." + "\nID: " + actionable.GetID);
             }
         }
     }

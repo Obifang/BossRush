@@ -12,7 +12,8 @@ public class PlayerController : MonoBehaviour, IFlippable, IController
         PerformingAction
     }
 
-    public MovementScript _movement;
+    public MovementScript _movementForce;
+    public MovementForceBased _movement;
     private Movement_Dash _dash;
 
     private Rigidbody2D _rb;
@@ -44,8 +45,8 @@ public class PlayerController : MonoBehaviour, IFlippable, IController
 
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
-
-        switch (_movementState){
+        _movement.Move(_horizontal, _vertical);
+        /*switch (_movementState){
             case MovementState.Idle:
                 if (_horizontal != 0 || _vertical != 0) {
                     _movementState = MovementState.Moving;
@@ -59,7 +60,7 @@ public class PlayerController : MonoBehaviour, IFlippable, IController
                 _movement.Move(_horizontal, _vertical);
                 break;
             case MovementState.Dashing:
-                if (!_dash.IsDashing) {
+                if (!_dash.IsActive) {
                     _movementState = MovementState.Idle;
                 }
                 break;
@@ -71,7 +72,7 @@ public class PlayerController : MonoBehaviour, IFlippable, IController
                     _movement.StopMoving();
                 }
                 break;
-        }
+        }*/
 
         //Jump
         if (Input.GetKeyDown(KeyCode.Space)) {

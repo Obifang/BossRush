@@ -49,6 +49,7 @@ public class Attack : MonoBehaviour, IActionable
     public void Deactivate(Vector2 direction)
     {
         StopAllCoroutines();
+        IsActive = false;
     }
 
     private IEnumerator Use()

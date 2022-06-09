@@ -28,7 +28,7 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
     private Animator _animator;
     private States _states = States.Roaming;
     private GameObject _enemy;
-    private MovementScript _movement;
+    private MovementForceBased _movement;
     private Vector2 _movementDirection = Vector2.right;
     private float _timer;
     private float DistanceToEnemy;
@@ -41,7 +41,7 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
         _health = GetComponent<Health>();
         _animator = GetComponent<Animator>();
         _enemy = FindObjectOfType<PlayerController>().gameObject;
-        _movement = GetComponent<MovementScript>();
+        _movement = GetComponent<MovementForceBased>();
         _renderer = GetComponent<SpriteRenderer>();
     }
 
@@ -61,7 +61,7 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
         DistanceToEnemy = Vector2.Distance(_enemy.transform.position, transform.position);
         _movementDirection = (_enemy.transform.position - transform.position).normalized;
         _horizontal = _movementDirection.x;
-
+        Debug.Log("Enemy State: " + _states);
         switch (_states) {
             case States.MoveTowardsEnemy:
                 MoveTowardsPlayer();
@@ -70,7 +70,15 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
                 Roaming();
                 break;
             case States.Attacking:
-                _patterns.HandlePatternsWithinRange(_enemy.transform.position);
+                if (DistanceToEnemy > DistanceForMeleeAttack) {
+                    if (!_patterns.IsCurrentActionActive()) {
+                        _states = States.MoveTowardsEnemy;
+                        _movement.UpdateState(MovementState.Moving);
+                        _patterns.StopCurrentAction();
+                    }
+                } else {
+                    _patterns.HandlePatternsWithinRange(_enemy.transform.position);
+                }
                 break;
             case States.Evading:
                 break;
@@ -83,12 +91,13 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
 
     void MoveTowardsPlayer()
     {
-        
         _movement.Move(_movementDirection.x, _movementDirection.y);
 
         if (DistanceToEnemy < DistanceForMeleeAttack) {
             _states = States.Attacking;
             _movement.StopMoving();
+            _movement.UpdateState(MovementState.Idle);
+            Debug.Log("Stopped Moving");
             return;
         }
     }

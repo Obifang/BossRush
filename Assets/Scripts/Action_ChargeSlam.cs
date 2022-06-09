@@ -104,5 +104,6 @@ public class Action_ChargeSlam : MonoBehaviour, IActionable
         }
 
         _animator.SetBool(ChargeAnimation, false);
+        IsActive = false;
     }
 }

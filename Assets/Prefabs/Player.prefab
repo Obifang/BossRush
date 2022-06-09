@@ -81,6 +81,8 @@ GameObject:
   - component: {fileID: 6523489968355155022}
   - component: {fileID: 6523489968355155023}
   - component: {fileID: 6523489968355155020}
+  - component: {fileID: 164794207}
+  - component: {fileID: 164794208}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -234,13 +236,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f13d2c3ad64f13499572146e3db96c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AssociatedAnimationName: 
   HitableLayers:
     serializedVersion: 2
     m_Bits: 8
   AttackPoint: {fileID: 6523489968971645538}
   AttackRange: 2
   AttackerRenderer: {fileID: 6523489968355155015}
-  Cooldown: 1
+  Cooldown: 0.5
+  Damage: 1
   ID: 0
   Name: 
 --- !u!114 &6523489968355155010
@@ -255,8 +259,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adc6560b5363b8a44a96aac3a7a6d214, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AnimationName: 
   DashSpeed: 15
   DashCooldown: 0.2
+  ID: 3
+  Name: 
 --- !u!114 &6523489968355155011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,6 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e269f2b93c296e4881048b4cfe9e4b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DeathAnimationName: Death
   StartingHealthValue: 10
   MaxHealthValue: 10
 --- !u!114 &6523489968355155008
@@ -288,7 +296,7 @@ MonoBehaviour:
     m_Bits: 8
   Distance: 5
   Damage: 1
-  ID: 0
+  ID: 2
   Name: 
 --- !u!114 &6523489968355155009
 MonoBehaviour:
@@ -304,7 +312,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectileType: {fileID: 3599111512274175943, guid: 471031e71c1eccc45bf534e6b5182fdf, type: 3}
   AttackPoint: {fileID: 6523489968971645538}
-  ID: 0
+  ID: 1
   Name: 
   Cooldown: 0.5
 --- !u!114 &6523489968355155022
@@ -351,8 +359,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e269f2b93c296e4881048b4cfe9e4b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DeathAnimationName: 
   StartingHealthValue: 10
   MaxHealthValue: 10
+--- !u!114 &164794207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6523489968355155387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7e7822fd5a017644ac4f533167f096d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &164794208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6523489968355155387}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7742450d96078b489ad3471a1b5bddc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 2
+  Name: 1
+  ChargeDuration: 4
+  Damage: 3
+  ChargeAnimation: Block
+  SlamAnimation: Attack3
+  CooldownDuration: 5
+  AttackPoint: {fileID: 6523489968971645538}
+  AttackRange: 0
+  HitableLayers:
+    serializedVersion: 2
+    m_Bits: 1024
+  ChargeParticles: {fileID: 0}
+  SlamParticles: {fileID: 0}
 --- !u!1 &6523489968370128190
 GameObject:
   m_ObjectHideFlags: 0

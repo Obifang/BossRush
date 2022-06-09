@@ -92,6 +92,12 @@ public class MovementScript : MonoBehaviour
         }
     }
 
+    public void KnockBack(Vector2 dir, float force)
+    {
+        StopMoving();
+        _rb.AddForce(dir * force, ForceMode2D.Impulse);
+    }
+
     //Grounded Check
     void IsGrounded()
     {
