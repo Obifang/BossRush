@@ -11,6 +11,7 @@ public class Attack : MonoBehaviour, IActionable
     public SpriteRenderer AttackerRenderer;
     public float Cooldown = 1f;
     public float Damage = 1.0f;
+    public float ApplyDamageAfterTime = 0f;
     private IFlippable Flippable;
 
     public int ID;
@@ -33,7 +34,10 @@ public class Attack : MonoBehaviour, IActionable
 
     void FlipAttackPoint(bool value)
     {
-        AttackPoint.localPosition = new Vector2(AttackPoint.localPosition.x * -1f, AttackPoint.localPosition.y);
+        var dir = AttackPoint.localPosition.x * transform.localScale.normalized.x;
+        if ((value && dir > 0) || (!value && dir < 0)) {
+            AttackPoint.localPosition = new Vector2(AttackPoint.localPosition.x * -1, AttackPoint.localPosition.y);
+        }
     }
 
     public void Activate(Vector2 direction)
@@ -57,7 +61,7 @@ public class Attack : MonoBehaviour, IActionable
         if (AssociatedAnimationName != "") {
             _animator.SetTrigger(AssociatedAnimationName);
         }
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(ApplyDamageAfterTime);
         Collider2D [] hitObjects = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, HitableLayers);
 
         foreach(Collider2D hitObject in hitObjects) {

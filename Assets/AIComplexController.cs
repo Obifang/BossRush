@@ -33,6 +33,7 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
     private float _timer;
     private float DistanceToEnemy;
     private SpriteRenderer _renderer;
+    private Vector2 _facingDirection = Vector2.left;
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +43,7 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
         _animator = GetComponent<Animator>();
         _enemy = FindObjectOfType<PlayerController>().gameObject;
         _movement = GetComponent<MovementForceBased>();
-        _renderer = GetComponent<SpriteRenderer>();
+        _renderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -61,7 +62,7 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
         DistanceToEnemy = Vector2.Distance(_enemy.transform.position, transform.position);
         _movementDirection = (_enemy.transform.position - transform.position).normalized;
         _horizontal = _movementDirection.x;
-        Debug.Log("Enemy State: " + _states);
+
         switch (_states) {
             case States.MoveTowardsEnemy:
                 MoveTowardsPlayer();
@@ -97,7 +98,6 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
             _states = States.Attacking;
             _movement.StopMoving();
             _movement.UpdateState(MovementState.Idle);
-            Debug.Log("Stopped Moving");
             return;
         }
     }
@@ -129,7 +129,6 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
 
         if (DistanceToEnemy < DistanceToAgro) {
             _states = States.MoveTowardsEnemy;
-            Debug.Log("Deagro Player");
             return;
         }
     }
@@ -144,9 +143,11 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
 
         if (_horizontal < 0) {
             _renderer.flipX = true;
+            _facingDirection = Vector2.left;
 
         } else if (_horizontal > 0) {
             _renderer.flipX = false;
+            _facingDirection = Vector2.right;
         }
 
         if (oldValue != _renderer.flipX && Fliped != null) {

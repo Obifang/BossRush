@@ -12,6 +12,7 @@ public class Health : MonoBehaviour
     private float _currentHealth;
     private Animator _animator;
     private IController _controller;
+    private ActionHandler _handler;
     private bool _deathTriggered = false;
 
     public delegate void HealthChange(float value);
@@ -23,6 +24,7 @@ public class Health : MonoBehaviour
         _currentHealth = StartingHealthValue;
         _animator = GetComponent<Animator>();
         _controller = GetComponent<IController>();
+        _handler = GetComponent<ActionHandler>();
     }
 
     public void CalculateHealthChange(float damage)
@@ -32,7 +34,8 @@ public class Health : MonoBehaviour
         }
 
         _currentHealth -= damage;
-
+        _animator.SetTrigger("Hurt");
+        _handler.CurrentAction.Deactivate(Vector2.zero);
         if (_currentHealth <= 0f) {
             _currentHealth = 0f;
             Death();

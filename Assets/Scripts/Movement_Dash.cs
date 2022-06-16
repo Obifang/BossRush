@@ -7,14 +7,11 @@ public class Movement_Dash : MonoBehaviour, IActionable
     public string AnimationName;
     public float DashSpeed = 25.0f;
     public float DashCooldown = 1.0f;
-
     public int ID;
     public string Name;
 
     public int GetID { get => ID; }
-
     public string GetName { get => Name; }
-
     public bool IsActive { get => _isDashing; }
 
     private float _currentCooldown;

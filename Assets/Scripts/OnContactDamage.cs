@@ -13,6 +13,7 @@ public class OnContactDamage : MonoBehaviour
     private float _timer;
     private bool _locked;
     private IHasState<MovementState> _hasState;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,20 +55,21 @@ public class OnContactDamage : MonoBehaviour
 
     void DoDamage(GameObject gO)
     {
-        if (_locked || _hasState.GetCurrentState() == MovementState.Dashing) {
+        if (_locked || _hasState.GetCurrentState()  == MovementState.Dashing) {
             return;
         }
        // yield return new WaitForEndOfFrame();
         _locked = true;
-
         var health = gO.GetComponent<Health>();
         if (health != null)
             health.CalculateHealthChange(Damage);
 
-        var mS = gO.GetComponent<MovementForceBased>();
-        if (mS != null) {
-            var dir = (gO.transform.position - transform.position).normalized;
-            mS.KnockBack(dir, KnockbackForce, Duration);
+        var mv = gO.GetComponent<MovementForceBased>();
+
+        if (mv != null) {
+            var dir = ((Vector2)mv.transform.position - (Vector2)transform.position).normalized;
+            mv.StopMoving();
+            mv.KnockBack(dir, KnockbackForce, Duration);
         }
     }
 }

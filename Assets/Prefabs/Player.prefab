@@ -82,7 +82,7 @@ GameObject:
   - component: {fileID: 6523489968355155023}
   - component: {fileID: 6523489968355155020}
   - component: {fileID: 164794207}
-  - component: {fileID: 164794208}
+  - component: {fileID: 111118604}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -181,7 +181,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &6523489968355155385
 BoxCollider2D:
@@ -216,7 +216,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6523489968355155387}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9510fe9234051794089968b8330d74fd, type: 3}
   m_Name: 
@@ -277,8 +277,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DeathAnimationName: Death
-  StartingHealthValue: 10
-  MaxHealthValue: 10
+  StartingHealthValue: 1e+9
+  MaxHealthValue: 1e+9
 --- !u!114 &6523489968355155008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,7 +327,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6effb4a85a2b5f4293baa11c8516635, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movement: {fileID: 6523489968355155384}
+  _movementForce: {fileID: 6523489968355155384}
+  _movement: {fileID: 111118604}
 --- !u!95 &6523489968355155023
 Animator:
   serializedVersion: 3
@@ -374,32 +375,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7e7822fd5a017644ac4f533167f096d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &164794208
+--- !u!114 &111118604
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6523489968355155387}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7742450d96078b489ad3471a1b5bddc, type: 3}
+  m_Script: {fileID: 11500000, guid: c2c85cf63482bee4f94fc179ebe5ba5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 2
-  Name: 1
-  ChargeDuration: 4
-  Damage: 3
-  ChargeAnimation: Block
-  SlamAnimation: Attack3
-  CooldownDuration: 5
-  AttackPoint: {fileID: 6523489968971645538}
-  AttackRange: 0
-  HitableLayers:
-    serializedVersion: 2
-    m_Bits: 1024
-  ChargeParticles: {fileID: 0}
-  SlamParticles: {fileID: 0}
+  MovementSpeed: 6
+  JumpSpeed: 13
+  GroundCheckDistance: 1.5
+  MaxSpeed: 6
 --- !u!1 &6523489968370128190
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,7 +616,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.033560097, y: 0.68965983}
+  m_Offset: {x: -0.029887736, y: 0.69836855}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -636,7 +627,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.4965986, y: 1.2517006}
+  m_Size: {x: 0.81337917, y: 1.2691181}
   m_EdgeRadius: 0
 --- !u!50 &6523489968890627033
 Rigidbody2D:
@@ -658,7 +649,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!1 &6523489968971645541
 GameObject:
   m_ObjectHideFlags: 0

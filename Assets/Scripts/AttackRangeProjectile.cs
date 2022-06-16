@@ -31,6 +31,7 @@ public class AttackRangeProjectile : MonoBehaviour, IActionable
     public void Deactivate(Vector2 direction)
     {
         StopAllCoroutines();
+        IsActive = false;
     }
 
     private IEnumerator Use(Vector2 direction)

@@ -102,7 +102,7 @@ MonoBehaviour:
     m_Bits: 8
   IgnoreLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 1280
   Damage: 1
   Speed: 10
   LifeTime: 10

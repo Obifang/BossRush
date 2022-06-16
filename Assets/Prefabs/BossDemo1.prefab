@@ -9634,7 +9634,7 @@ GameObject:
   - component: {fileID: 562859433}
   - component: {fileID: 1530546676}
   m_Layer: 3
-  m_Name: ComplexEnemy
+  m_Name: BossDemo1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

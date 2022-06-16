@@ -55,12 +55,11 @@ public class Projectile : MonoBehaviour
         if (collision.isTrigger) {
             return;
         }
-
-        if (1 << collision.gameObject.layer == HitableLayers && collision.transform.TryGetComponent<Health>(out Health health)) {
+        if ((1 << collision.gameObject.layer & HitableLayers) != 0 && collision.transform.TryGetComponent<Health>(out Health health)) {
             health.CalculateHealthChange(1f);
         }
 
-        if (1 << collision.gameObject.layer != IgnoreLayers) {
+        if ((1 << collision.gameObject.layer & IgnoreLayers) == 0) {
             Destroy(gameObject);
         }
     }
