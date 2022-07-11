@@ -6,6 +6,7 @@ using System.Linq;
 public class ActionHandler : MonoBehaviour
 {
     private Dictionary<int, IActionable> _actionsByID;
+    private Dictionary<string, IActionable> _actionsByName;
     private IActionable _currentAction;
 
     public IActionable CurrentAction { get => _currentAction;}
@@ -15,6 +16,7 @@ public class ActionHandler : MonoBehaviour
     void Start()
     {
         _actionsByID = new Dictionary<int, IActionable>();
+        _actionsByName = new Dictionary<string,IActionable>();
         SetupActionDictionaries();
         _currentAction = _actionsByID[_actionsByID.Keys.First()];
     }
@@ -29,21 +31,45 @@ public class ActionHandler : MonoBehaviour
             } else {
                 Debug.LogWarning("Warning: Multiple Actions share the same ID." + "\nID: " + actionable.GetID);
             }
+
+            if (!_actionsByName.ContainsKey(actionable.GetName)) {
+                _actionsByName.Add(actionable.GetName, actionable);
+            } else {
+                Debug.LogWarning("Warning: Multiple Actions share the same Name." + "\nID: " + actionable.GetID);
+            }
         }
     }
 
-    public void ActivateActionByID(Vector2 direction, int id)
+    public bool ActivateActionByID(Vector2 direction, int id)
     {
         if (_currentAction != null && _currentAction.IsActive) {
-            return;
+            return false;
         }
 
         if (!_actionsByID.ContainsKey(id)) {
-            return;
+            return false;
         }
 
         _currentAction = _actionsByID[id];
         _currentAction.Activate(direction);
+
+        return true;
+    }
+
+    public bool ActivateActionByName(Vector2 direction, string name)
+    {
+        if (_currentAction != null && _currentAction.IsActive) {
+            return false;
+        }
+
+        if (!_actionsByName.ContainsKey(name)) {
+            return false;
+        }
+
+        _currentAction = _actionsByName[name];
+        _currentAction.Activate(direction);
+
+        return true;
     }
 
     public void AddAction(IActionable action)

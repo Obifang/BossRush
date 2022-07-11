@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Movement_Dash : MonoBehaviour, IActionable
 {
+    public int ID;
+    public string Name;
     public string AnimationName;
     public float DashSpeed = 25.0f;
     public float DashCooldown = 1.0f;
-    public int ID;
-    public string Name;
 
     public int GetID { get => ID; }
     public string GetName { get => Name; }
@@ -25,7 +25,6 @@ public class Movement_Dash : MonoBehaviour, IActionable
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        _hasState = GetComponent<IHasState<MovementState>>();
     }
 
     // Update is called once per frame
@@ -41,9 +40,6 @@ public class Movement_Dash : MonoBehaviour, IActionable
             _currentCooldown = 0f;
             _rb.velocity = Vector2.zero;
             _isDashing = false;
-            if (_hasState != null) {
-                _hasState.UpdateState(MovementState.Idle);
-            }
         }
     }
 
@@ -68,9 +64,6 @@ public class Movement_Dash : MonoBehaviour, IActionable
         
         _rb = rb;
         _dir = new Vector2(horizontalValue, 0).normalized;
-        if (_hasState != null) {
-            _hasState.UpdateState(MovementState.Dashing);
-        }
     }
 
     public void Activate(Vector2 direction)
