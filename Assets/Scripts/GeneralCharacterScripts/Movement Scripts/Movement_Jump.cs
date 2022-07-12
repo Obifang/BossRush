@@ -16,6 +16,7 @@ public class Movement_Jump : MonoBehaviour, IActionable
 
     private Rigidbody2D _rb;
     private Animator _animator;
+    private Vector2 _dir;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +37,7 @@ public class Movement_Jump : MonoBehaviour, IActionable
             return;
         }
 
-        _rb.AddForce(Vector2.up * JumpSpeed, ForceMode2D.Impulse);
+        _rb.AddForce(_dir * JumpSpeed, ForceMode2D.Impulse);
 
         if (_animator != null) {
             _animator.SetTrigger(JumpAnimationName);
@@ -46,6 +47,7 @@ public class Movement_Jump : MonoBehaviour, IActionable
 
     public void Activate(Vector2 direction)
     {
+        _dir = new Vector2(direction.x, 1);
         Jump();
     }
 

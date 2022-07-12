@@ -11,7 +11,7 @@ public class PatternHandler : MonoBehaviour
     [System.Serializable]
     public struct Pattern
     {
-        public List<int> ActionIDs;
+        public List<string> ActionIDs;
         public int Weighting;
         public float MaxUsableRangeFromTarget;
         public float MinUsableRangeFromTarget;
@@ -75,7 +75,7 @@ public class PatternHandler : MonoBehaviour
         switch (_actionState) {
             case ActionState.Ready:
                 if (!_actionHandler.IsActive) {
-                    _actionHandler.ActivateActionByID((target - (Vector2)transform.position).normalized, pattern.ActionIDs[_actionIndex]);
+                    _actionHandler.ActivateActionByName((target - (Vector2)transform.position).normalized, pattern.ActionIDs[_actionIndex]);
                     
                     _actionState = ActionState.Waiting;
                 }
@@ -121,7 +121,7 @@ public class PatternHandler : MonoBehaviour
         switch (_actionState) {
             case ActionState.Ready:
                 if (!_actionHandler.IsActive) {
-                    _actionHandler.ActivateActionByID(Vector2.right, pattern.ActionIDs[_actionIndex]);
+                    _actionHandler.ActivateActionByName(Vector2.right, pattern.ActionIDs[_actionIndex]);
                     Debug.Log("Action Index: " + _actionHandler.CurrentAction.GetName);
                     _actionState = ActionState.Waiting;
                 }

@@ -11,7 +11,7 @@ public class Health : MonoBehaviour
 
     private float _currentHealth;
     private Animator _animator;
-    private IController _controller;
+    private BaseController _controller;
     private ActionHandler _handler;
     private bool _deathTriggered = false;
 
@@ -23,7 +23,7 @@ public class Health : MonoBehaviour
     {
         _currentHealth = StartingHealthValue;
         _animator = GetComponent<Animator>();
-        _controller = GetComponent<IController>();
+        _controller = GetComponent<BaseController>();
         _handler = GetComponent<ActionHandler>();
     }
 

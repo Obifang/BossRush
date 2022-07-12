@@ -7,5 +7,6 @@ public enum MovementState
     Knockback,
     Dashing,
     PerformingAction,
+    WallSlide,
     Locked
 }

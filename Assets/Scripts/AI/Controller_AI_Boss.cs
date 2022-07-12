@@ -58,11 +58,9 @@ public class Controller_AI_Boss : BaseController
         if (_enemy == null) {
             return;
         }
-
+        Debug.Log("Current State: " + _states);
         HandleDistanceFromPlayer();
         DistanceToEnemy = Vector2.Distance(_enemy.transform.position, transform.position);
-        _movementDirection = (_enemy.transform.position - transform.position).normalized;
-        _horizontal = _movementDirection.x;
 
         switch (_states) {
             case States.MoveTowardsEnemy:
@@ -93,12 +91,19 @@ public class Controller_AI_Boss : BaseController
     void MoveTowardsPlayer()
     {
         _movement.Move(_movementDirection.x, _movementDirection.y);
+        _movementDirection = (_enemy.transform.position - transform.position).normalized;
+        _horizontal = _movementDirection.x;
 
         if (DistanceToEnemy < DistanceForMeleeAttack) {
             _states = States.Attacking;
             _movement.StopMoving();
             _movement.UpdateState(MovementState.PerformingAction);
             return;
+        }
+
+        if (DistanceToEnemy > DistanceToAgro) {
+            _states |= States.Roaming;
+            _movement.UpdateState(MovementState.Moving);
         }
     }
 

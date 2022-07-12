@@ -16,8 +16,9 @@ public class Controller_Player : BaseController
     // Update is called once per frame
     protected override void Update()
     {
-        base.Update();
+        
         HandleInput();
+        base.Update();
     }
 
     private void HandleInput()
@@ -26,10 +27,18 @@ public class Controller_Player : BaseController
             return;
         }
 
-        _horizontal = Input.GetAxisRaw("Horizontal");
-        _vertical = Input.GetAxisRaw("Vertical");
-        _movement.Move(_horizontal, _vertical);
-
+        if (_movement.Sliding) {
+            if (Input.GetKeyDown(KeyCode.Space)) {
+                _horizontal = -_facingDirection.x;
+                _movement.Move(_horizontal, _vertical);
+                _movement.Jump();
+            }
+        } else {
+            _horizontal = Input.GetAxisRaw("Horizontal");
+            _vertical = Input.GetAxisRaw("Vertical");
+            _movement.Move(_horizontal, _vertical);
+        }
+        
         if (!_movement.Grounded)
             return;
 
