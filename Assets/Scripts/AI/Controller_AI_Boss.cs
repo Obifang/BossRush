@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
-public class AIComplexController : MonoBehaviour, IFlippable, IController
+public class Controller_AI_Boss : BaseController
 {
     private enum States
     {
@@ -14,42 +13,44 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
         Dead
     }
 
-    private PatternHandler _patterns;
-    public event IFlippable.Action Fliped;
+    //Public variables
     public float RandomDirectionMoveTime;
     public float DistanceToAgro;
     public float DistanceToSwitchToAttackState;
     public float DistanceForMeleeAttack = 2.0f;
 
-
-    private float _horizontal;
-    private float _vertical;
+    //Private variables
+    private PatternHandler _patterns;
     private Health _health;
-    private Animator _animator;
     private States _states = States.Roaming;
     private GameObject _enemy;
-    private MovementForceBased _movement;
+    private Controller_Movement _movement;
     private Vector2 _movementDirection = Vector2.right;
     private float _timer;
     private float DistanceToEnemy;
-    private SpriteRenderer _renderer;
-    private Vector2 _facingDirection = Vector2.left;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         _patterns = GetComponent<PatternHandler>();
         _health = GetComponent<Health>();
         _animator = GetComponent<Animator>();
         _enemy = FindObjectOfType<Controller_Player>().gameObject;
-        _movement = GetComponent<MovementForceBased>();
+        _movement = GetComponent<Controller_Movement>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         HandleStates();
+    }
+
+    public override void SetActive(bool value)
+    {
+        this.enabled = value;
     }
 
     void HandleStates()
@@ -78,6 +79,7 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
                         _patterns.StopCurrentAction();
                     }
                 } else {
+                    _movement.UpdateState(MovementState.PerformingAction);
                     _patterns.HandlePatternsWithinRange(_enemy.transform.position);
                 }
                 break;
@@ -86,8 +88,6 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
             case States.Dead:
                 break;
         }
-
-        FlipSprite();
     }
 
     void MoveTowardsPlayer()
@@ -97,7 +97,7 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
         if (DistanceToEnemy < DistanceForMeleeAttack) {
             _states = States.Attacking;
             _movement.StopMoving();
-            _movement.UpdateState(MovementState.Idle);
+            _movement.UpdateState(MovementState.PerformingAction);
             return;
         }
     }
@@ -133,38 +133,10 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
         }
     }
 
-    void FlipSprite()
-    {
-        if (_horizontal == 0) {
-            return;
-        }
-
-        bool oldValue = _renderer.flipX;
-
-        if (_horizontal < 0) {
-            _renderer.flipX = true;
-            _facingDirection = Vector2.left;
-
-        } else if (_horizontal > 0) {
-            _renderer.flipX = false;
-            _facingDirection = Vector2.right;
-        }
-
-        if (oldValue != _renderer.flipX && Fliped != null) {
-            Fliped.Invoke(_renderer.flipX);
-        }
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (_states == States.Roaming) {
             _movementDirection = new Vector2(_movementDirection.x * -1f, 0);
         }
-    }
-
-    public void SetActive(bool value)
-    {
-        _patterns.StopCurrentAction();
-        this.enabled = value;
     }
 }

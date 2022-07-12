@@ -35,7 +35,7 @@ public class ActionHandler : MonoBehaviour
             if (!_actionsByName.ContainsKey(actionable.GetName)) {
                 _actionsByName.Add(actionable.GetName, actionable);
             } else {
-                Debug.LogWarning("Warning: Multiple Actions share the same Name." + "\nID: " + actionable.GetID);
+                Debug.LogWarning("Warning: Multiple Actions share the same Name." + "\nName: " + actionable.GetName);
             }
         }
     }
