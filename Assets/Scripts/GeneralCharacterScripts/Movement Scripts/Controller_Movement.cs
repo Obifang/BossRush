@@ -26,6 +26,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     private float _knockbackForce;
     private MovementState _previousState;
     private ActionHandler _actionHandler;
+    private BaseController _controller;
 
     private Sensor_HeroKnight m_groundSensor;
     private Sensor_HeroKnight m_wallSensorR1;
@@ -54,7 +55,8 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     void Update()
     {
         //Falling
-        if (!_grounded && IsFalling() && _movementState != MovementState.Dashing && _movementState != MovementState.WallSlide) {
+        if (!_grounded && IsFalling() && _movementState != MovementState.Dashing && _movementState != MovementState.WallSlide
+            && _movementState != MovementState.WallJump) {
             if (_animator != null)
                 _animator.SetFloat("AirSpeedY", _rb.velocity.y);
             UpdateState(MovementState.Falling);
@@ -100,6 +102,9 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
             case MovementState.WallSlide:
                 _animator.SetBool("WallSlide", false);
                 break;
+            case MovementState.WallJump:
+                StopMoving();
+                break;
         }
     }
 
@@ -132,6 +137,8 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
             case MovementState.WallSlide:
                 _animator.SetBool("WallSlide", true);
                 break;
+            case MovementState.WallJump:
+                break;
         }
     }
 
@@ -147,7 +154,6 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                 Moving();
                 break;
             case MovementState.Jumping:
-                if (_previousState != MovementState.WallSlide)
                     InAirMoving();
                 if (_sliding && _previousState != MovementState.WallSlide) {
                     UpdateState(MovementState.WallSlide);
@@ -167,8 +173,9 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                 } else {
                     if (_sliding) {
                         UpdateState(MovementState.WallSlide);
+                    } else {
+                        InAirMoving();
                     }
-                    InAirMoving();
                 }
                 break;
             case MovementState.Dashing:
@@ -180,6 +187,16 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
             case MovementState.WallSlide:
                 if (_grounded || !_sliding) {
                     UpdateState(MovementState.Idle);
+                }
+                break;
+            case MovementState.WallJump:
+                //InAirMoving();
+                if ((IsFalling() && _sliding) || (_sliding && _previousState != MovementState.WallSlide)) {
+                    UpdateState(MovementState.WallSlide);
+                }
+
+                if (IsFalling()) {
+                    UpdateState(MovementState.Falling);
                 }
                 break;
         }
@@ -202,7 +219,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
 
     private void InAirMoving()
     {
-        var dir = MovementSpeed * Mathf.Clamp(_horizontal + _rb.velocity.normalized.x, -1f, 1f);
+        var dir = MovementSpeed * _horizontal;
         _rb.velocity = new Vector2(dir, _rb.velocity.y);
         //_rb.AddForce(new Vector2(dir, 0));
         //_rb.velocity = Vector2.ClampMagnitude(_rb.velocity, JumpSpeed);
@@ -233,9 +250,12 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         }
         var result = _actionHandler.ActivateActionByName(new Vector2(_horizontal, _vertical), JumpActionName);
 
-        if (result)
-            UpdateState(MovementState.Jumping);
-        
+        if (result) {
+            if (!_sliding)
+                UpdateState(MovementState.Jumping);
+            else if (_movementState == MovementState.WallSlide)
+                UpdateState(MovementState.WallJump);
+        }
     }
 
     public void Dash(float facingDirection)

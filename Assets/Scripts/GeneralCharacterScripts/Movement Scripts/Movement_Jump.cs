@@ -37,6 +37,7 @@ public class Movement_Jump : MonoBehaviour, IActionable
             return;
         }
 
+        _rb.velocity = Vector2.zero;
         _rb.AddForce(_dir * JumpSpeed, ForceMode2D.Impulse);
 
         if (_animator != null) {

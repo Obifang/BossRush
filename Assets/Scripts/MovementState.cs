@@ -8,5 +8,6 @@ public enum MovementState
     Dashing,
     PerformingAction,
     WallSlide,
+    WallJump,
     Locked
 }

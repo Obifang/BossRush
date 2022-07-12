@@ -27,7 +27,9 @@ public class Controller_Player : BaseController
             return;
         }
 
-        if (_movement.Sliding) {
+        _vertical = Input.GetAxisRaw("Vertical");
+        var currentState = _movement.GetCurrentState();
+        if (currentState == MovementState.WallSlide || currentState == MovementState.WallJump) {
             if (Input.GetKeyDown(KeyCode.Space)) {
                 _horizontal = -_facingDirection.x;
                 _movement.Move(_horizontal, _vertical);
@@ -35,10 +37,9 @@ public class Controller_Player : BaseController
             }
         } else {
             _horizontal = Input.GetAxisRaw("Horizontal");
-            _vertical = Input.GetAxisRaw("Vertical");
             _movement.Move(_horizontal, _vertical);
         }
-        
+
         if (!_movement.Grounded)
             return;
 
@@ -51,7 +52,7 @@ public class Controller_Player : BaseController
             _actionHandler.ActivateActionByID(_facingDirection, 1);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (!_movement.Sliding && Input.GetKeyDown(KeyCode.Space)) {
             _movement.Jump();
         }
 
