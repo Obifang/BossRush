@@ -8,9 +8,11 @@ public class ActionHandler : MonoBehaviour
     private Dictionary<int, IActionable> _actionsByID;
     private Dictionary<string, IActionable> _actionsByName;
     private IActionable _currentAction;
+    private bool _interuptFlag = false;
 
     public IActionable CurrentAction { get => _currentAction;}
     public bool IsActive { get => _currentAction.IsActive;}
+    public bool IsInteruptAble { get => _interuptFlag;}
 
     // Start is called before the first frame update
     void Start()
@@ -40,9 +42,9 @@ public class ActionHandler : MonoBehaviour
         }
     }
 
-    public bool ActivateActionByID(Vector2 direction, int id)
+    public bool ActivateActionByID(Vector2 direction, int id, bool interupt = false)
     {
-        if (_currentAction != null && _currentAction.IsActive) {
+        if (_interuptFlag == false && _currentAction != null && _currentAction.IsActive) {
             return false;
         }
 
@@ -50,15 +52,17 @@ public class ActionHandler : MonoBehaviour
             return false;
         }
 
+        _interuptFlag = interupt;
+        _currentAction.Deactivate(direction);
         _currentAction = _actionsByID[id];
         _currentAction.Activate(direction);
 
         return true;
     }
 
-    public bool ActivateActionByName(Vector2 direction, string name)
+    public bool ActivateActionByName(Vector2 direction, string name, bool interupt = false)
     {
-        if (_currentAction != null && _currentAction.IsActive) {
+        if (_interuptFlag == false && _currentAction != null && _currentAction.IsActive) {
             return false;
         }
 
@@ -66,6 +70,8 @@ public class ActionHandler : MonoBehaviour
             return false;
         }
 
+        _interuptFlag = interupt;
+        _currentAction.Deactivate(direction);
         _currentAction = _actionsByName[name];
         _currentAction.Activate(direction);
 

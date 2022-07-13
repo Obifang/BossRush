@@ -654,6 +654,7 @@ GameObject:
   - component: {fileID: 923462275}
   - component: {fileID: 923462278}
   - component: {fileID: 923462279}
+  - component: {fileID: 923462280}
   m_Layer: 10
   m_Name: Player - RE
   m_TagString: Player
@@ -897,6 +898,27 @@ MonoBehaviour:
   ApplyDamageAfterTime: 0.15
   ID: 0
   Name: 
+--- !u!114 &923462280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 923462268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2187d2aa898f0f479508655212da85f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 1
+  Name: IdleBlock
+  AssociatedAnimationName: IdleBlock
+  HitableLayers:
+    serializedVersion: 2
+    m_Bits: 8
+  AttackRange: 0
+  AttackerRenderer: {fileID: 923462270}
+  Cooldown: 0
 --- !u!1 &1196123865
 GameObject:
   m_ObjectHideFlags: 0
@@ -1174,7 +1196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8823382062613683582, guid: 60d50d4fef2de0e4683118458e0c8838, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 34.53
+      value: 29.94
       objectReference: {fileID: 0}
     - target: {fileID: 8823382062613683582, guid: 60d50d4fef2de0e4683118458e0c8838, type: 3}
       propertyPath: m_LocalPosition.z

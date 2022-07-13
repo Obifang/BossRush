@@ -23,7 +23,7 @@ public class Controller_Player : BaseController
 
     private void HandleInput()
     {
-        if (_actionHandler.IsActive) {
+        if (_actionHandler.IsActive && !_actionHandler.IsInteruptAble) {
             return;
         }
 
@@ -44,12 +44,14 @@ public class Controller_Player : BaseController
             return;
 
         if (Input.GetKeyDown(KeyCode.Mouse0)) {
+            Debug.Log("Sword");
             _movement.UpdateState(MovementState.PerformingAction);
             _actionHandler.ActivateActionByID(_facingDirection, 0);
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse1)) {
-            _actionHandler.ActivateActionByID(_facingDirection, 1);
+        if (Input.GetKey(KeyCode.Mouse1)) {
+            _movement.UpdateState(MovementState.PerformingAction);
+            _actionHandler.ActivateActionByID(_facingDirection, 1, true);
         }
 
         if (!_movement.Sliding && Input.GetKeyDown(KeyCode.Space)) {

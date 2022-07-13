@@ -5,6 +5,11 @@ using System.Linq;
 
 public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
 {
+    private enum SlidingSide
+    {
+        Left, Right
+    }
+
     public bool Grounded { get => _grounded; }
     public bool Sliding { get => _sliding; }
 
@@ -27,6 +32,8 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     private MovementState _previousState;
     private ActionHandler _actionHandler;
     private BaseController _controller;
+    private SlidingSide _directionWhenWallSliding;
+    private SlidingSide _slidingDirection;
 
     private Sensor_HeroKnight m_groundSensor;
     private Sensor_HeroKnight m_wallSensorR1;
@@ -57,8 +64,6 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         //Falling
         if (!_grounded && IsFalling() && _movementState != MovementState.Dashing && _movementState != MovementState.WallSlide
             && _movementState != MovementState.WallJump) {
-            if (_animator != null)
-                _animator.SetFloat("AirSpeedY", _rb.velocity.y);
             UpdateState(MovementState.Falling);
         }
 
@@ -73,6 +78,9 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
 
     public void UpdateState(MovementState mS)
     {
+        if (_movementState == mS)
+            return;
+
         _previousState = _movementState;
         _movementState = mS;
         OnStateExit(_previousState);
@@ -121,13 +129,11 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                 _animator.SetInteger("AnimState", 1);
                 break;
             case MovementState.Jumping:
-                if (_previousState == MovementState.WallSlide) {
-                    _animator.SetBool("WallSlide", false);
-                }
                 break;
             case MovementState.Knockback:
                 break;
             case MovementState.Falling:
+                _animator.SetFloat("AirSpeedY", _rb.velocity.y);
                 break;
             case MovementState.Dashing:
                 break;
@@ -136,6 +142,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                 break;
             case MovementState.WallSlide:
                 _animator.SetBool("WallSlide", true);
+                _directionWhenWallSliding = _slidingDirection;
                 break;
             case MovementState.WallJump:
                 break;
@@ -190,14 +197,11 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                 }
                 break;
             case MovementState.WallJump:
-                //InAirMoving();
-                if ((IsFalling() && _sliding) || (_sliding && _previousState != MovementState.WallSlide)) {
+                if (_sliding && _directionWhenWallSliding != _slidingDirection)
                     UpdateState(MovementState.WallSlide);
-                }
 
-                if (IsFalling()) {
+                if (IsFalling()) 
                     UpdateState(MovementState.Falling);
-                }
                 break;
         }
     }
@@ -221,8 +225,6 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     {
         var dir = MovementSpeed * _horizontal;
         _rb.velocity = new Vector2(dir, _rb.velocity.y);
-        //_rb.AddForce(new Vector2(dir, 0));
-        //_rb.velocity = Vector2.ClampMagnitude(_rb.velocity, JumpSpeed);
     }
 
     private void Idle()
@@ -239,8 +241,16 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
             return;
         }
 
-        _sliding =  (m_wallSensorL1.State() && m_wallSensorL2.State())
-            || (m_wallSensorR1.State() && m_wallSensorR2.State());
+        var right = (m_wallSensorR1.State() && m_wallSensorR2.State());
+        var left = (m_wallSensorL1.State() && m_wallSensorL2.State());
+
+        if (right)
+            _slidingDirection = SlidingSide.Right;
+
+        if (left)
+            _slidingDirection = SlidingSide.Left;
+
+        _sliding =  left || right;
     }
 
     public void Jump()
@@ -275,9 +285,6 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     {
         var dir = MovementSpeed * _horizontal;
         _rb.velocity = new Vector2(dir, _rb.velocity.y);
-        //_rb.velocity = _rb.velocity + new Vector2(dir, 0);
-        //_rb.AddForce(new Vector2(dir, 0));
-        //_rb.velocity = Vector2.ClampMagnitude(_rb.velocity, MaxSpeed);// new Vector2(Mathf.Clamp(_rb.velocity.x, -MaxSpeed, MaxSpeed), _rb.velocity.y);
         if (_horizontal == 0 && _vertical == 0) {
             if (_animator != null) {
                 UpdateState(MovementState.Idle);
@@ -334,7 +341,6 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         _horizontal = 0;
         if (_animator != null)
             _animator.SetInteger("AnimState", 0);
-
     }
 
     public void StopMovingVertically()
@@ -343,7 +349,6 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         _vertical = 0;
         if (_animator != null)
             _animator.SetInteger("AnimState", 0);
-
     }
 
     //Grounded Check
