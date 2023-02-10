@@ -46,7 +46,7 @@ public class Movement_Dash : MonoBehaviour, IActionable
     private void FixedUpdate()
     {
         if (_isDashing) {
-            _rb.velocity = _dir * DashSpeed;
+            _rb.velocity =  new Vector2(_dir.x * DashSpeed, _rb.velocity.y);
         }
     }
 
@@ -74,6 +74,7 @@ public class Movement_Dash : MonoBehaviour, IActionable
     public void Deactivate(Vector2 direction)
     {
         _isDashing = false;
+        _currentCooldown = 0;
         StopAllCoroutines();
     }
 }

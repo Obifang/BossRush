@@ -6,6 +6,7 @@ using System.Linq;
 public class Health : MonoBehaviour
 {
     public string DeathAnimationName;
+    public string HurtAnimationName = "Hurt";
     public float StartingHealthValue = 10.0f;
     public float MaxHealthValue = 10.0f;
 
@@ -14,9 +15,13 @@ public class Health : MonoBehaviour
     private BaseController _controller;
     private ActionHandler _handler;
     private bool _deathTriggered = false;
+    private float _damageReductionAmount;
 
     public delegate void HealthChange(float value);
     public event HealthChange ChangeInHealth;
+
+    public delegate float PreHealthChange(float value);
+    public event PreHealthChange GetReductions;
 
     // Start is called before the first frame update
     void Start()
@@ -30,12 +35,25 @@ public class Health : MonoBehaviour
     public void CalculateHealthChange(float damage)
     {
         if (_deathTriggered) {
+            _damageReductionAmount = 0;
             return;
         }
 
-        _currentHealth -= damage;
-        _animator.SetTrigger("Hurt");
-        _handler.CurrentAction.Deactivate(Vector2.zero);
+        float damageAdjustments = 0;
+
+        if (GetReductions != null) {
+            damageAdjustments += GetReductions.Invoke(damage);
+        }
+
+        var cHP = _currentHealth;
+        _currentHealth -= Mathf.Clamp(damage - damageAdjustments, 0, damage);
+
+        if (cHP != _currentHealth) {
+            _animator.SetTrigger(HurtAnimationName);
+            _handler.CurrentAction.Deactivate(Vector2.zero);
+        }
+        
+        
         if (_currentHealth <= 0f) {
             _currentHealth = 0f;
             Death();
@@ -45,6 +63,11 @@ public class Health : MonoBehaviour
         if (ChangeInHealth != null) {
             ChangeInHealth.Invoke(_currentHealth);
         }
+    }
+    
+    public void AddDamageReduction(float value)
+    {
+        _damageReductionAmount += value;
     }
 
     public void Death()
