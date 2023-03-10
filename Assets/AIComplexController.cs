@@ -78,7 +78,14 @@ public class AIComplexController : MonoBehaviour, IFlippable, IController
                         _patterns.StopCurrentAction();
                     }
                 } else {
-                    _patterns.HandlePatternsWithinRange(_enemy.transform.position);
+                    var actionActivated = _patterns.HandlePatternsWithinRange(_enemy.transform.position);
+
+                    if (!actionActivated) {
+                        Debug.Log("Can't Do anything");
+                        _states = States.MoveTowardsEnemy;
+                        _movement.UpdateState(MovementState.Moving);
+                        _patterns.StopCurrentAction();
+                    }
                 }
                 break;
             case States.Evading:

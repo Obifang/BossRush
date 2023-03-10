@@ -5,6 +5,7 @@ using System.Linq;
 
 public class Health : MonoBehaviour
 {
+    public bool Immortal = false;
     public string DeathAnimationName;
     public string HurtAnimationName = "Hurt";
     public float StartingHealthValue = 10.0f;
@@ -34,6 +35,9 @@ public class Health : MonoBehaviour
 
     public void CalculateHealthChange(float damage)
     {
+        if (Immortal) {
+            damage = 0f;
+        }
         if (_deathTriggered) {
             _damageReductionAmount = 0;
             return;

@@ -57,4 +57,9 @@ public class Movement_Jump : MonoBehaviour, IActionable
         StopAllCoroutines();
         IsActive = false;
     }
+
+    public bool CanActivate(Vector2 direction)
+    {
+        return true;
+    }
 }

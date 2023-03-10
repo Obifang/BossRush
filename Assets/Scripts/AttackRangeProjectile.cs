@@ -48,4 +48,8 @@ public class AttackRangeProjectile : MonoBehaviour, IActionable
         yield return new WaitForSecondsRealtime(value);
         IsActive = false;
     }
+    public bool CanActivate(Vector2 direction)
+    {
+        return true;
+    }
 }

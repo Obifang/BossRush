@@ -9,12 +9,13 @@ public interface IActionable
     /// <summary>
     /// Use to start an Action. Should not require Deactivate to stop once completed.
     /// </summary>
-    /// <param name="direction"></param>
-    public void Activate(Vector2 direction);
+    /// <param name="position"></param>
+    public void Activate(Vector2 position);
     /// <summary>
     /// Use to stop an Action.
     /// </summary>
     /// <param name="direction"></param>
     public void Deactivate(Vector2 direction);
+    public bool CanActivate(Vector2 direction);
     public bool IsActive { get;}
 }

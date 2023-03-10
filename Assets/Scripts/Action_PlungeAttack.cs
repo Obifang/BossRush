@@ -145,4 +145,8 @@ public class Action_PlungeAttack : MonoBehaviour, IActionable
 
         Gizmos.DrawWireSphere(AttackPoint.position, AttackRange);
     }
+    public bool CanActivate(Vector2 direction)
+    {
+        return true;
+    }
 }

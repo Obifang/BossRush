@@ -77,4 +77,9 @@ public class Movement_Dash : MonoBehaviour, IActionable
         _currentCooldown = 0;
         StopAllCoroutines();
     }
+
+    public bool CanActivate(Vector2 direction)
+    {
+        return true;
+    }
 }

@@ -48,9 +48,11 @@ public class ActionHandler : MonoBehaviour
             return false;
         }
 
-        if (!_actionsByID.ContainsKey(id)) {
+        if (!_actionsByID.ContainsKey(id) || !_actionsByID[id].CanActivate(direction)) {
             return false;
         }
+
+
 
         _interuptFlag = interupt;
         _currentAction.Deactivate(direction);
@@ -66,7 +68,7 @@ public class ActionHandler : MonoBehaviour
             return false;
         }
 
-        if (!_actionsByName.ContainsKey(name)) {
+        if (!_actionsByName.ContainsKey(name) || !_actionsByName[name].CanActivate(direction)) {
             return false;
         }
 

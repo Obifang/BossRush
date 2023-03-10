@@ -113,4 +113,9 @@ public class Action_Block : MonoBehaviour, IActionable
     {
 
     }
+
+    public bool CanActivate(Vector2 direction)
+    {
+        return true;
+    }
 }

@@ -46,4 +46,9 @@ public class AttackRangeHitScan : MonoBehaviour, IActionable
     {
         StopAllCoroutines();
     }
+
+    public bool CanActivate(Vector2 direction)
+    {
+        return true;
+    }
 }
