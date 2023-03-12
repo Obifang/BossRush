@@ -43,7 +43,7 @@ public class Attack : MonoBehaviour, IActionable
         var attckXPos = AttackPoint.localPosition.x;
 
         if ((_baseController.StartingSpriteIsFacingRight && ((value && attckXPos > 0) || (!value && attckXPos < 0))) ||
-            (!_baseController.StartingSpriteIsFacingRight && ((value && attckXPos < 0) || (!value && attckXPos > 0)))) {
+           (!_baseController.StartingSpriteIsFacingRight && ((value && attckXPos < 0) || (!value && attckXPos > 0)))) {
             AttackPoint.localPosition = new Vector2(AttackPoint.localPosition.x * -1, AttackPoint.localPosition.y);
         }
     }

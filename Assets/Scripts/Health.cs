@@ -37,6 +37,7 @@ public class Health : MonoBehaviour
     {
         if (Immortal) {
             damage = 0f;
+            return;
         }
         if (_deathTriggered) {
             _damageReductionAmount = 0;
