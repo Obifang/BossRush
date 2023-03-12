@@ -17,8 +17,11 @@ public abstract class BaseController : MonoBehaviour, IFlippable
     public Animator GetAnimator { get => _animator;}
     public Rigidbody2D GetRb { get => _rb;}
     public ActionHandler GetActionHandler { get => _actionHandler; }
+    public bool IsFlipable { get;set; }
     public float Horizontal { get => _horizontal;}
     public float Vertical { get => _vertical;}
+    public Vector2 FacingDirection { get => _facingDirection;}
+
     public bool StartingSpriteIsFacingRight = true;
 
     // Start is called before the first frame update
@@ -28,12 +31,15 @@ public abstract class BaseController : MonoBehaviour, IFlippable
         _renderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _actionHandler = GetComponent<ActionHandler>();
+        IsFlipable = true;
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
-        FlipSprite();
+        if (IsFlipable) {
+            FlipSprite();
+        }
     }
 
     public virtual void FlipSprite()

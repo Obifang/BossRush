@@ -9,5 +9,6 @@ public enum MovementState
     PerformingAction,
     WallSlide,
     WallJump,
+    Strafe,
     Locked
 }

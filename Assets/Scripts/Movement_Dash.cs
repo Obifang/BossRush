@@ -11,6 +11,7 @@ public class Movement_Dash : MonoBehaviour, IActionable
     public float DashCooldown = 1.0f;
     public int FramesImmortalFor = 0;
     public int FramesBeforeImmortalStart = 0;
+
     public int GetID { get => ID; }
     public string GetName { get => Name; }
     public bool IsActive { get => _isDashing; }
@@ -54,6 +55,7 @@ public class Movement_Dash : MonoBehaviour, IActionable
             _currentCooldown = 0f;
             _rb.velocity = Vector2.zero;
             _isDashing = false;
+            ShouldIgnoreLayers(false);
         }
     }
 
@@ -69,9 +71,12 @@ public class Movement_Dash : MonoBehaviour, IActionable
         if (_isDashing || _currentCooldown > 0f) {
             return;
         }
+        ShouldIgnoreLayers(true);
+
         _isDashing = true;
         _currentCooldown = DashCooldown;
         _animator.SetTrigger(AnimationName);
+
         if (DashUI.instance != null) {
             DashUI.instance.Dashed(DashCooldown);
         }
@@ -83,6 +88,17 @@ public class Movement_Dash : MonoBehaviour, IActionable
 
         _rb = rb;
         _dir = new Vector2(horizontalValue, 0).normalized;
+    }
+    
+    /// <summary>
+    /// Used to allow for rolling through enemies.
+    /// </summary>
+    /// <param name="value"></param>
+    public void ShouldIgnoreLayers(bool value)
+    {
+        Physics2D.IgnoreLayerCollision(3, 9, value);
+        Physics2D.IgnoreLayerCollision(8, 9, value);
+        Physics2D.IgnoreLayerCollision(8, 10, value);
     }
 
     public void Activate(Vector2 direction)
@@ -97,6 +113,7 @@ public class Movement_Dash : MonoBehaviour, IActionable
         _immortalFrameCounter = 0;
         _preImmortalFrameCounter = 0;
         _health.Immortal = false;
+        ShouldIgnoreLayers(false);
         StopAllCoroutines();
     }
 
