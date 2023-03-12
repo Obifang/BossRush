@@ -17,7 +17,6 @@ public class Controller_Player : BaseController
     // Update is called once per frame
     protected override void Update()
     {
-        
         HandleInput();
         base.Update();
     }
@@ -41,8 +40,6 @@ public class Controller_Player : BaseController
             _movement.Move(_horizontal, _vertical);
         }
 
-        
-
         if (!_movement.Grounded) {
             if (Input.GetKeyDown(KeyCode.Mouse0) && _movement.GetCurrentState() == MovementState.Falling) {
                 _movement.UpdateState(MovementState.Falling);
@@ -59,8 +56,12 @@ public class Controller_Player : BaseController
         }
 
         if (Input.GetKey(KeyCode.Mouse1)) {
-            _movement.UpdateState(MovementState.PerformingAction);
+            IsFlipable = false;
+            _movement.UpdateState(MovementState.Strafe);
             _actionHandler.ActivateActionByID(_facingDirection, 1, true);
+        } else if (Input.GetKeyUp(KeyCode.Mouse1)) {
+            IsFlipable = true;
+            _movement.UpdateState(MovementState.Moving);
         }
 
         if (!_movement.Sliding && Input.GetKeyDown(KeyCode.Space)) {

@@ -81,7 +81,7 @@ public class Attack : MonoBehaviour, IActionable
 
         foreach(Collider2D hitObject in hitObjects) {
             if (hitObject.TryGetComponent<Controller_Combat>(out Controller_Combat combat)) {
-                combat.ApplyDamage(Damage, StaminaReduction);
+                combat.ApplyDamage(Damage, StaminaReduction, transform);
             }
             /* if (hitObject.TryGetComponent<Health>(out Health health)) {
                  health.CalculateHealthChange(Damage);

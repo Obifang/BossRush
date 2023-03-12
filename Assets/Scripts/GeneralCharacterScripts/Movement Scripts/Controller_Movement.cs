@@ -14,6 +14,8 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     public bool Sliding { get => _sliding; }
 
     public float MovementSpeed = 5.0f;
+    [Range(0f, 1f)]
+    public float StrafeSpeedModifier;
     public float GroundCheckDistance = 2.0f;
     public string JumpActionName = "Jump";
     public string DashActionName = "Dash";
@@ -112,6 +114,8 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
             case MovementState.WallJump:
                 StopMoving();
                 break;
+            case MovementState.Strafe:
+                break;
         }
     }
 
@@ -145,6 +149,8 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                 _directionWhenWallSliding = _slidingDirection;
                 break;
             case MovementState.WallJump:
+                break;
+            case MovementState.Strafe:
                 break;
         }
     }
@@ -203,6 +209,9 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                 if (IsFalling()) 
                     UpdateState(MovementState.Falling);
                 break;
+            case MovementState.Strafe:
+                Strafe();
+                break;
         }
     }
 
@@ -231,6 +240,17 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     {
         if (_horizontal != 0) {
             UpdateState(MovementState.Moving);
+        }
+    }
+    
+    private void Strafe()
+    {
+        var dir = MovementSpeed * _horizontal;
+        _rb.velocity = new Vector2(dir, _rb.velocity.y) * StrafeSpeedModifier;
+        if (_horizontal == 0 && _vertical == 0) {
+            if (_animator != null) {
+                UpdateState(MovementState.Idle);
+            }
         }
     }
 

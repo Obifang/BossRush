@@ -72,6 +72,7 @@ public class Movement_Dash : MonoBehaviour, IActionable
         _isDashing = true;
         _currentCooldown = DashCooldown;
         _animator.SetTrigger(AnimationName);
+
         if (DashUI.instance != null) {
             DashUI.instance.Dashed(DashCooldown);
         }

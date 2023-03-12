@@ -1369,6 +1369,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementSpeed: 5
+  StrafeSpeedModifier: 0
   GroundCheckDistance: 0.75
   JumpActionName: Jump
   DashActionName: Dash
@@ -1452,6 +1453,8 @@ MonoBehaviour:
   AnimationName: Roll
   DashSpeed: 10
   DashCooldown: 0.5
+  FramesImmortalFor: 20
+  FramesBeforeImmortalStart: 0
 --- !u!114 &923462279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1514,7 +1517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e269f2b93c296e4881048b4cfe9e4b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Immortal: 1
+  Immortal: 0
   DeathAnimationName: Death
   HurtAnimationName: Hurt
   StartingHealthValue: 10
@@ -2856,6 +2859,8 @@ MonoBehaviour:
   AnimationName: Roll
   DashSpeed: 10
   DashCooldown: 0.5
+  FramesImmortalFor: 0
+  FramesBeforeImmortalStart: 0
 --- !u!114 &1835076760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2911,6 +2916,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementSpeed: 5
+  StrafeSpeedModifier: 0
   GroundCheckDistance: 0.75
   JumpActionName: Jump
   DashActionName: Dash
@@ -3350,6 +3356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementSpeed: 2
+  StrafeSpeedModifier: 0
   GroundCheckDistance: 2
   JumpActionName: Jump
   DashActionName: Dash
@@ -3383,9 +3390,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 412043a70bc931f44bc7197ef8d06f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartingSpriteIsFacingRight: 1
+  StartingSpriteIsFacingRight: 0
   RandomDirectionMoveTime: 1
-  DistanceToAgro: 1000
+  DistanceToAgro: 100
   DistanceToSwitchToAttackState: 15
 --- !u!114 &2059334355 stripped
 MonoBehaviour:

@@ -11,7 +11,7 @@ public class Controller_Combat : MonoBehaviour
     private float _totalStaminaReduction;
     private float _defense;
 
-    public delegate void DamageSequence(float value, float stamina);
+    public delegate void DamageSequence(float value, float stamina, Transform damageSource = null);
     public event DamageSequence DamageBeingApplied;
 
     // Start is called before the first frame update
@@ -28,13 +28,13 @@ public class Controller_Combat : MonoBehaviour
         
     }
 
-    public void ApplyDamage(float damage, float staminaReduction)
+    public void ApplyDamage(float damage, float staminaReduction, Transform DamageSource = null)
     {
         var stam = CalculateStaminaReduction(staminaReduction);
         var dmg = CalculateDamageValue(damage);
 
         if (DamageBeingApplied != null)
-            DamageBeingApplied.Invoke(dmg, stam);
+            DamageBeingApplied.Invoke(dmg, stam, DamageSource);
 
         _health.CalculateHealthChange(dmg);
         _stamina.ReduceStamina(stam);
