@@ -15,10 +15,6 @@ public class PatternHandler : MonoBehaviour
         public int Weighting;
         public float MaxUsableRangeFromTarget;
         public float MinUsableRangeFromTarget;
-        [Range(0, 100)]
-        public int ActivatableRangeMax;
-        [Range(0, 100)]
-        public int ActivatableRangeMin;
     }
 
     public enum ActionState
@@ -31,26 +27,20 @@ public class PatternHandler : MonoBehaviour
     public List<Pattern> Patterns;
     public bool RandomPatternIndex = true;
 
+
     private List<Pattern> _potentialPatterns;
     private List<Pattern> _distancePatterns;
-    private List<Pattern> _unUsedPatterns;
-    private Health _health;
     private ActionHandler _actionHandler;
     private ActionState _actionState;
     private int _patternIndex;
     private int _actionIndex;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _potentialPatterns = new List<Pattern>();
-        _unUsedPatterns = new List<Pattern>();
         _distancePatterns = new List<Pattern>();
         _actionHandler = GetComponent<ActionHandler>();
-        _health = GetComponent<Health>();
-        SetupPatterns();
-        _health.ChangeInHealth += RemovePatterns;
-        _health.ChangeInHealth += AddPatterns;
     }
 
     public bool IsCurrentActionActive()
@@ -63,7 +53,7 @@ public class PatternHandler : MonoBehaviour
         _actionHandler.CurrentAction.Deactivate(Vector2.zero);
     }
 
-    public void HandlePatternsWithinRange(Vector2 target)
+    public bool HandlePatternsWithinRange(Vector2 target)
     {
         if (_distancePatterns.Count == 0) {
             var distance = Vector2.Distance(transform.position, target);
@@ -75,8 +65,10 @@ public class PatternHandler : MonoBehaviour
         switch (_actionState) {
             case ActionState.Ready:
                 if (!_actionHandler.IsActive) {
-                    _actionHandler.ActivateActionByName((target - (Vector2)transform.position).normalized, pattern.ActionIDs[_actionIndex]);
-                    
+                    var canActivate = _actionHandler.ActivateActionByName(target, pattern.ActionIDs[_actionIndex]);
+                    if (!canActivate) {
+                        return false;
+                    }
                     _actionState = ActionState.Waiting;
                 }
                 break;
@@ -112,6 +104,8 @@ public class PatternHandler : MonoBehaviour
                 _actionState = ActionState.Ready;
                 break;
         }
+
+        return true;
     }
 
     public void HandlePatterns()
@@ -151,15 +145,6 @@ public class PatternHandler : MonoBehaviour
         }
     }
 
-    void SetupPatterns()
-    {
-        foreach (var pattern in Patterns) {
-            _unUsedPatterns.Add(pattern);
-        }
-
-        AddPatterns(_health.MaxHealthValue);
-    }
-
     void AddPatternsDistance(float distance)
     {
         _distancePatterns = _potentialPatterns.Where(x => distance <= x.MaxUsableRangeFromTarget &&
@@ -170,32 +155,13 @@ public class PatternHandler : MonoBehaviour
         }
     }
 
-    void AddPatterns(float healthThreshold)
+    public void SetPatternByIDs(List<int> ids)
     {
-        var hp = ConvertHPtoPercentage(healthThreshold);
-        var temp = _unUsedPatterns.Where(x => hp <= x.ActivatableRangeMax && hp > x.ActivatableRangeMin).ToArray();
-        foreach (Pattern i in temp) {
-            _potentialPatterns.Add(i);
-            _unUsedPatterns.Remove(i);
-        }
-    }
+        _potentialPatterns.Clear();
+        _distancePatterns.Clear();
 
-    void RemovePatterns(float healthThreshold)
-    {
-        var hp = ConvertHPtoPercentage(healthThreshold);
-        var temp = _potentialPatterns.Where(x => x.ActivatableRangeMin > hp).ToArray();
-        foreach (Pattern i in temp) {
-            _potentialPatterns.Remove(i);
-            _unUsedPatterns.Add(i);
+        foreach (int i in ids) {
+            _potentialPatterns.Add(Patterns[i]);
         }
-    }
-
-    float ConvertHPtoPercentage(float health)
-    {
-        if (_health.MaxHealthValue == 0) {
-            return 0;
-        }
-
-        return (health / _health.MaxHealthValue * 100);
     }
 }

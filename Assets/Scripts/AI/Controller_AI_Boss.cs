@@ -17,7 +17,8 @@ public class Controller_AI_Boss : BaseController
     public float RandomDirectionMoveTime;
     public float DistanceToAgro;
     public float DistanceToSwitchToAttackState;
-    public float DistanceForMeleeAttack = 2.0f;
+
+    //public event IFlippable.Action Fliped;
 
     //Private variables
     private PatternHandler _patterns;
@@ -61,7 +62,7 @@ public class Controller_AI_Boss : BaseController
         Debug.Log("Current State: " + _states);
         HandleDistanceFromPlayer();
         DistanceToEnemy = Vector2.Distance(_enemy.transform.position, transform.position);
-
+       // 
         switch (_states) {
             case States.MoveTowardsEnemy:
                 MoveTowardsPlayer();
@@ -70,13 +71,14 @@ public class Controller_AI_Boss : BaseController
                 Roaming();
                 break;
             case States.Attacking:
-                if (DistanceToEnemy > DistanceForMeleeAttack) {
+                FaceEnemy();
+                if (DistanceToEnemy > DistanceToSwitchToAttackState) {
                     if (!_patterns.IsCurrentActionActive()) {
                         _states = States.MoveTowardsEnemy;
                         _movement.UpdateState(MovementState.Moving);
                         _patterns.StopCurrentAction();
                     }
-                } else {
+                } else if (!_patterns.IsCurrentActionActive()) {
                     _movement.UpdateState(MovementState.PerformingAction);
                     _patterns.HandlePatternsWithinRange(_enemy.transform.position);
                 }
@@ -94,7 +96,7 @@ public class Controller_AI_Boss : BaseController
         _movementDirection = (_enemy.transform.position - transform.position).normalized;
         _horizontal = _movementDirection.x;
 
-        if (DistanceToEnemy < DistanceForMeleeAttack) {
+        if (DistanceToEnemy < DistanceToSwitchToAttackState) {
             _states = States.Attacking;
             _movement.StopMoving();
             _movement.UpdateState(MovementState.PerformingAction);
@@ -112,6 +114,24 @@ public class Controller_AI_Boss : BaseController
         if (DistanceToEnemy > DistanceToAgro) {
             _states = States.Roaming;
             return;
+        }
+    }
+
+    void FaceEnemy()
+    {
+        bool oldValue = _renderer.flipX;
+
+        if (transform.position.x < _enemy.transform.position.x) {
+            _renderer.flipX = true;
+            _facingDirection = Vector2.left;
+
+        } else if (transform.position.x > _enemy.transform.position.x) {
+            _renderer.flipX = false;
+            _facingDirection = Vector2.right;
+        }
+
+        if (oldValue != _renderer.flipX) {
+            InvokeFlipedEvent(_renderer.flipX);
         }
     }
 

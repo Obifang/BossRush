@@ -106,4 +106,9 @@ public class Action_ChargeSlam : MonoBehaviour, IActionable
         _animator.SetBool(ChargeAnimation, false);
         IsActive = false;
     }
+
+    public bool CanActivate(Vector2 direction)
+    {
+        return true;
+    }
 }

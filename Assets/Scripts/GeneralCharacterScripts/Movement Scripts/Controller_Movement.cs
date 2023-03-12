@@ -35,11 +35,11 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     private SlidingSide _directionWhenWallSliding;
     private SlidingSide _slidingDirection;
 
-    private Sensor_HeroKnight m_groundSensor;
-    private Sensor_HeroKnight m_wallSensorR1;
-    private Sensor_HeroKnight m_wallSensorR2;
-    private Sensor_HeroKnight m_wallSensorL1;
-    private Sensor_HeroKnight m_wallSensorL2;
+    private Sensor _groundSensor;
+    private Sensor _wallSensorR1;
+    private Sensor _wallSensorR2;
+    private Sensor _wallSensorL1;
+    private Sensor _wallSensorL2;
 
     // Start is called before the first frame update
     void Start()
@@ -51,19 +51,18 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         var actionables = GetComponents<IActionable>();
         _actionHandler = GetComponent<ActionHandler>();
 
-        m_groundSensor = transform.Find("GroundSensor").GetComponent<Sensor_HeroKnight>();
-        m_wallSensorR1 = transform.Find("WallSensor_R1").GetComponent<Sensor_HeroKnight>();
-        m_wallSensorR2 = transform.Find("WallSensor_R2").GetComponent<Sensor_HeroKnight>();
-        m_wallSensorL1 = transform.Find("WallSensor_L1").GetComponent<Sensor_HeroKnight>();
-        m_wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor_HeroKnight>();
+        _groundSensor = transform.Find("GroundSensor").GetComponent<Sensor>();
+        _wallSensorR1 = transform.Find("WallSensor_R1").GetComponent<Sensor>();
+        _wallSensorR2 = transform.Find("WallSensor_R2").GetComponent<Sensor>();
+        _wallSensorL1 = transform.Find("WallSensor_L1").GetComponent<Sensor>();
+        _wallSensorL2 = transform.Find("WallSensor_L2").GetComponent<Sensor>();
     }
 
     // Update is called once per frame
     void Update()
     {
         //Falling
-        if (!_grounded && IsFalling() && _movementState != MovementState.Dashing && _movementState != MovementState.WallSlide
-            && _movementState != MovementState.WallJump) {
+        if (!_grounded && IsFalling() && _movementState != MovementState.WallSlide) {
             UpdateState(MovementState.Falling);
         }
 
@@ -134,6 +133,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                 break;
             case MovementState.Falling:
                 _animator.SetFloat("AirSpeedY", _rb.velocity.y);
+                _animator.SetBool("Grounded", false);
                 break;
             case MovementState.Dashing:
                 break;
@@ -161,7 +161,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                 Moving();
                 break;
             case MovementState.Jumping:
-                    InAirMoving();
+                InAirMoving();
                 if (_sliding && _previousState != MovementState.WallSlide) {
                     UpdateState(MovementState.WallSlide);
                 }
@@ -173,7 +173,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                 if (!IsFalling() && _grounded) {
                     if (_horizontal == 0) {
                         UpdateState(MovementState.Idle);
-                        StopMoving();
+                        StopMovingHorizontally();
                     }
                     else
                         UpdateState(MovementState.Moving);
@@ -241,8 +241,8 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
             return;
         }
 
-        var right = (m_wallSensorR1.State() && m_wallSensorR2.State());
-        var left = (m_wallSensorL1.State() && m_wallSensorL2.State());
+        var right = (_wallSensorR1.IsColliding() && _wallSensorR2.IsColliding());
+        var left = (_wallSensorL1.IsColliding() && _wallSensorL2.IsColliding());
 
         if (right)
             _slidingDirection = SlidingSide.Right;

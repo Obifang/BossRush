@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,7 @@ public abstract class BaseController : MonoBehaviour, IFlippable
     public ActionHandler GetActionHandler { get => _actionHandler; }
     public float Horizontal { get => _horizontal;}
     public float Vertical { get => _vertical;}
+    public bool StartingSpriteIsFacingRight = true;
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -43,16 +45,42 @@ public abstract class BaseController : MonoBehaviour, IFlippable
         bool oldValue = _renderer.flipX;
 
         if (_horizontal < 0) {
-            _renderer.flipX = true;
+            if (StartingSpriteIsFacingRight) {
+                _renderer.flipX = true;
+            } else {
+                _renderer.flipX = false;
+            }
+            
             _facingDirection = Vector2.left;
 
         } else if (_horizontal > 0) {
-            _renderer.flipX = false;
+            if (StartingSpriteIsFacingRight) {
+                _renderer.flipX = false;
+            } else {
+                _renderer.flipX = true;
+            }
             _facingDirection = Vector2.right;
         }
 
         if (oldValue != _renderer.flipX && Fliped != null) {
             Fliped.Invoke(_renderer.flipX);
+        }
+    }
+
+    public void AddToFlipedEvent(IFlippable.Action e)
+    {
+        Fliped += e;
+    }
+
+    public void RemoveFromFlipedEvent(IFlippable.Action e)
+    {
+        Fliped -= e;
+    }
+
+    public void InvokeFlipedEvent(bool value)
+    {
+        if (Fliped != null) {
+            Fliped.Invoke(value);
         }
     }
 

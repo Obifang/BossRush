@@ -6,6 +6,7 @@ using System.Linq;
 public class Controller_Player : BaseController
 {
     Controller_Movement _movement;
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -40,8 +41,16 @@ public class Controller_Player : BaseController
             _movement.Move(_horizontal, _vertical);
         }
 
-        if (!_movement.Grounded)
+        
+
+        if (!_movement.Grounded) {
+            if (Input.GetKeyDown(KeyCode.Mouse0) && _movement.GetCurrentState() == MovementState.Falling) {
+                _movement.UpdateState(MovementState.Falling);
+                _actionHandler.ActivateActionByID(_facingDirection, 3);
+            }
             return;
+        }
+            
 
         if (Input.GetKeyDown(KeyCode.Mouse0)) {
             Debug.Log("Sword");
@@ -67,6 +76,4 @@ public class Controller_Player : BaseController
     {
         this.enabled = value;
     }
-
-    
 }
