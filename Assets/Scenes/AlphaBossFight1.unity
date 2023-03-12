@@ -1422,6 +1422,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c89ec7cddbf05f41b8368aa52962ba2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StartingSpriteIsFacingRight: 1
 --- !u!114 &923462277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2896,6 +2897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c89ec7cddbf05f41b8368aa52962ba2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StartingSpriteIsFacingRight: 1
 --- !u!114 &1835076763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3381,9 +3383,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 412043a70bc931f44bc7197ef8d06f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StartingSpriteIsFacingRight: 1
   RandomDirectionMoveTime: 1
   DistanceToAgro: 1000
-  DistanceToSwitchToAttackState: 500
+  DistanceToSwitchToAttackState: 15
 --- !u!114 &2059334355 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5594177418520782, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}

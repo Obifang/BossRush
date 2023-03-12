@@ -18,7 +18,7 @@ public class Controller_AI_Boss : BaseController
     public float DistanceToAgro;
     public float DistanceToSwitchToAttackState;
 
-    public event IFlippable.Action Fliped;
+    //public event IFlippable.Action Fliped;
 
     //Private variables
     private PatternHandler _patterns;
@@ -62,7 +62,7 @@ public class Controller_AI_Boss : BaseController
         Debug.Log("Current State: " + _states);
         HandleDistanceFromPlayer();
         DistanceToEnemy = Vector2.Distance(_enemy.transform.position, transform.position);
-        FaceEnemy();
+       // 
         switch (_states) {
             case States.MoveTowardsEnemy:
                 MoveTowardsPlayer();
@@ -71,6 +71,7 @@ public class Controller_AI_Boss : BaseController
                 Roaming();
                 break;
             case States.Attacking:
+                FaceEnemy();
                 if (DistanceToEnemy > DistanceToSwitchToAttackState) {
                     if (!_patterns.IsCurrentActionActive()) {
                         _states = States.MoveTowardsEnemy;
@@ -129,10 +130,9 @@ public class Controller_AI_Boss : BaseController
             _facingDirection = Vector2.right;
         }
 
-        if (oldValue != _renderer.flipX && Fliped != null) {
-            Fliped.Invoke(_renderer.flipX);
+        if (oldValue != _renderer.flipX) {
+            InvokeFlipedEvent(_renderer.flipX);
         }
-
     }
 
     void Roaming()

@@ -26,6 +26,7 @@ public class Attack : MonoBehaviour, IActionable
     public bool IsActive { get; private set; }
     private Animator _animator;
     private Stamina _stamina;
+    private BaseController _baseController;
 
     // Start is called before the first frame update
     void Start()
@@ -34,12 +35,15 @@ public class Attack : MonoBehaviour, IActionable
         _stamina = GetComponent<Stamina>();
         Flippable = GetComponent<IFlippable>();
         Flippable.Fliped += FlipAttackPoint;
+        _baseController = GetComponent<BaseController>();
     }
 
     void FlipAttackPoint(bool value)
     {
-        var dir = AttackPoint.localPosition.x * transform.localScale.normalized.x;
-        if ((value && dir > 0) || (!value && dir < 0)) {
+        var attckXPos = AttackPoint.localPosition.x;
+
+        if ((_baseController.StartingSpriteIsFacingRight && ((value && attckXPos > 0) || (!value && attckXPos < 0))) ||
+            (!_baseController.StartingSpriteIsFacingRight && ((value && attckXPos < 0) || (!value && attckXPos > 0)))) {
             AttackPoint.localPosition = new Vector2(AttackPoint.localPosition.x * -1, AttackPoint.localPosition.y);
         }
     }
