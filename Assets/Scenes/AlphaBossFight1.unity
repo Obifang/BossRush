@@ -1517,7 +1517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e269f2b93c296e4881048b4cfe9e4b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Immortal: 0
+  Immortal: 1
   DeathAnimationName: Death
   HurtAnimationName: Hurt
   StartingHealthValue: 10
@@ -3906,12 +3906,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8307557921876556218, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Duration
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557921876556218, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8307557921876556218, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: KnockbackForce
-      value: 25
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661123, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Name
