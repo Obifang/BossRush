@@ -98,10 +98,7 @@ public class Action_ChargeSlam : MonoBehaviour, IActionable
     {
         IsActive = true;
         yield return new WaitForSeconds(duration);
-        if (SlamParticles != null) {
-            SlamParticles.Stop();
-        }
-        IsActive = false;
+        Deactivate(Vector2.zero);
     }
 
     private void OnDrawGizmos()

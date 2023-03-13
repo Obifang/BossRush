@@ -45,7 +45,9 @@ public class Controller_AI_Boss : BaseController
     // Update is called once per frame
     protected override void Update()
     {
-        base.Update();
+        if (_states != States.Attacking) {
+            base.Update();
+        }
         HandleStates();
     }
 
@@ -71,7 +73,6 @@ public class Controller_AI_Boss : BaseController
                 Roaming();
                 break;
             case States.Attacking:
-                FaceEnemy();
                 if (DistanceToEnemy > DistanceToSwitchToAttackState) {
                     if (!_patterns.IsCurrentActionActive()) {
                         _states = States.MoveTowardsEnemy;
@@ -79,6 +80,7 @@ public class Controller_AI_Boss : BaseController
                         _patterns.StopCurrentAction();
                     }
                 } else if (!_patterns.IsCurrentActionActive()) {
+                    FaceEnemy();
                     _movement.UpdateState(MovementState.PerformingAction);
                     _patterns.HandlePatternsWithinRange(_enemy.transform.position);
                 }
@@ -130,7 +132,7 @@ public class Controller_AI_Boss : BaseController
             _facingDirection = Vector2.right;
         }
 
-        if (oldValue != _renderer.flipX) {
+        if (oldValue != _renderer.flipX && !_patterns.IsCurrentActionActive()) {
             InvokeFlipedEvent(_renderer.flipX);
         }
     }

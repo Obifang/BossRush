@@ -45,7 +45,7 @@ public class PatternHandler : MonoBehaviour
 
     public bool IsCurrentActionActive()
     {
-        return _actionHandler.CurrentAction.IsActive;
+        return _actionHandler.IsActive;
     }
 
     public void StopCurrentAction()
