@@ -52,8 +52,6 @@ public class ActionHandler : MonoBehaviour
             return false;
         }
 
-
-
         _interuptFlag = interupt;
         _currentAction.Deactivate(direction);
         _currentAction = _actionsByID[id];

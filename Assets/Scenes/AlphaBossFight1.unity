@@ -1371,6 +1371,7 @@ MonoBehaviour:
   MovementSpeed: 5
   StrafeSpeedModifier: 0
   GroundCheckDistance: 0.75
+  AllowDoubleJump: 1
   JumpActionName: Jump
   DashActionName: Dash
 --- !u!50 &923462274
@@ -2918,6 +2919,7 @@ MonoBehaviour:
   MovementSpeed: 5
   StrafeSpeedModifier: 0
   GroundCheckDistance: 0.75
+  AllowDoubleJump: 0
   JumpActionName: Jump
   DashActionName: Dash
 --- !u!50 &1835076764
@@ -3358,6 +3360,7 @@ MonoBehaviour:
   MovementSpeed: 2
   StrafeSpeedModifier: 0
   GroundCheckDistance: 2
+  AllowDoubleJump: 0
   JumpActionName: Jump
   DashActionName: Dash
 --- !u!114 &2059334350
@@ -3374,7 +3377,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 20
   Name: Teleport
-  AnimationName: Teleport
+  TeleportAnimation: Teleport
   TeleportTime: 2
   GroundCheckDistance: 0.5
   AdditionalDistanceFromTarget: 1
@@ -3393,7 +3396,7 @@ MonoBehaviour:
   StartingSpriteIsFacingRight: 0
   RandomDirectionMoveTime: 1
   DistanceToAgro: 100
-  DistanceToSwitchToAttackState: 15
+  DistanceToSwitchToAttackState: 50
 --- !u!114 &2059334355 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5594177418520782, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
@@ -3517,10 +3520,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PatternThresholds:
   - AvailableAtHealthPercent: 0
-    PatternsIndex: 0000000002000000
-  - AvailableAtHealthPercent: 0
-    PatternsIndex: 0000000004000000
+    PatternsIndex: 01000000
   - AvailableAtHealthPercent: 100
+    PatternsIndex: 000000000300000001000000
+  - AvailableAtHealthPercent: 0
     PatternsIndex: 0100000000000000
 --- !u!1 &2071273755
 GameObject:
@@ -3901,6 +3904,22 @@ PrefabInstance:
       propertyPath: MovementSpeed
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 8307557921810508032, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557921810508038, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: lengthInSec
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557921810508039, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557921810508039, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.338
+      objectReference: {fileID: 0}
     - target: {fileID: 8307557921876556218, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Damage
       value: 0
@@ -3916,6 +3935,22 @@ PrefabInstance:
     - target: {fileID: 8307557921876556218, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: KnockbackForce
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557921907068121, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: lengthInSec
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557921907068123, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557921907068126, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557921907068126, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.338
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661123, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Name
@@ -3947,7 +3982,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661173, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: SlamAnimation
-      value: Attack1
+      value: Cast
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661173, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: CooldownDuration
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661174, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: GlobalActionRecoveryTime
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[0].Weighting
@@ -3959,6 +4002,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[2].Weighting
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Patterns.Array.data[3].Weighting
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
@@ -3991,7 +4038,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[1].ActionIDs.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[2].ActionIDs.Array.size
@@ -3999,7 +4046,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[3].ActionIDs.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[4].ActionIDs.Array.size
@@ -4018,6 +4065,10 @@ PrefabInstance:
       value: Teleport
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Patterns.Array.data[1].ActionIDs.Array.data[1]
+      value: BasicAttack
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[2].ActionIDs.Array.data[0]
       value: Dash
       objectReference: {fileID: 0}
@@ -4028,6 +4079,10 @@ PrefabInstance:
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[3].ActionIDs.Array.data[0]
       value: Dash
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Patterns.Array.data[3].ActionIDs.Array.data[1]
+      value: Charge and Slam
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[4].ActionIDs.Array.data[0]

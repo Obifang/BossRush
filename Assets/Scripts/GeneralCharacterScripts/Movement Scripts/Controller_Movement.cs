@@ -12,11 +12,13 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
 
     public bool Grounded { get => _grounded; }
     public bool Sliding { get => _sliding; }
+    public bool CanDoubleJump { get => _doubleJumped; set => _doubleJumped = value; }
 
     public float MovementSpeed = 5.0f;
     [Range(0f, 1f)]
     public float StrafeSpeedModifier;
     public float GroundCheckDistance = 2.0f;
+    public bool AllowDoubleJump;
     public string JumpActionName = "Jump";
     public string DashActionName = "Dash";
 
@@ -36,6 +38,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     private BaseController _controller;
     private SlidingSide _directionWhenWallSliding;
     private SlidingSide _slidingDirection;
+    private bool _doubleJumped;
 
     private Sensor _groundSensor;
     private Sensor _wallSensorR1;
@@ -49,7 +52,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _collider = GetComponent<Collider2D>();
-
+        CanDoubleJump = AllowDoubleJump;
         var actionables = GetComponents<IActionable>();
         _actionHandler = GetComponent<ActionHandler>();
 
@@ -74,6 +77,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         if (_grounded && _movementState != MovementState.Jumping) {
             if (_animator != null)
                 _animator.SetBool("Grounded", true);
+            CanDoubleJump = AllowDoubleJump;
         }
     }
 
@@ -279,6 +283,21 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         if (_movementState == MovementState.Jumping || _movementState == MovementState.Falling) {
             return;
         }
+
+        var result = _actionHandler.ActivateActionByName(new Vector2(_horizontal, _vertical), JumpActionName);
+
+        if (result) {
+            if (!_sliding)
+                UpdateState(MovementState.Jumping);
+            else if (_movementState == MovementState.WallSlide)
+                UpdateState(MovementState.WallJump);
+        }
+    }
+
+    public void DoubleJump()
+    {
+        CanDoubleJump = false;
+
         var result = _actionHandler.ActivateActionByName(new Vector2(_horizontal, _vertical), JumpActionName);
 
         if (result) {

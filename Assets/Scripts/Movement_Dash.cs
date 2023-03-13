@@ -66,7 +66,7 @@ public class Movement_Dash : MonoBehaviour, IActionable
         }
     }
 
-    public void Dash(float horizontalValue, Rigidbody2D rb)
+    public void Dash(float horizontalValue)
     {
         if (_isDashing || _currentCooldown > 0f) {
             return;
@@ -86,7 +86,10 @@ public class Movement_Dash : MonoBehaviour, IActionable
             _preImmortalFrameCounter = FramesBeforeImmortalStart;
         }
 
-        _rb = rb;
+        if (horizontalValue > 1 || horizontalValue < -1) {
+            horizontalValue = horizontalValue - transform.position.x;
+        }
+
         _dir = new Vector2(horizontalValue, 0).normalized;
     }
     
@@ -103,7 +106,7 @@ public class Movement_Dash : MonoBehaviour, IActionable
 
     public void Activate(Vector2 direction)
     {
-        Dash(direction.x, _rb);
+        Dash(direction.x);
     }
 
     public void Deactivate(Vector2 direction)

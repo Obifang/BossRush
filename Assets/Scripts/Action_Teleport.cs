@@ -7,7 +7,7 @@ public class Action_Teleport : MonoBehaviour, IActionable
 {
     public int ID;
     public string Name;
-    public string AnimationName;
+    public string TeleportAnimation;
     public float TeleportTime;
     public float GroundCheckDistance = 2.0f;
     public float AdditionalDistanceFromTarget = 0f;
@@ -43,7 +43,6 @@ public class Action_Teleport : MonoBehaviour, IActionable
             _isTeleporting = false;
             return;
         }
-        _animator.SetTrigger(AnimationName);
         FadeIn();
     }
 
@@ -51,7 +50,6 @@ public class Action_Teleport : MonoBehaviour, IActionable
     {
         _isTeleporting = false;
         _teleportTimer = 0f;
-        _animator.SetFloat("AnimationDirection", 1f);
         _animator.speed = 1;
     }
 
@@ -77,17 +75,17 @@ public class Action_Teleport : MonoBehaviour, IActionable
 
     private void FadeIn()
     {
-        _animator.ResetTrigger(AnimationName);
+        _animator.ResetTrigger(TeleportAnimation);
         _animator.speed = 1 / (TeleportTime * 0.5f);
-        _animator.SetTrigger(AnimationName);
+        _animator.SetTrigger(TeleportAnimation);
         _hasFaded = false;
     }
 
+    //Called through event on animation
     private void FadeOut()
     {
-        _animator.ResetTrigger(AnimationName);
-        _animator.SetTrigger(AnimationName);
         _hasFaded = true;
+        TeleportToPosition(_newPos);
     }
 
     // Update is called once per frame
@@ -96,10 +94,6 @@ public class Action_Teleport : MonoBehaviour, IActionable
         if (_isTeleporting) {
             _teleportTimer += Time.deltaTime;
             if (_teleportTimer >= TeleportTime * 0.5f) {
-                if (!_hasFaded) {
-                    FadeOut();
-                    TeleportToPosition(_newPos);
-                }
                 if (_teleportTimer >= TeleportTime) {
                     Deactivate(_newPos);
                 }

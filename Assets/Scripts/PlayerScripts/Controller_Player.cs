@@ -45,6 +45,11 @@ public class Controller_Player : BaseController
                 _movement.UpdateState(MovementState.Falling);
                 _actionHandler.ActivateActionByID(_facingDirection, 3);
             }
+
+            if (!_movement.Sliding && Input.GetKeyDown(KeyCode.Space) && _movement.CanDoubleJump) {
+                _movement.DoubleJump();
+            }
+
             return;
         }
             
