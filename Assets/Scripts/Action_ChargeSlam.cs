@@ -69,10 +69,12 @@ public class Action_ChargeSlam : MonoBehaviour, IActionable
     private IEnumerator Use()
     {
         _animator.SetBool(ChargeAnimation, true);
+        _animator.SetTrigger(SlamAnimation);
         if (ChargeParticles != null) {
             ChargeParticles.Play();
         }
         yield return new WaitForSeconds(ChargeDuration);
+        
         if (ChargeParticles != null) {
             ChargeParticles.Stop();
         }
@@ -81,7 +83,7 @@ public class Action_ChargeSlam : MonoBehaviour, IActionable
             SlamParticles.Play();
         }
         _animator.SetBool(ChargeAnimation, false);
-        _animator.SetTrigger(SlamAnimation);
+        
 
         Collider2D[] hitObjects = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, HitableLayers);
 
