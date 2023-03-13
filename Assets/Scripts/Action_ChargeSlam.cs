@@ -8,6 +8,8 @@ public class Action_ChargeSlam : MonoBehaviour, IActionable
     public string Name;
     public float ChargeDuration = 4.0f;
     public float Damage = 3.0f;
+    public float StaminaUsage = 2;
+    public float StaminaReduction = 5;
     public string ChargeAnimation;
     public string SlamAnimation;
     public float CooldownDuration;
@@ -24,12 +26,29 @@ public class Action_ChargeSlam : MonoBehaviour, IActionable
     private Animator _animator;
     private float _timer;
     private ParticleSystem _particles;
+    private BaseController _baseController;
+    private IFlippable Flippable;
 
     // Start is called before the first frame update
     void Start()
     {
         _animator = GetComponent<Animator>();
         _particles = GetComponent<ParticleSystem>();
+        _baseController = GetComponent<BaseController>();
+        Flippable = GetComponent<IFlippable>();
+        Flippable.Fliped += FlipAttackPointAndParticles;
+    }
+
+    void FlipAttackPointAndParticles(bool value)
+    {
+        var chargePosX = ChargeParticles.transform.localPosition.x;
+
+        if ((_baseController.StartingSpriteIsFacingRight && ((value && chargePosX > 0) || (!value && chargePosX < 0))) ||
+           (!_baseController.StartingSpriteIsFacingRight && ((value && chargePosX < 0) || (!value && chargePosX > 0)))) {
+            var newPos = new Vector2(ChargeParticles.transform.localPosition.x * -1, ChargeParticles.transform.localPosition.y);
+            ChargeParticles.transform.localPosition = newPos;
+            SlamParticles.transform.localPosition = newPos;
+        }
     }
 
     // Update is called once per frame
@@ -67,8 +86,8 @@ public class Action_ChargeSlam : MonoBehaviour, IActionable
         Collider2D[] hitObjects = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, HitableLayers);
 
         foreach (Collider2D hitObject in hitObjects) {
-            if (hitObject.TryGetComponent<Health>(out Health health)) {
-                health.CalculateHealthChange(Damage);
+            if (hitObject.TryGetComponent<Controller_Combat>(out Controller_Combat combat)) {
+                combat.ApplyDamage(Damage, StaminaReduction, transform);
             }
         }
     }

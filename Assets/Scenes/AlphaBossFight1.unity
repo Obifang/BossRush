@@ -1371,6 +1371,7 @@ MonoBehaviour:
   MovementSpeed: 5
   StrafeSpeedModifier: 0
   GroundCheckDistance: 0.75
+  AllowDoubleJump: 1
   JumpActionName: Jump
   DashActionName: Dash
 --- !u!50 &923462274
@@ -2918,6 +2919,7 @@ MonoBehaviour:
   MovementSpeed: 5
   StrafeSpeedModifier: 0
   GroundCheckDistance: 0.75
+  AllowDoubleJump: 0
   JumpActionName: Jump
   DashActionName: Dash
 --- !u!50 &1835076764
@@ -3358,6 +3360,7 @@ MonoBehaviour:
   MovementSpeed: 2
   StrafeSpeedModifier: 0
   GroundCheckDistance: 2
+  AllowDoubleJump: 0
   JumpActionName: Jump
   DashActionName: Dash
 --- !u!114 &2059334350
@@ -3517,10 +3520,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PatternThresholds:
   - AvailableAtHealthPercent: 0
-    PatternsIndex: 0000000002000000
-  - AvailableAtHealthPercent: 0
-    PatternsIndex: 0000000004000000
+    PatternsIndex: 02000000
   - AvailableAtHealthPercent: 100
+    PatternsIndex: 000000000300000001000000
+  - AvailableAtHealthPercent: 0
     PatternsIndex: 0100000000000000
 --- !u!1 &2071273755
 GameObject:
@@ -3901,6 +3904,14 @@ PrefabInstance:
       propertyPath: MovementSpeed
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 8307557921810508039, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557921810508039, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.338
+      objectReference: {fileID: 0}
     - target: {fileID: 8307557921876556218, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Damage
       value: 0
@@ -3916,6 +3927,14 @@ PrefabInstance:
     - target: {fileID: 8307557921876556218, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: KnockbackForce
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557921907068126, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557921907068126, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.338
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661123, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Name
@@ -3962,6 +3981,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Patterns.Array.data[3].Weighting
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[4].Weighting
       value: 1
       objectReference: {fileID: 0}
@@ -3991,7 +4014,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[1].ActionIDs.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[2].ActionIDs.Array.size
@@ -3999,7 +4022,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[3].ActionIDs.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[4].ActionIDs.Array.size
@@ -4018,6 +4041,10 @@ PrefabInstance:
       value: Teleport
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Patterns.Array.data[1].ActionIDs.Array.data[1]
+      value: BasicAttack
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[2].ActionIDs.Array.data[0]
       value: Dash
       objectReference: {fileID: 0}
@@ -4030,6 +4057,10 @@ PrefabInstance:
       value: Dash
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Patterns.Array.data[3].ActionIDs.Array.data[1]
+      value: Charge and Slam
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[4].ActionIDs.Array.data[0]
       value: Charge and Slam
       objectReference: {fileID: 0}
@@ -4039,7 +4070,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[1].MinUsableRangeFromTarget
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[4].MaxUsableRangeFromTarget

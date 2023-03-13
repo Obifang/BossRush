@@ -28,10 +28,14 @@ public class Controller_Combat : MonoBehaviour
         
     }
 
-    public void ApplyDamage(float damage, float staminaReduction, Transform DamageSource = null)
+    public void ApplyDamage(float damage, float staminaReduction, Transform DamageSource = null, bool IgnoreDefense = false)
     {
         var stam = CalculateStaminaReduction(staminaReduction);
         var dmg = CalculateDamageValue(damage);
+
+        if (IgnoreDefense) {
+            dmg = damage;
+        }
 
         if (DamageBeingApplied != null)
             DamageBeingApplied.Invoke(dmg, stam, DamageSource);

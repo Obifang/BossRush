@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour, IFlippable, IController
         //Dash
         if (Input.GetKeyDown(KeyCode.LeftShift)) {
             _movementState = MovementState.Dashing;
-            _dash.Dash(_facingDirection.x, _rb);
+            _actionHandler.ActivateActionByID(_facingDirection, 10);
             _animator.SetTrigger("Roll");
         }
 
