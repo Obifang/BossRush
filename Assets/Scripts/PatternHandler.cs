@@ -27,6 +27,8 @@ public class PatternHandler : MonoBehaviour
     public List<Pattern> Patterns;
     public bool RandomPatternIndex = true;
 
+    public int GetCurrentPatternCount { get => _potentialPatterns.Count; }
+    public string GetCurrentActionName { get => _actionHandler.CurrentAction.GetName; }
 
     private List<Pattern> _potentialPatterns;
     private List<Pattern> _distancePatterns;
@@ -57,6 +59,7 @@ public class PatternHandler : MonoBehaviour
     {
         if (_distancePatterns.Count == 0) {
             var distance = Vector2.Distance(transform.position, target);
+            
             AddPatternsDistance(distance);
             _patternIndex = 0;
         }
@@ -65,10 +68,17 @@ public class PatternHandler : MonoBehaviour
         switch (_actionState) {
             case ActionState.Ready:
                 if (!_actionHandler.IsActive) {
-                    var canActivate = _actionHandler.ActivateActionByName(target, pattern.ActionIDs[_actionIndex]);
-                    if (!canActivate) {
+                    if (!_actionHandler.CanActivateAction(target, pattern.ActionIDs[_actionIndex])) {
+                        _actionIndex++;
+                        if (_actionIndex >= pattern.ActionIDs.Count) {
+                            _actionIndex = 0;
+                        }
                         return false;
                     }
+                    _actionHandler.ActivateActionByName(target, pattern.ActionIDs[_actionIndex]);
+                    /*
+                    Debug.Log("Total Patterns: " + _potentialPatterns.Count);
+                    Debug.Log("Action Active: " + pattern.ActionIDs[_actionIndex]);*/
                     _actionState = ActionState.Waiting;
                 }
                 break;

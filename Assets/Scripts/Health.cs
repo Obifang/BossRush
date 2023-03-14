@@ -8,6 +8,8 @@ public class Health : MonoBehaviour
     public bool Immortal = false;
     public string DeathAnimationName;
     public string HurtAnimationName = "Hurt";
+    public bool PlayHurtAnimationWhenTakingDamage = true;
+    public bool StopCurrentActionWhenTakingDamage = true;
     public float StartingHealthValue = 10.0f;
     public float MaxHealthValue = 10.0f;
 
@@ -54,8 +56,12 @@ public class Health : MonoBehaviour
         _currentHealth -= Mathf.Clamp(damage - damageAdjustments, 0, damage);
 
         if (cHP != _currentHealth) {
-            _animator.SetTrigger(HurtAnimationName);
-            _handler.CurrentAction.Deactivate(Vector2.zero);
+            if (PlayHurtAnimationWhenTakingDamage) {
+                _animator.SetTrigger(HurtAnimationName);
+            }
+            if (StopCurrentActionWhenTakingDamage) {
+                _handler.CurrentAction.Deactivate(Vector2.zero);
+            }
         }
         
         

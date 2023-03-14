@@ -87,4 +87,14 @@ public class ActionHandler : MonoBehaviour
     {
         _actionsByID.Remove(id);
     }
+
+    public bool CanActivateAction(Vector2 direction, int id)
+    {
+        return _actionsByID[id].CanActivate(direction);
+    }
+
+    public bool CanActivateAction(Vector2 direction, string name)
+    {
+        return _actionsByName[name].CanActivate(direction);
+    }
 }

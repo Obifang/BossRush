@@ -10,6 +10,7 @@ public class Controller_AI_Boss : BaseController
         Attacking,
         Evading,
         Roaming,
+        Damaged,
         Dead
     }
 
@@ -40,6 +41,7 @@ public class Controller_AI_Boss : BaseController
         _enemy = FindObjectOfType<Controller_Player>().gameObject;
         _movement = GetComponent<Controller_Movement>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
+        //_health.ChangeInHealth += TakenDamage;
     }
 
     // Update is called once per frame
@@ -61,10 +63,8 @@ public class Controller_AI_Boss : BaseController
         if (_enemy == null) {
             return;
         }
-        Debug.Log("Current State: " + _states);
         HandleDistanceFromPlayer();
         DistanceToEnemy = Vector2.Distance(_enemy.transform.position, transform.position);
-       // 
         switch (_states) {
             case States.MoveTowardsEnemy:
                 MoveTowardsPlayer();
@@ -81,15 +81,34 @@ public class Controller_AI_Boss : BaseController
                     }
                 } else if (!_patterns.IsCurrentActionActive()) {
                     FaceEnemy();
+                    var canPlayAction = _patterns.HandlePatternsWithinRange(_enemy.transform.position);
+                    if (!canPlayAction) {
+                        MoveTowardsPlayer();
+                        break;
+                    }
                     _movement.UpdateState(MovementState.PerformingAction);
-                    _patterns.HandlePatternsWithinRange(_enemy.transform.position);
                 }
                 break;
             case States.Evading:
                 break;
             case States.Dead:
                 break;
+            case States.Damaged:
+                FaceEnemy();
+                _timer += Time.deltaTime;
+                //Update to remove magic number
+                if (_timer >= 0.5f) {
+                    _states = States.Attacking;
+                }
+                break;
         }
+    }
+
+    void TakenDamage(float damage)
+    {
+        //_animator.SetTrigger("Hurt");
+        _states = States.Damaged;
+        _timer = 0f;
     }
 
     void MoveTowardsPlayer()
@@ -100,8 +119,8 @@ public class Controller_AI_Boss : BaseController
 
         if (DistanceToEnemy < DistanceToSwitchToAttackState) {
             _states = States.Attacking;
-            _movement.StopMoving();
-            _movement.UpdateState(MovementState.PerformingAction);
+            //_movement.StopMoving();
+            //_movement.UpdateState(MovementState.PerformingAction);
             return;
         }
 

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
+using static UnityEngine.GraphicsBuffer;
 
 public class Attack : MonoBehaviour, IActionable
 {
@@ -112,6 +114,14 @@ public class Attack : MonoBehaviour, IActionable
 
     public bool CanActivate(Vector2 direction)
     {
-        return true;
+        if (direction.x <= 1 && direction.x >= -1) {
+            return true;
+        }
+
+        if (Vector2.Distance(AttackPoint.position, direction) <= AttackRange) {
+            return true;
+        }
+
+        return false;
     }
 }
