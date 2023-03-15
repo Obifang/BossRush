@@ -174,4 +174,18 @@ public class PatternHandler : MonoBehaviour
             _potentialPatterns.Add(Patterns[i]);
         }
     }
+
+    public void AddPatternToCurrentPool(int ID)
+    {
+        if (ID >= 0 && ID < Patterns.Count) {
+            var pattern = Patterns[ID];
+            var newPattern = _potentialPatterns.Find(x => x.ActionIDs == pattern.ActionIDs);
+
+            if (newPattern.Equals(null)) {
+                _potentialPatterns.Clear();
+                _distancePatterns.Clear();
+                _potentialPatterns.Add(pattern);
+            }
+        }
+    }
 }

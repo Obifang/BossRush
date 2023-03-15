@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,7 @@ public class Controller_AI_Boss : BaseController
     public float RandomDirectionMoveTime;
     public float DistanceToAgro;
     public float DistanceToSwitchToAttackState;
+    public int PatternIDUsedToRespondToClosePlayerAttack;
 
     //public event IFlippable.Action Fliped;
 
@@ -42,6 +44,7 @@ public class Controller_AI_Boss : BaseController
         _movement = GetComponent<Controller_Movement>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         //_health.ChangeInHealth += TakenDamage;
+        ActionMonitorer.Instance.Subscribe(gameObject, RespondToEnemy, _enemy);
     }
 
     // Update is called once per frame
@@ -51,6 +54,15 @@ public class Controller_AI_Boss : BaseController
             base.Update();
         }
         HandleStates();
+    }
+
+    public void RespondToEnemy(GameObject gm, string action)
+    {
+        //Debug.Log(action);
+        if (action == PatternIDUsedToRespondToClosePlayerAttack.ToString()) {
+            _patterns.AddPatternToCurrentPool(6);
+            Debug.Log("Added Reponse To Enemy");
+        }
     }
 
     public override void SetActive(bool value)
@@ -166,7 +178,7 @@ public class Controller_AI_Boss : BaseController
                 _horizontal = _movementDirection.x;
             } else {
                 _timer = 0;
-                var rand = Random.Range(-1, 1);
+                var rand = UnityEngine.Random.Range(-1, 1);
                 if (rand != 0) {
                     _movementDirection = new Vector2(rand, 0);
                 }

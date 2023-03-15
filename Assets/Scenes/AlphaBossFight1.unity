@@ -3517,6 +3517,49 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0.1}
   serializedVersion: 2
   m_Radius: 0.05
+--- !u!1 &2050056450
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2050056452}
+  - component: {fileID: 2050056451}
+  m_Layer: 0
+  m_Name: Controllers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2050056451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2050056450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b88685240b4c264db8605c0764b1062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &2050056452
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2050056450}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.6716309, y: 1.1534653, z: -152.37482}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2059334347 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5594177418520789, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
@@ -3591,6 +3634,7 @@ MonoBehaviour:
   RandomDirectionMoveTime: 1
   DistanceToAgro: 100
   DistanceToSwitchToAttackState: 50
+  PatternIDUsedToRespondToClosePlayerAttack: 0
 --- !u!114 &2059334355 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5594177418520782, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
@@ -4215,30 +4259,34 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[0].Weighting
-      value: 1
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[1].Weighting
-      value: 1
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[2].Weighting
-      value: 1
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[3].Weighting
-      value: 1
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[4].Weighting
-      value: 1
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[5].Weighting
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Patterns.Array.data[6].Weighting
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
@@ -4284,6 +4332,10 @@ PrefabInstance:
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[5].ActionIDs.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Patterns.Array.data[6].ActionIDs.Array.size
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[0].ActionIDs.Array.data[0]
@@ -4334,6 +4386,14 @@ PrefabInstance:
       value: Charge and Slam
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Patterns.Array.data[6].ActionIDs.Array.data[0]
+      value: Dash
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Patterns.Array.data[6].ActionIDs.Array.data[1]
+      value: BasicAttack
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[0].MaxUsableRangeFromTarget
       value: 2.5
       objectReference: {fileID: 0}
@@ -4351,11 +4411,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[2].MaxUsableRangeFromTarget
-      value: 6
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[2].MinUsableRangeFromTarget
-      value: 2.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[3].MaxUsableRangeFromTarget
@@ -4380,6 +4440,14 @@ PrefabInstance:
     - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
       propertyPath: Patterns.Array.data[5].MinUsableRangeFromTarget
       value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Patterns.Array.data[6].MaxUsableRangeFromTarget
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8307557923076661175, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
+      propertyPath: Patterns.Array.data[6].MinUsableRangeFromTarget
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5594177418520784, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}

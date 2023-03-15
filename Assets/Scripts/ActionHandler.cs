@@ -56,7 +56,7 @@ public class ActionHandler : MonoBehaviour
         _currentAction.Deactivate(direction);
         _currentAction = _actionsByID[id];
         _currentAction.Activate(direction);
-
+        ActionMonitorer.Instance.Broadcast(gameObject, _currentAction.GetID.ToString());
         return true;
     }
 
@@ -74,7 +74,7 @@ public class ActionHandler : MonoBehaviour
         _currentAction.Deactivate(direction);
         _currentAction = _actionsByName[name];
         _currentAction.Activate(direction);
-
+        ActionMonitorer.Instance.Broadcast(gameObject, _currentAction.GetID.ToString());
         return true;
     }
 
