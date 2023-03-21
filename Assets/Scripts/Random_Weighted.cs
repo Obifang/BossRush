@@ -9,15 +9,14 @@ public static class Random_Weighted<T>
     {
         var totalWeight = objs.Keys.Sum(x => objs[x]);
         int rndm = Random.Range(0, totalWeight);
-        int total = 0;
+        int total = rndm;
 
         foreach(T obj in objs.Keys) {
-            total += objs[obj];
-            if (rndm < total) {
+            if (total < objs[obj]) {
                 return obj;
             }
+            total -= objs[obj];
         }
-
         return objs.Keys.ToArray()[0];
     }
 }

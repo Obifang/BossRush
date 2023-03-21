@@ -32,6 +32,11 @@ public class Health_Pattern_Manager : MonoBehaviour
         SetPatternsByHealth(_health.StartingHealthValue);
     }
 
+    /// <summary>
+    /// Assumes all available patterns are only in 1 Threshold at certain health percentage.
+    /// As such, if multiple Thresholds are set to the same percentage, only the fist result will be used.
+    /// </summary>
+    /// <param name="Health"></param>
     void SetPatternsByHealth(float Health)
     {
         var hp = ConvertHPtoPercentage(Health);
@@ -56,6 +61,9 @@ public class Health_Pattern_Manager : MonoBehaviour
         return (health / _health.MaxHealthValue * 100);
     }
 
+    /// <summary>
+    /// Orders patterns based on highest health Thresholds at the front of the queue.
+    /// </summary>
     void OrderPatternsForQueue()
     {
         var temp = PatternThresholds;

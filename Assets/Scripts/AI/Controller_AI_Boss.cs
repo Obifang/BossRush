@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class Controller_AI_Boss : BaseController
         Attacking,
         Evading,
         Roaming,
+        Damaged,
         Dead
     }
 
@@ -17,6 +19,7 @@ public class Controller_AI_Boss : BaseController
     public float RandomDirectionMoveTime;
     public float DistanceToAgro;
     public float DistanceToSwitchToAttackState;
+    public int PatternIDUsedToRespondToClosePlayerAttack;
 
     //public event IFlippable.Action Fliped;
 
@@ -29,6 +32,7 @@ public class Controller_AI_Boss : BaseController
     private Vector2 _movementDirection = Vector2.right;
     private float _timer;
     private float DistanceToEnemy;
+    private bool _repondToAttackFlag;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -40,6 +44,8 @@ public class Controller_AI_Boss : BaseController
         _enemy = FindObjectOfType<Controller_Player>().gameObject;
         _movement = GetComponent<Controller_Movement>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
+        //_health.ChangeInHealth += TakenDamage;
+        //ActionMonitorer.Instance.Subscribe(RespondToEnemy, _enemy);
     }
 
     // Update is called once per frame
@@ -49,6 +55,16 @@ public class Controller_AI_Boss : BaseController
             base.Update();
         }
         HandleStates();
+    }
+
+    public void RespondToEnemy(GameObject gm, string action)
+    {
+        //Debug.Log(action);
+        if (action == PatternIDUsedToRespondToClosePlayerAttack.ToString() && _patterns.IsPatternCurrentlyUseable(6, true)) {
+            _patterns.AddPatternToCurrentPool(6);
+            _repondToAttackFlag = true;
+            Debug.Log("Added Reponse To Enemy");
+        }
     }
 
     public override void SetActive(bool value)
@@ -61,10 +77,8 @@ public class Controller_AI_Boss : BaseController
         if (_enemy == null) {
             return;
         }
-        Debug.Log("Current State: " + _states);
         HandleDistanceFromPlayer();
         DistanceToEnemy = Vector2.Distance(_enemy.transform.position, transform.position);
-       // 
         switch (_states) {
             case States.MoveTowardsEnemy:
                 MoveTowardsPlayer();
@@ -73,6 +87,12 @@ public class Controller_AI_Boss : BaseController
                 Roaming();
                 break;
             case States.Attacking:
+                if (_repondToAttackFlag) {
+                    _patterns.ForcePatternStart(6, true);
+                    _repondToAttackFlag = false;
+                    break;
+                }
+
                 if (DistanceToEnemy > DistanceToSwitchToAttackState) {
                     if (!_patterns.IsCurrentActionActive()) {
                         _states = States.MoveTowardsEnemy;
@@ -81,15 +101,38 @@ public class Controller_AI_Boss : BaseController
                     }
                 } else if (!_patterns.IsCurrentActionActive()) {
                     FaceEnemy();
-                    _movement.UpdateState(MovementState.PerformingAction);
-                    _patterns.HandlePatternsWithinRange(_enemy.transform.position);
+                    if (_movement.GetCurrentState() != MovementState.Falling) {
+                        _movement.UpdateState(MovementState.PerformingAction);
+                    }
+                    var canPlayAction = _patterns.HandlePatternsWithinRange(_enemy.transform.position);
+                    if (!canPlayAction) {
+                        //_patterns.StopCurrentAction();
+                        //MoveTowardsPlayer();
+                        break;
+                    }
+                    
                 }
                 break;
             case States.Evading:
                 break;
             case States.Dead:
                 break;
+            case States.Damaged:
+                FaceEnemy();
+                _timer += Time.deltaTime;
+                //Update to remove magic number
+                if (_timer >= 0.5f) {
+                    _states = States.Attacking;
+                }
+                break;
         }
+    }
+
+    void TakenDamage(float damage)
+    {
+        //_animator.SetTrigger("Hurt");
+        _states = States.Damaged;
+        _timer = 0f;
     }
 
     void MoveTowardsPlayer()
@@ -100,8 +143,8 @@ public class Controller_AI_Boss : BaseController
 
         if (DistanceToEnemy < DistanceToSwitchToAttackState) {
             _states = States.Attacking;
-            _movement.StopMoving();
-            _movement.UpdateState(MovementState.PerformingAction);
+            //_movement.StopMoving();
+            //_movement.UpdateState(MovementState.PerformingAction);
             return;
         }
 
@@ -147,7 +190,7 @@ public class Controller_AI_Boss : BaseController
                 _horizontal = _movementDirection.x;
             } else {
                 _timer = 0;
-                var rand = Random.Range(-1, 1);
+                var rand = UnityEngine.Random.Range(-1, 1);
                 if (rand != 0) {
                     _movementDirection = new Vector2(rand, 0);
                 }

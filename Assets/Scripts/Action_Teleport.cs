@@ -32,14 +32,16 @@ public class Action_Teleport : MonoBehaviour, IActionable
 
     public void Activate(Vector2 direction)
     {
+        
         if (_isTeleporting || !GroundChecks(direction)) {
             return;
         }
 
         _isTeleporting = true;
-        _newPos = GetPositionNextToTarget(direction);
+        _newPos = direction;
+        var newPos = GetPositionNextToTarget(direction);
 
-        if (_newPos == Vector2.zero) {
+        if (newPos == Vector2.zero) {
             _isTeleporting = false;
             return;
         }
@@ -51,10 +53,12 @@ public class Action_Teleport : MonoBehaviour, IActionable
         _isTeleporting = false;
         _teleportTimer = 0f;
         _animator.speed = 1;
+        _hasFaded = false;
     }
 
     private Vector2 GetPositionNextToTarget(Vector2 pos)
     {
+        //Debug.Log(pos);
         var width = _collider.bounds.size.x + AdditionalDistanceFromTarget;
         var left = new Vector2(pos.x - width, pos.y);
         var right = new Vector2(pos.x + width, pos.y);
@@ -64,7 +68,7 @@ public class Action_Teleport : MonoBehaviour, IActionable
         } else if (GroundChecks(right)){
             return right;
         }
-
+        
         return Vector2.zero;
     }
 
@@ -85,7 +89,6 @@ public class Action_Teleport : MonoBehaviour, IActionable
     private void FadeOut()
     {
         _hasFaded = true;
-        TeleportToPosition(_newPos);
     }
 
     // Update is called once per frame
@@ -93,6 +96,10 @@ public class Action_Teleport : MonoBehaviour, IActionable
     {
         if (_isTeleporting) {
             _teleportTimer += Time.deltaTime;
+            if (_hasFaded) {
+                TeleportToPosition(GetPositionNextToTarget(_newPos));
+                _hasFaded = false;
+            }
             if (_teleportTimer >= TeleportTime * 0.5f) {
                 if (_teleportTimer >= TeleportTime) {
                     Deactivate(_newPos);

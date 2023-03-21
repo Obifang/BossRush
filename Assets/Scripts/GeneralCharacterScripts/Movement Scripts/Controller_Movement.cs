@@ -143,11 +143,15 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
             case MovementState.Falling:
                 _animator.SetFloat("AirSpeedY", _rb.velocity.y);
                 _animator.SetBool("Grounded", false);
+                _actionHandler.CurrentAction.Deactivate(transform.position);
                 break;
             case MovementState.Dashing:
                 break;
             case MovementState.PerformingAction:
                 StopMoving();
+                if (_horizontal != 0) {
+                    _animator.SetInteger("AnimState", 1);
+                }
                 break;
             case MovementState.WallSlide:
                 _animator.SetBool("WallSlide", true);
@@ -186,7 +190,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                         UpdateState(MovementState.Idle);
                         StopMovingHorizontally();
                     }
-                    else
+                    else if (_grounded) 
                         UpdateState(MovementState.Moving);
                 } else {
                     if (_sliding) {
@@ -406,8 +410,21 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         Debug.DrawLine(left, new Vector3(left.x, left.y - GroundCheckDistance), Color.red);
         Debug.DrawLine(center, new Vector3(center.x, center.y - GroundCheckDistance), Color.red);
         Debug.DrawLine(right, new Vector3(right.x, right.y - GroundCheckDistance), Color.red);
-
+        Debug.Log((leftHit || rightHit || centerHit));
         _grounded = (leftHit || rightHit || centerHit);
+    }
+
+    public bool CheckForGroundAtPosition(Vector2 newPos)
+    {
+        var groundLayer = 1 << LayerMask.NameToLayer("Ground");
+        var halfWidth = _collider.bounds.size.x * 0.5f;
+        var left = new Vector2(newPos.x - halfWidth, newPos.y);
+        var right = new Vector2(newPos.x + halfWidth, newPos.y);
+        var centerHit = Physics2D.Raycast(newPos, Vector2.down, GroundCheckDistance, groundLayer);
+        var leftHit = Physics2D.Raycast(left, Vector2.down, GroundCheckDistance, groundLayer);
+        var rightHit = Physics2D.Raycast(right, Vector2.down, GroundCheckDistance, groundLayer);
+
+        return (leftHit && rightHit && centerHit);
     }
 
     public MovementState GetCurrentState()

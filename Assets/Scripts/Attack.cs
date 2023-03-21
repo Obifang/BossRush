@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
+using static UnityEngine.GraphicsBuffer;
 
 public class Attack : MonoBehaviour, IActionable
 {
@@ -14,6 +16,7 @@ public class Attack : MonoBehaviour, IActionable
     public float ApplyDamageAfterTime = 0f;
     public float StaminaUsage = 2;
     public float StaminaReduction = 5;
+    public float AttackSpeed = 1.0f;
     private IFlippable Flippable;
 
     public int ID;
@@ -75,8 +78,9 @@ public class Attack : MonoBehaviour, IActionable
 
         if (AssociatedAnimationName != "") {
             _animator.SetTrigger(AssociatedAnimationName);
+            _animator.speed = 1 / (1 / AttackSpeed);
         }
-        yield return new WaitForSeconds(ApplyDamageAfterTime);
+        yield return new WaitForSeconds(ApplyDamageAfterTime / AttackSpeed);
         Collider2D [] hitObjects = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, HitableLayers);
 
         foreach(Collider2D hitObject in hitObjects) {
@@ -96,8 +100,9 @@ public class Attack : MonoBehaviour, IActionable
     private IEnumerator StartCooldown(float value)
     {
         IsActive = true;
-        yield return new WaitForSecondsRealtime(value);
+        yield return new WaitForSecondsRealtime(value / AttackSpeed);
         IsActive = false;
+        _animator.speed = 1;
     }
 
     private void OnDrawGizmos()
@@ -112,6 +117,17 @@ public class Attack : MonoBehaviour, IActionable
 
     public bool CanActivate(Vector2 direction)
     {
-        return true;
+        if (direction.x <= 1 && direction.x >= -1) {
+            return true;
+        }
+
+        if (Vector2.Distance(AttackPoint.position, direction) <= AttackRange) {
+            return true;
+        }
+
+        if (Vector2.Distance(transform.position, direction) <= AttackRange) {
+            return true;
+        }
+        return false;
     }
 }
