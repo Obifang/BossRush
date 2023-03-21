@@ -28,6 +28,7 @@ public class PatternHandler : MonoBehaviour
     public bool RandomPatternIndex = true;
 
     public int GetCurrentPatternCount { get => _potentialPatterns.Count; }
+    public int GetCurrentPatternCountDistance { get => _distancePatterns.Count; }
     public string GetCurrentActionName { get => _actionHandler.CurrentAction.GetName; }
 
     private List<Pattern> _potentialPatterns;
@@ -61,6 +62,7 @@ public class PatternHandler : MonoBehaviour
             var distance = Vector2.Distance(transform.position, target);
             
             AddPatternsDistance(distance);
+            _actionIndex = 0;
             _patternIndex = 0;
         }
         var pattern = _distancePatterns[_patternIndex];
@@ -68,17 +70,11 @@ public class PatternHandler : MonoBehaviour
         switch (_actionState) {
             case ActionState.Ready:
                 if (!_actionHandler.IsActive) {
+                    _actionState = ActionState.Waiting;
                     if (!_actionHandler.CanActivateAction(target, pattern.ActionIDs[_actionIndex])) {
-                        _actionIndex++;
-                        if (_actionIndex >= pattern.ActionIDs.Count) {
-                            _actionIndex = 0;
-                        }
                         return false;
                     }
                     _actionHandler.ActivateActionByName(target, pattern.ActionIDs[_actionIndex]);
-                    /*
-                    Debug.Log("Total Patterns: " + _potentialPatterns.Count);
-                    Debug.Log("Action Active: " + pattern.ActionIDs[_actionIndex]);*/
                     _actionState = ActionState.Waiting;
                 }
                 break;
@@ -88,6 +84,14 @@ public class PatternHandler : MonoBehaviour
                 }
 
                 _actionIndex++;
+                
+                //Early break if there are still actions to be done.
+                if (_actionIndex < pattern.ActionIDs.Count) {
+                    pattern = _distancePatterns[_patternIndex];
+                    _actionState = ActionState.Ready;
+                    break;
+                }
+
                 var distance = Vector2.Distance(transform.position, target);
                 AddPatternsDistance(distance);
 
@@ -102,7 +106,9 @@ public class PatternHandler : MonoBehaviour
                         _patternIndex++;
                     }
                 }
+
                 if (_patternIndex >= _distancePatterns.Count) {
+                    _actionIndex = 0;
                     _patternIndex = 0;
                 }
 
@@ -165,6 +171,12 @@ public class PatternHandler : MonoBehaviour
         }
     }
 
+    bool IsWithinDistance(int ID, float distance)
+    {
+        var pattern = Patterns[ID];
+        return (distance <= pattern.MaxUsableRangeFromTarget && distance > pattern.MinUsableRangeFromTarget);
+    }
+
     public void SetPatternByIDs(List<int> ids)
     {
         _potentialPatterns.Clear();
@@ -186,6 +198,39 @@ public class PatternHandler : MonoBehaviour
                 _distancePatterns.Clear();
                 _potentialPatterns.Add(pattern);
             }
+        }
+    }
+
+    public bool IsPatternCurrentlyUseable(int ID, bool requireRangeCheck = false)
+    {
+        if (requireRangeCheck) {
+            if (_distancePatterns.Contains(Patterns[ID])) {
+                Debug.Log("Pattern Useable: " + ID);
+                return true;
+            }
+
+            return false;
+        } else if (_potentialPatterns.Contains(Patterns[ID])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void ForcePatternStart(int ID, bool requireRangeCheck = false)
+    {
+        if (requireRangeCheck) {
+            if (_distancePatterns.Contains(Patterns[ID])) {
+                int indx = _distancePatterns.IndexOf(Patterns[ID]);
+                _patternIndex = indx;
+                _actionIndex = 0;
+                _actionState = ActionState.Ready;
+            }
+        } else if (_potentialPatterns.Contains(Patterns[ID])) {
+            int indx = _potentialPatterns.IndexOf(Patterns[ID]);
+            _patternIndex = indx;
+            _actionIndex = 0;
+            _actionState = ActionState.Ready;
         }
     }
 }

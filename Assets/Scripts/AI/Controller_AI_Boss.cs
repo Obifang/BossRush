@@ -32,6 +32,7 @@ public class Controller_AI_Boss : BaseController
     private Vector2 _movementDirection = Vector2.right;
     private float _timer;
     private float DistanceToEnemy;
+    private bool _repondToAttackFlag;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -44,7 +45,7 @@ public class Controller_AI_Boss : BaseController
         _movement = GetComponent<Controller_Movement>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         //_health.ChangeInHealth += TakenDamage;
-        ActionMonitorer.Instance.Subscribe(gameObject, RespondToEnemy, _enemy);
+        //ActionMonitorer.Instance.Subscribe(RespondToEnemy, _enemy);
     }
 
     // Update is called once per frame
@@ -59,8 +60,9 @@ public class Controller_AI_Boss : BaseController
     public void RespondToEnemy(GameObject gm, string action)
     {
         //Debug.Log(action);
-        if (action == PatternIDUsedToRespondToClosePlayerAttack.ToString()) {
+        if (action == PatternIDUsedToRespondToClosePlayerAttack.ToString() && _patterns.IsPatternCurrentlyUseable(6, true)) {
             _patterns.AddPatternToCurrentPool(6);
+            _repondToAttackFlag = true;
             Debug.Log("Added Reponse To Enemy");
         }
     }
@@ -85,6 +87,12 @@ public class Controller_AI_Boss : BaseController
                 Roaming();
                 break;
             case States.Attacking:
+                if (_repondToAttackFlag) {
+                    _patterns.ForcePatternStart(6, true);
+                    _repondToAttackFlag = false;
+                    break;
+                }
+
                 if (DistanceToEnemy > DistanceToSwitchToAttackState) {
                     if (!_patterns.IsCurrentActionActive()) {
                         _states = States.MoveTowardsEnemy;
@@ -93,12 +101,16 @@ public class Controller_AI_Boss : BaseController
                     }
                 } else if (!_patterns.IsCurrentActionActive()) {
                     FaceEnemy();
+                    if (_movement.GetCurrentState() != MovementState.Falling) {
+                        _movement.UpdateState(MovementState.PerformingAction);
+                    }
                     var canPlayAction = _patterns.HandlePatternsWithinRange(_enemy.transform.position);
                     if (!canPlayAction) {
-                        MoveTowardsPlayer();
+                        //_patterns.StopCurrentAction();
+                        //MoveTowardsPlayer();
                         break;
                     }
-                    _movement.UpdateState(MovementState.PerformingAction);
+                    
                 }
                 break;
             case States.Evading:

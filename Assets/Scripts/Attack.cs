@@ -16,6 +16,7 @@ public class Attack : MonoBehaviour, IActionable
     public float ApplyDamageAfterTime = 0f;
     public float StaminaUsage = 2;
     public float StaminaReduction = 5;
+    public float AttackSpeed = 1.0f;
     private IFlippable Flippable;
 
     public int ID;
@@ -77,8 +78,9 @@ public class Attack : MonoBehaviour, IActionable
 
         if (AssociatedAnimationName != "") {
             _animator.SetTrigger(AssociatedAnimationName);
+            _animator.speed = 1 / (1 / AttackSpeed);
         }
-        yield return new WaitForSeconds(ApplyDamageAfterTime);
+        yield return new WaitForSeconds(ApplyDamageAfterTime / AttackSpeed);
         Collider2D [] hitObjects = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, HitableLayers);
 
         foreach(Collider2D hitObject in hitObjects) {
@@ -98,8 +100,9 @@ public class Attack : MonoBehaviour, IActionable
     private IEnumerator StartCooldown(float value)
     {
         IsActive = true;
-        yield return new WaitForSecondsRealtime(value);
+        yield return new WaitForSecondsRealtime(value / AttackSpeed);
         IsActive = false;
+        _animator.speed = 1;
     }
 
     private void OnDrawGizmos()
@@ -122,6 +125,9 @@ public class Attack : MonoBehaviour, IActionable
             return true;
         }
 
+        if (Vector2.Distance(transform.position, direction) <= AttackRange) {
+            return true;
+        }
         return false;
     }
 }

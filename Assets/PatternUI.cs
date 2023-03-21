@@ -15,7 +15,8 @@ public class PatternUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        TextBox.text = "Current Pattern Index: " + ObjectWithPatternHandler.GetCurrentPatternCount;
+        TextBox.text = "Total Available Patterns: " + ObjectWithPatternHandler.GetCurrentPatternCountDistance;
         TextBox.text += "\nCurrent Action: " + ObjectWithPatternHandler.GetCurrentActionName;
+        TextBox.text += "\nAction Active: " + ObjectWithPatternHandler.IsCurrentActionActive();
     }
 }

@@ -12,12 +12,11 @@ public static class Random_Weighted<T>
         int total = rndm;
 
         foreach(T obj in objs.Keys) {
-            if (rndm < total) {
+            if (total < objs[obj]) {
                 return obj;
             }
-            total += objs[obj];
+            total -= objs[obj];
         }
-
         return objs.Keys.ToArray()[0];
     }
 }
