@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Video;
 using static UnityEngine.GraphicsBuffer;
@@ -30,6 +31,7 @@ public class Attack : MonoBehaviour, IActionable
     private Animator _animator;
     private Stamina _stamina;
     private BaseController _baseController;
+    private Controller_Combat _combatController;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +41,7 @@ public class Attack : MonoBehaviour, IActionable
         Flippable = GetComponent<IFlippable>();
         Flippable.Fliped += FlipAttackPoint;
         _baseController = GetComponent<BaseController>();
+        _combatController = GetComponent<Controller_Combat>();
     }
 
     void FlipAttackPoint(bool value)
@@ -69,11 +72,11 @@ public class Attack : MonoBehaviour, IActionable
 
     private IEnumerator Use()
     {
-        if (_stamina != null) {
-            if (_stamina.GetCurrentStamina - StaminaUsage <= 0) {
-                yield break;
-            }
-            _stamina.ReduceStamina(StaminaUsage);
+        var success = _combatController.UseStamina(StaminaUsage);
+
+        if (!success) {
+            Deactivate(Vector2.zero);
+            yield break;
         }
 
         if (AssociatedAnimationName != "") {
@@ -87,13 +90,6 @@ public class Attack : MonoBehaviour, IActionable
             if (hitObject.TryGetComponent<Controller_Combat>(out Controller_Combat combat)) {
                 combat.ApplyDamage(Damage, StaminaReduction, transform);
             }
-            /* if (hitObject.TryGetComponent<Health>(out Health health)) {
-                 health.CalculateHealthChange(Damage);
-             }
-
-             if (hitObject.TryGetComponent<Stamina>(out Stamina stamina)) {
-                 stamina.ReduceStamina(1.0f);
-             }*/
         }
     }
 
@@ -117,6 +113,7 @@ public class Attack : MonoBehaviour, IActionable
 
     public bool CanActivate(Vector2 direction)
     {
+
         if (direction.x <= 1 && direction.x >= -1) {
             return true;
         }

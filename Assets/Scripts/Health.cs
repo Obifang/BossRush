@@ -60,7 +60,7 @@ public class Health : MonoBehaviour
                 _animator.SetTrigger(HurtAnimationName);
             }
             if (StopCurrentActionWhenTakingDamage) {
-                _handler.CurrentAction.Deactivate(Vector2.zero);
+                _handler.DeactivateCurrentAction(Vector2.zero);
             }
         }
         

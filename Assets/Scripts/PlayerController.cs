@@ -82,8 +82,8 @@ public class PlayerController : MonoBehaviour, IFlippable, IController
         //Dash
         if (Input.GetKeyDown(KeyCode.LeftShift)) {
             _movementState = MovementState.Dashing;
-            _actionHandler.ActivateActionByID(_facingDirection, 10);
-            _animator.SetTrigger("Roll");
+            _actionHandler.ActivateAction(_facingDirection, 10);
+            //_animator.SetTrigger("Roll");
         }
 
         if (_actionHandler.IsActive) {
@@ -93,15 +93,15 @@ public class PlayerController : MonoBehaviour, IFlippable, IController
         if (Input.GetMouseButtonDown(0)) {
             _animator.SetTrigger("Attack" + 2);
             _movementState = MovementState.PerformingAction;
-            _actionHandler.ActivateActionByID(_facingDirection, 1);
+            _actionHandler.ActivateAction(_facingDirection, 1);
         } else if (Input.GetMouseButtonDown(2)) {
             _animator.SetTrigger("Attack" + 3);
             _movementState = MovementState.PerformingAction;
-            _actionHandler.ActivateActionByID(_facingDirection, 2);
+            _actionHandler.ActivateAction(_facingDirection, 2);
         } else if (Input.GetKeyDown(KeyCode.Mouse1)) {
             _animator.SetTrigger("Attack" + 1);
             _movementState = MovementState.PerformingAction;
-            _actionHandler.ActivateActionByID(_facingDirection, 0);
+            _actionHandler.ActivateAction(_facingDirection, 0);
         }
     }
 

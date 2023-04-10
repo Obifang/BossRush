@@ -74,7 +74,7 @@ public class PatternHandler : MonoBehaviour
                     if (!_actionHandler.CanActivateAction(target, pattern.ActionIDs[_actionIndex])) {
                         return false;
                     }
-                    _actionHandler.ActivateActionByName(target, pattern.ActionIDs[_actionIndex]);
+                    _actionHandler.ActivateAction(target, pattern.ActionIDs[_actionIndex]);
                     _actionState = ActionState.Waiting;
                 }
                 break;
@@ -131,7 +131,7 @@ public class PatternHandler : MonoBehaviour
         switch (_actionState) {
             case ActionState.Ready:
                 if (!_actionHandler.IsActive) {
-                    _actionHandler.ActivateActionByName(Vector2.right, pattern.ActionIDs[_actionIndex]);
+                    _actionHandler.ActivateAction(Vector2.right, pattern.ActionIDs[_actionIndex]);
                     Debug.Log("Action Index: " + _actionHandler.CurrentAction.GetName);
                     _actionState = ActionState.Waiting;
                 }

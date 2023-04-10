@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Data;
 
 public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
 {
@@ -66,6 +67,9 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     // Update is called once per frame
     void Update()
     {
+        if (_movementState == MovementState.Locked) {
+            return;
+        }
         //Falling
         if (!_grounded && IsFalling() && _movementState != MovementState.WallSlide) {
             UpdateState(MovementState.Falling);
@@ -83,7 +87,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
 
     public void UpdateState(MovementState mS)
     {
-        if (_movementState == mS)
+        if (_movementState == mS || _movementState == MovementState.Locked)
             return;
 
         _previousState = _movementState;
@@ -127,6 +131,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     {
         switch (ms) {
             case MovementState.Locked:
+                StopMoving();
                 break;
             case MovementState.Idle:
                 _animator.SetInteger("AnimState", 0);
@@ -224,6 +229,19 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         }
     }
 
+    public void LockMovementForDuration(float duration)
+    {
+        StopMoving();
+        UpdateState(MovementState.Locked);
+        StartCoroutine(StartCooldown(duration));
+    }
+
+    private IEnumerator StartCooldown(float value)
+    {
+        yield return new WaitForSecondsRealtime(value);
+        _movementState = MovementState.Idle;
+    }
+
     private void IsPerformingAction()
     {
         if (!_actionHandler.IsActive)
@@ -258,7 +276,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         _rb.velocity = new Vector2(dir, _rb.velocity.y) * StrafeSpeedModifier;
         if (_horizontal == 0 && _vertical == 0) {
             if (_animator != null) {
-                UpdateState(MovementState.Idle);
+                //UpdateState(MovementState.Idle);
             }
         }
     }
@@ -288,7 +306,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
             return;
         }
 
-        var result = _actionHandler.ActivateActionByName(new Vector2(_horizontal, _vertical), JumpActionName);
+        var result = _actionHandler.ActivateAction(new Vector2(_horizontal, _vertical), JumpActionName);
 
         if (result) {
             if (!_sliding)
@@ -302,7 +320,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     {
         CanDoubleJump = false;
 
-        var result = _actionHandler.ActivateActionByName(new Vector2(_horizontal, _vertical), JumpActionName);
+        var result = _actionHandler.ActivateAction(new Vector2(_horizontal, _vertical), JumpActionName);
 
         if (result) {
             if (!_sliding)
@@ -315,7 +333,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     public void Dash(float facingDirection)
     {
         if (_movementState != MovementState.Dashing) {
-            var result = _actionHandler.ActivateActionByName(new Vector2(facingDirection, _vertical), DashActionName);
+            var result = _actionHandler.ActivateAction(new Vector2(facingDirection, _vertical), DashActionName);
             if (result)
                 UpdateState(MovementState.Dashing);
         }
@@ -410,7 +428,6 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         Debug.DrawLine(left, new Vector3(left.x, left.y - GroundCheckDistance), Color.red);
         Debug.DrawLine(center, new Vector3(center.x, center.y - GroundCheckDistance), Color.red);
         Debug.DrawLine(right, new Vector3(right.x, right.y - GroundCheckDistance), Color.red);
-        Debug.Log((leftHit || rightHit || centerHit));
         _grounded = (leftHit || rightHit || centerHit);
     }
 

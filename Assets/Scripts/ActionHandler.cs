@@ -42,7 +42,7 @@ public class ActionHandler : MonoBehaviour
         }
     }
 
-    public bool ActivateActionByID(Vector2 direction, int id, bool interupt = false)
+    public bool ActivateAction(Vector2 direction, int id, bool interupt = false)
     {
         if (_interuptFlag == false && _currentAction != null && _currentAction.IsActive) {
             return false;
@@ -53,14 +53,16 @@ public class ActionHandler : MonoBehaviour
         }
 
         _interuptFlag = interupt;
-        _currentAction.Deactivate(direction);
+        if (_currentAction.IsActive)
+            _currentAction.Deactivate(direction);
+
         _currentAction = _actionsByID[id];
         _currentAction.Activate(direction);
         ActionMonitorer.Instance.Broadcast(gameObject, _currentAction.GetID.ToString());
         return true;
     }
 
-    public bool ActivateActionByName(Vector2 direction, string name, bool interupt = false)
+    public bool ActivateAction(Vector2 direction, string name, bool interupt = false)
     {
         if (_interuptFlag == false && _currentAction != null && _currentAction.IsActive) {
             return false;
@@ -71,10 +73,45 @@ public class ActionHandler : MonoBehaviour
         }
 
         _interuptFlag = interupt;
-        _currentAction.Deactivate(direction);
+        if (_currentAction.IsActive)
+            _currentAction.Deactivate(direction);
+
         _currentAction = _actionsByName[name];
         _currentAction.Activate(direction);
         ActionMonitorer.Instance.Broadcast(gameObject, _currentAction.GetID.ToString());
+        return true;
+    }
+
+    public void DeactivateCurrentAction(Vector2 direction)
+    {
+        DeactivateAction(direction, _currentAction.GetID);
+    }
+
+    public bool DeactivateAction(Vector2 direction, int id)
+    {
+        if (_currentAction == null || !_currentAction.IsActive) {
+            return false;
+        }
+
+        if (!_actionsByID.ContainsKey(id)) {
+            return false;
+        }
+
+        _currentAction.Deactivate(direction);
+        return true;
+    }
+
+    public bool DeactivateAction(Vector2 direction, string name)
+    {
+        if (_currentAction == null || !_currentAction.IsActive) {
+            return false;
+        }
+
+        if (!_actionsByName.ContainsKey(name)) {
+            return false;
+        }
+
+        _currentAction.Deactivate(direction);
         return true;
     }
 

@@ -23,9 +23,6 @@ public class Controller_Player : BaseController
 
     private void HandleInput()
     {
-        if (_actionHandler.IsActive && !_actionHandler.IsInteruptAble) {
-            return;
-        }
 
         _vertical = Input.GetAxisRaw("Vertical");
         var currentState = _movement.GetCurrentState();
@@ -43,7 +40,7 @@ public class Controller_Player : BaseController
         if (!_movement.Grounded) {
             if (Input.GetKeyDown(KeyCode.Mouse0) && _movement.GetCurrentState() == MovementState.Falling) {
                 _movement.UpdateState(MovementState.Falling);
-                _actionHandler.ActivateActionByID(_facingDirection, 3);
+                _actionHandler.ActivateAction(_facingDirection, 3);
             }
 
             if (!_movement.Sliding && Input.GetKeyDown(KeyCode.Space) && _movement.CanDoubleJump) {
@@ -55,17 +52,17 @@ public class Controller_Player : BaseController
             
 
         if (Input.GetKeyDown(KeyCode.Mouse0)) {
-            Debug.Log("Sword");
             _movement.UpdateState(MovementState.PerformingAction);
-            _actionHandler.ActivateActionByID(_facingDirection, 0);
+            _actionHandler.ActivateAction(_facingDirection, 0);
         }
 
-        if (Input.GetKey(KeyCode.Mouse1)) {
+        if (Input.GetKeyDown(KeyCode.Mouse1)) {
             IsFlipable = false;
             _movement.UpdateState(MovementState.Strafe);
-            _actionHandler.ActivateActionByID(_facingDirection, 1, true);
+            _actionHandler.ActivateAction(_facingDirection, 1);
         } else if (Input.GetKeyUp(KeyCode.Mouse1)) {
             IsFlipable = true;
+            _actionHandler.DeactivateAction(_facingDirection, 1);
             _movement.UpdateState(MovementState.Moving);
         }
 

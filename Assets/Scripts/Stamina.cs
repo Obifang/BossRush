@@ -13,6 +13,7 @@ public class Stamina : MonoBehaviour
     [SerializeField]
     private float TickAmount = 1.0f;
 
+    public string OutOfStaminaAnimationTrigger;
     public float GetCurrentStamina { get => _stamina; }
     public delegate void OutOfStamina();
     public event OutOfStamina OnOutOfStamina;
@@ -22,12 +23,16 @@ public class Stamina : MonoBehaviour
 
     float _stamina;
     float _timer;
+    private Animator _animator;
+    private Controller_Movement _movementController;
 
     // Start is called before the first frame update
     void Start()
     {
         _timer = 0f;
         _stamina = StartingStamina;
+        _animator = GetComponent<Animator>();
+        OnOutOfStamina += PlayOutOfStaminaAnimation;
     }
 
     // Update is called once per frame
@@ -40,6 +45,14 @@ public class Stamina : MonoBehaviour
                 _timer = 0f;
                 IncreaseStamina(TickAmount);
             }
+        }
+    }
+
+    public void PlayOutOfStaminaAnimation()
+    {
+        if (OutOfStaminaAnimationTrigger != "") {
+            Debug.Log("Out of stamina");
+            _animator.SetTrigger(OutOfStaminaAnimationTrigger);
         }
     }
     
@@ -87,5 +100,13 @@ public class Stamina : MonoBehaviour
         }
     }
 
-    
+    public void AddToOutOfStaminaListener(OutOfStamina e)
+    {
+        OnOutOfStamina += e;
+    }
+
+    public void RemoveOutOfStaminaListener(OutOfStamina e)
+    {
+        OnOutOfStamina -= e;
+    }
 }
