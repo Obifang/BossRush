@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a769c1de9061d54e995ccdef375652f, type: 3}
+  m_Name: CanAttackEnemy
+  m_EditorClassIdentifier: 
+  Decision: {fileID: 11400000, guid: c95699fcf0f6f334391325bf504cc1b5, type: 2}
+  TrueState: {fileID: 11400000, guid: 627cc96a065205046a204e887cf192df, type: 2}
+  FalseState: {fileID: 11400000, guid: 0f1dff21f3934b4438e6c2ea68cc4cb0, type: 2}
