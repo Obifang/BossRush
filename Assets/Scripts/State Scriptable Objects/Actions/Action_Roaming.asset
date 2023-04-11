@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11d599ea9e7a9c14394334e3c734b067, type: 3}
   m_Name: Action_Roaming
   m_EditorClassIdentifier: 
+  RoamingDirectionTime: 1

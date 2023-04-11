@@ -56,7 +56,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         CanDoubleJump = AllowDoubleJump;
         var actionables = GetComponents<IActionable>();
         _actionHandler = GetComponent<ActionHandler>();
-
+        _controller = GetComponent<BaseController>();
         _groundSensor = transform.Find("GroundSensor").GetComponent<Sensor>();
         _wallSensorR1 = transform.Find("WallSensor_R1").GetComponent<Sensor>();
         _wallSensorR2 = transform.Find("WallSensor_R2").GetComponent<Sensor>();
@@ -384,6 +384,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     {
         _horizontal = horizontal;
         _vertical = vertical;
+        _controller.Horizontal = _horizontal;
     }
 
     private void FixedUpdate()

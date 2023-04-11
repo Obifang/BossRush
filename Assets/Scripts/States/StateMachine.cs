@@ -13,18 +13,29 @@ public class StateMachine : MonoBehaviour
     public BaseState CurrentState { get; set; }
     void Awake()
     {
-        CurrentState = _initialState;
+        Init();
         _cachedComponents = new Dictionary<Type, Component>();
     }
+
+    #region Xnode Code Implimentation
+    public virtual void Init()
+    {
+        CurrentState = _initialState;
+    }
+
+    public virtual void Execute()
+    {
+        CurrentState.Execute(this);
+    }
+    #endregion
 
     // Update is called once per frame
     void Update()
     {
-        CurrentState.Execute(this);
-        Debug.Log(CurrentState);
+        Execute();
     }
 
-    public void ChangeState(BaseState newState)
+    public virtual void ChangeState(BaseState newState)
     {
         if (CurrentState == newState) {
             return;

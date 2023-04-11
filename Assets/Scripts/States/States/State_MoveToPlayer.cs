@@ -9,7 +9,6 @@ public class State_MoveToPlayer : SMAction
     {
         var movementDirection = (stateMachine.FindComponent<Controller_Player>().transform.position - stateMachine.transform.position).normalized;
         var controller = stateMachine.GetComponent<Controller_Movement>();
-
         controller.Move(movementDirection.x, movementDirection.y);
     }
 }

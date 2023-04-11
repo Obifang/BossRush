@@ -18,8 +18,8 @@ public abstract class BaseController : MonoBehaviour, IFlippable
     public Rigidbody2D GetRb { get => _rb;}
     public ActionHandler GetActionHandler { get => _actionHandler; }
     public bool IsFlipable { get;set; }
-    public float Horizontal { get => _horizontal;}
-    public float Vertical { get => _vertical;}
+    public float Horizontal { get => _horizontal; set { _horizontal = value; } }
+    public float Vertical { get => _vertical; set { _vertical = value; } }
     public Vector2 FacingDirection { get => _facingDirection;}
 
     public bool StartingSpriteIsFacingRight = true;
