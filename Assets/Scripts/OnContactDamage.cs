@@ -76,7 +76,7 @@ public class OnContactDamage : MonoBehaviour
     {
         Vector2 direction = Vector2.zero;
 
-        var dirFromContact = (collision.gameObject.transform.position - transform.position).normalized;
+        var dirFromContact = (collision.contacts[0].point - (Vector2)transform.position).normalized;
 
         direction = dirFromContact;
 

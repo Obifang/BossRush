@@ -11,6 +11,9 @@ public class Action_Teleport : MonoBehaviour, IActionable
     public float TeleportTime;
     public float GroundCheckDistance = 2.0f;
     public float AdditionalDistanceFromTarget = 0f;
+    public string TeleportOutSoundEffect;
+    public string TeleportInSoundEffect;
+
     public int GetID { get => ID; }
     public string GetName { get => Name; }
     public bool IsActive { get => _isTeleporting;}
@@ -43,6 +46,7 @@ public class Action_Teleport : MonoBehaviour, IActionable
 
         if (newPos == Vector2.zero) {
             _isTeleporting = false;
+            Deactivate(newPos);
             return;
         }
         FadeIn();
@@ -83,12 +87,14 @@ public class Action_Teleport : MonoBehaviour, IActionable
         _animator.speed = 1 / (TeleportTime * 0.5f);
         _animator.SetTrigger(TeleportAnimation);
         _hasFaded = false;
+        Manager_Audio.Instance.PlaySoundEffect(TeleportInSoundEffect);
     }
 
     //Called through event on animation
     private void FadeOut()
     {
         _hasFaded = true;
+        Manager_Audio.Instance.PlaySoundEffect(TeleportOutSoundEffect);
     }
 
     // Update is called once per frame

@@ -17,13 +17,15 @@ public class Controller_Player : BaseController
     // Update is called once per frame
     protected override void Update()
     {
+        if (Manager_GameState.Instance.GetCurrentGameState != Manager_GameState.GameState.Playing) {
+            return;
+        }
         HandleInput();
         base.Update();
     }
 
     private void HandleInput()
     {
-
         _vertical = Input.GetAxisRaw("Vertical");
         var currentState = _movement.GetCurrentState();
         if (currentState == MovementState.WallSlide || currentState == MovementState.WallJump) {

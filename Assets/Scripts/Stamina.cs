@@ -51,7 +51,6 @@ public class Stamina : MonoBehaviour
     public void PlayOutOfStaminaAnimation()
     {
         if (OutOfStaminaAnimationTrigger != "") {
-            Debug.Log("Out of stamina");
             _animator.SetTrigger(OutOfStaminaAnimationTrigger);
         }
     }

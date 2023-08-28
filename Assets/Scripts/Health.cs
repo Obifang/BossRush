@@ -8,10 +8,17 @@ public class Health : MonoBehaviour
     public bool Immortal = false;
     public string DeathAnimationName;
     public string HurtAnimationName = "Hurt";
+    public string HurtSoundEffect;
     public bool PlayHurtAnimationWhenTakingDamage = true;
     public bool StopCurrentActionWhenTakingDamage = true;
     public float StartingHealthValue = 10.0f;
     public float MaxHealthValue = 10.0f;
+    public bool FlashOnHit;
+    public Material MaterialToFlash;
+    [Range(0f, 1f)]
+    public float FlashAmount;
+    public float FlashTime;
+
 
     private float _currentHealth;
     private Animator _animator;
@@ -19,12 +26,17 @@ public class Health : MonoBehaviour
     private ActionHandler _handler;
     private bool _deathTriggered = false;
     private float _damageReductionAmount;
+    private Material _originalMaterial;
+    private SpriteRenderer _spriteRenderer;
 
     public delegate void HealthChange(float value);
     public event HealthChange ChangeInHealth;
 
     public delegate float PreHealthChange(float value);
     public event PreHealthChange GetReductions;
+
+    public delegate void ZeroHealth();
+    public event ZeroHealth DeathEvent;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +45,22 @@ public class Health : MonoBehaviour
         _animator = GetComponent<Animator>();
         _controller = GetComponent<BaseController>();
         _handler = GetComponent<ActionHandler>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    private IEnumerator Flash(float time)
+    {
+        _originalMaterial = _spriteRenderer.material;
+        _spriteRenderer.material = MaterialToFlash;
+        _spriteRenderer.material.SetFloat("_FlashAmount", FlashAmount);
+        yield return new WaitForSeconds(time);
+        _spriteRenderer.material.SetFloat("_FlashAmount", 0);
+        _spriteRenderer.material = _originalMaterial;
+    }
+
+    public void BeginFlash(float time)
+    {
+        StartCoroutine(Flash(time));
     }
 
     public void CalculateHealthChange(float damage)
@@ -59,6 +87,13 @@ public class Health : MonoBehaviour
             if (PlayHurtAnimationWhenTakingDamage) {
                 _animator.SetTrigger(HurtAnimationName);
             }
+
+            if (FlashOnHit) {
+                BeginFlash(FlashTime);
+            }
+
+            Manager_Audio.Instance.PlaySoundEffect(HurtSoundEffect);
+
             if (StopCurrentActionWhenTakingDamage) {
                 _handler.DeactivateCurrentAction(Vector2.zero);
             }
@@ -97,6 +132,9 @@ public class Health : MonoBehaviour
             yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length *  (1 - _animator.GetCurrentAnimatorStateInfo(0).normalizedTime));
             yield return new WaitForSeconds(_animator.GetCurrentAnimatorStateInfo(0).length);
         }
+
+        DeathEvent.Invoke();
+        //Manager_GameState.Instance.ChangeGameState(Manager_GameState.GameState.Gameover);
 
         Destroy(gameObject);
     }

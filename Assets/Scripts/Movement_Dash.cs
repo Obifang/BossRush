@@ -12,6 +12,7 @@ public class Movement_Dash : MonoBehaviour, IActionable
     public int FramesImmortalFor = 0;
     public int FramesBeforeImmortalStart = 0;
     public float StaminaUsage = 0;
+    public string SoundEffect;
     public int GetID { get => ID; }
     public string GetName { get => Name; }
     public bool IsActive { get => _isDashing; }
@@ -75,7 +76,7 @@ public class Movement_Dash : MonoBehaviour, IActionable
         _isDashing = true;
         _currentCooldown = DashCooldown;
         _animator.SetTrigger(AnimationName);
-
+        Manager_Audio.Instance.PlaySoundEffect(SoundEffect);
         if (DashUI.instance != null) {
             DashUI.instance.Dashed(DashCooldown);
         }

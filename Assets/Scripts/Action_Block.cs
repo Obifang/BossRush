@@ -9,6 +9,7 @@ public class Action_Block : MonoBehaviour, IActionable
     public string Name;
     public string AssociatedAnimationName;
     public string BlockedAttackAnimationName;
+    public string OnBlockSoundEffect;
 
     public LayerMask HitableLayers;
     public float DefenseRange;
@@ -118,6 +119,8 @@ public class Action_Block : MonoBehaviour, IActionable
         if (facingDir > 0 && damage == 0) {
             _animator.SetBool(BlockedAttackAnimationName, true);
             _animator.SetBool("BlockHit", true);
+            Manager_Audio.Instance.PlaySoundEffect(OnBlockSoundEffect);
+            _stamina.IncreaseStamina(1);
         } else if (facingDir < 0) {
             _animator.SetBool(AssociatedAnimationName, false);
             _damagedFrameCounter = FramesInActiveWhenTakingDamage;

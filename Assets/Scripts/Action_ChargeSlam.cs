@@ -18,6 +18,8 @@ public class Action_ChargeSlam : MonoBehaviour, IActionable
     public LayerMask HitableLayers;
     public ParticleSystem ChargeParticles;
     public ParticleSystem SlamParticles;
+    public string ChargeSoundEffect;
+    public string SlamSoundEffect;
 
     public int GetID { get => ID;}
     public string GetName { get => Name;}
@@ -73,6 +75,7 @@ public class Action_ChargeSlam : MonoBehaviour, IActionable
         if (ChargeParticles != null) {
             ChargeParticles.Play();
         }
+        Manager_Audio.Instance.PlaySoundEffect(ChargeSoundEffect);
         yield return new WaitForSeconds(ChargeDuration);
         
         if (ChargeParticles != null) {
@@ -83,7 +86,7 @@ public class Action_ChargeSlam : MonoBehaviour, IActionable
             SlamParticles.Play();
         }
         _animator.SetBool(ChargeAnimation, false);
-        
+        Manager_Audio.Instance.PlaySoundEffect(SlamSoundEffect);
 
         Collider2D[] hitObjects = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, HitableLayers);
 

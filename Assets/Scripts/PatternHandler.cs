@@ -90,6 +90,8 @@ public class PatternHandler : MonoBehaviour
                     pattern = _distancePatterns[_patternIndex];
                     _actionState = ActionState.Ready;
                     break;
+                } else {
+                    _actionIndex = 0;
                 }
 
                 var distance = Vector2.Distance(transform.position, target);
@@ -114,9 +116,6 @@ public class PatternHandler : MonoBehaviour
 
                 pattern = _distancePatterns[_patternIndex];
 
-                if (_actionIndex >= pattern.ActionIDs.Count) {
-                    _actionIndex = 0;
-                }
                 _actionState = ActionState.Ready;
                 break;
         }
@@ -163,9 +162,10 @@ public class PatternHandler : MonoBehaviour
 
     void AddPatternsDistance(float distance)
     {
-        _distancePatterns = _potentialPatterns.Where(x => distance <= x.MaxUsableRangeFromTarget &&
-                                                                distance > x.MinUsableRangeFromTarget).ToList();
-
+        _distancePatterns = _potentialPatterns.Where(x => (distance <= x.MaxUsableRangeFromTarget) &&
+                                                                (distance > x.MinUsableRangeFromTarget)).ToList();
+        /*Debug.Log("Potential Pattern Count: " + _potentialPatterns.Count);
+        Debug.Log("Distance Pattern Count: " + _distancePatterns.Count);*/
         if (_distancePatterns.Count == 0) {
             _distancePatterns = _potentialPatterns;
         }
