@@ -48,7 +48,8 @@ public class Manager_GameState : MonoBehaviour
             ChangeGameState(GameState.Playing);
         }
 
-        Manager_Input.Instance._pause.performed += Pause;
+       // Manager_Input.Instance._pause.performed += Pause;
+        Manager_Input.Instance.AddPerformedCallback("Pause", Pause);
     }
 
     public void Awake()
@@ -129,7 +130,8 @@ public class Manager_GameState : MonoBehaviour
             PauseCalled.Invoke();
         }
         Time.timeScale = 0;
-        Manager_Input.Instance.PlayerControls.Player.Disable();
+        //Manager_Input.Instance.PlayerControls.Player.Disable();
+        Manager_Input.Instance._playerInput.currentActionMap.Disable();
     }
 
     public void ResumeGame()
@@ -139,7 +141,8 @@ public class Manager_GameState : MonoBehaviour
             ResumeCalled.Invoke();
         }
         Time.timeScale = 1;
-        Manager_Input.Instance.PlayerControls.Player.Enable();
+        Manager_Input.Instance._playerInput.currentActionMap.Enable();
+        //Manager_Input.Instance.PlayerControls.Player.Enable();
     }
 
     public void Gameover()

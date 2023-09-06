@@ -647,6 +647,7 @@ MonoBehaviour:
   TeleportAnimation: Teleport
   TeleportTime: 2
   GroundCheckDistance: 1
+  WallCheckDistance: 2
   AdditionalDistanceFromTarget: 1
   TeleportOutSoundEffect: BossTeleportOut
   TeleportInSoundEffect: BossTeleportIn
@@ -694,7 +695,8 @@ MonoBehaviour:
   Name: TeleportFast
   TeleportAnimation: Teleport
   TeleportTime: 1
-  GroundCheckDistance: 0.5
+  GroundCheckDistance: 1
+  WallCheckDistance: 2
   AdditionalDistanceFromTarget: 1
   TeleportOutSoundEffect: BossTeleportOut
   TeleportInSoundEffect: BossTeleportIn
@@ -791,7 +793,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PatternThresholds:
   - AvailableAtHealthPercent: 100
-    PatternsIndex: 000000000100000008000000
+    PatternsIndex: 010000000000000008000000
   - AvailableAtHealthPercent: 75
     PatternsIndex: 00000000010000000500000006000000
   - AvailableAtHealthPercent: 50
@@ -1196,6 +1198,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8311815555223698150, guid: c5e64fc84a03e5b48a25584c7761a235, type: 3}
+      propertyPath: Damage
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8311815555223698150, guid: c5e64fc84a03e5b48a25584c7761a235, type: 3}
       propertyPath: AttackRange
       value: 2.5
       objectReference: {fileID: 0}
@@ -1213,7 +1219,7 @@ PrefabInstance:
       objectReference: {fileID: 5594177418520785, guid: 66e0b39fa76bf9a4d98cdefd9a4a6069, type: 3}
     - target: {fileID: 8311815555223698150, guid: c5e64fc84a03e5b48a25584c7761a235, type: 3}
       propertyPath: StaminaReduction
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8311815555223698150, guid: c5e64fc84a03e5b48a25584c7761a235, type: 3}
       propertyPath: ApplyDamageAfterTime

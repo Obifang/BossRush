@@ -17,11 +17,17 @@ public class Controller_Player : BaseController
         _movement = GetComponent<Controller_Movement>();
         PlayerControls = Manager_Input.Instance.PlayerControls;
 
-        Manager_Input.Instance._attack.performed += Attack;
+        Manager_Input.Instance.AddPerformedCallback("Attack", Attack);
+        Manager_Input.Instance.AddPerformedCallback("Jump", Jump);
+        Manager_Input.Instance.AddPerformedCallback("Dash", Dash);
+        Manager_Input.Instance.AddPerformedCallback("Block", _ => Block(true));
+        Manager_Input.Instance.AddCanceledCallback("Block", _ => Block(false));
+
+       /* Manager_Input.Instance._attack.performed += Attack;
         Manager_Input.Instance._jump.performed += Jump;
         Manager_Input.Instance._dash.performed += Dash;
         Manager_Input.Instance._block.performed += _ => Block(true);
-        Manager_Input.Instance._block.canceled += _ => Block(false);
+        Manager_Input.Instance._block.canceled += _ => Block(false);*/
     }
 
     
@@ -38,7 +44,8 @@ public class Controller_Player : BaseController
 
     private void HandleInput()
     {
-        _moveDirection = Manager_Input.Instance._move.ReadValue<Vector2>();
+        /*_moveDirection =  Manager_Input.Instance._move.ReadValue<Vector2>();*/
+        _moveDirection = Manager_Input.Instance._playerInput.actions["Move"].ReadValue<Vector2>();
         _vertical = _moveDirection.y;
         var currentState = _movement.GetCurrentState();
         if (currentState != MovementState.WallSlide && currentState != MovementState.WallJump) {

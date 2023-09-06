@@ -697,7 +697,7 @@ MonoBehaviour:
   Cooldown: 0.429
   Damage: 1
   ApplyDamageAfterTime: 0.15
-  StaminaUsage: 2
+  StaminaUsage: 3
   StaminaReduction: 2
   AttackSpeed: 1
   ID: 0
@@ -723,7 +723,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   DefenseRange: 0
-  DamageBlocked: 1
+  DamageBlocked: 3
+  StaminaReducedByOnBlock: 4
   Duration: 1
   FrameCheckCount: 2
   FramesInActiveWhenTakingDamage: 15

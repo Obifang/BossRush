@@ -1,12 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 public class Manager_Input : MonoBehaviour
 {
     public static Manager_Input Instance { get; private set; }
-
+    public InputActionAsset inputAsset;
     [HideInInspector]
     public PlayerInputActions PlayerControls { get; private set; }
     [HideInInspector]
@@ -21,7 +23,7 @@ public class Manager_Input : MonoBehaviour
     public InputAction _dash;
     [HideInInspector]
     public InputAction _pause;
-
+    public PlayerInput _playerInput { get; private set; }
 
     public void Awake()
     {
@@ -29,17 +31,35 @@ public class Manager_Input : MonoBehaviour
             Destroy(this.gameObject);
         } else {
             Instance = this;
-            PlayerControls = new PlayerInputActions();
+            UpdateKeybinds();
             DontDestroyOnLoad(this);
         }
     }
+
+    public void AddPerformedCallback(string actionName , Action<CallbackContext> action)
+    {
+        _playerInput.actions[actionName].performed += action;
+    }
+
+    public void AddCanceledCallback(string actionName, Action<CallbackContext> action)
+    {
+        _playerInput.actions[actionName].canceled += action;
+    }
+
     private void OnEnable()
     {
-        if (PlayerControls == null) {
-            PlayerControls = new PlayerInputActions();
-        }
+        UpdateKeybinds();
 
-        _move = PlayerControls.Player.Move;
+        _playerInput.actions["Attack"].Enable();
+        _playerInput.actions["Move"].Enable();
+        _playerInput.actions["Dash"].Enable();
+        _playerInput.actions["Jump"].Enable();
+        _playerInput.actions["Block"].Enable();
+
+        _playerInput.actions["Pause"].Enable();
+
+
+        /*_move = PlayerControls.Player.Move;
         _move.Enable();
         _attack = PlayerControls.Player.Attack;
         _attack.Enable();
@@ -51,17 +71,34 @@ public class Manager_Input : MonoBehaviour
         _dash.Enable();
 
         _pause = PlayerControls.UI.Pause;
-        _pause.Enable();
+        _pause.Enable();*/
+    }
+
+    public void UpdateKeybinds()
+    {
+        //string rebinds = PlayerPrefs.GetString("Player");
+        _playerInput = GetComponent<PlayerInput>();
+        _playerInput.currentActionMap.Enable();
+
+        //InputActionRebindingExtensions.LoadBindingOverridesFromJson(PlayerControls, rebinds);
     }
 
     private void OnDisable()
     {
-        _move.Disable();
+        _playerInput.actions["Attack"].Disable();
+        _playerInput.actions["Move"].Disable();
+        _playerInput.actions["Dash"].Disable();
+        _playerInput.actions["Jump"].Disable();
+        _playerInput.actions["Block"].Disable();
+
+        _playerInput.actions["Pause"].Disable();
+
+        /*_move.Disable();
         _attack.Disable();
         _jump.Disable();
         _block.Disable();
         _dash.Disable();
-        _pause.Disable();
+        _pause.Disable();*/
     }
 
     // Start is called before the first frame update
