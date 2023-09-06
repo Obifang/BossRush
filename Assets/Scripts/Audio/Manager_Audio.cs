@@ -89,7 +89,7 @@ public class Manager_Audio : MonoBehaviour
     {
         
         if (Instance != null && Instance != this) {
-            Destroy(this);
+            Destroy(this.gameObject);
         } else {
             Instance = this;
             DontDestroyOnLoad(this);
@@ -135,6 +135,7 @@ public class Manager_Audio : MonoBehaviour
     {
         string currentScene = SceneManager.GetActiveScene().name;
         StopAllSoundEffects();
+        StopMusic();
         if (_musicStart.ContainsKey(currentScene))
             PlayMusic(_musicStart[currentScene]);
     }
@@ -154,10 +155,11 @@ public class Manager_Audio : MonoBehaviour
 
     public void PlayMusic(string name)
     {
-        _musicAudioSource.volume = _masterMusicVolume;
+        
         _musicAudioSource.clip = _musicInfo[name].MusicClip;
         _musicAudioSource.loop = _musicInfo[name].Loop;
         _musicAudioSource.Play();
+        _musicAudioSource.volume = _masterMusicVolume;
     }
 
     public void PlaySoundEffect(string NameOfEffect)

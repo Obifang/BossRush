@@ -52,6 +52,9 @@ public class Controller_AI_Boss : BaseController
     // Update is called once per frame
     protected override void Update()
     {
+        if (Manager_GameState.Instance.GetCurrentGameState != Manager_GameState.GameState.Playing) {
+            return;
+        }
         if (_states != States.Attacking) {
             base.Update();
         }

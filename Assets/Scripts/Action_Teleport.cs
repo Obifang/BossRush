@@ -10,6 +10,7 @@ public class Action_Teleport : MonoBehaviour, IActionable
     public string TeleportAnimation;
     public float TeleportTime;
     public float GroundCheckDistance = 2.0f;
+    public float WallCheckDistance = 2.0f;
     public float AdditionalDistanceFromTarget = 0f;
     public string TeleportOutSoundEffect;
     public string TeleportInSoundEffect;
@@ -67,9 +68,12 @@ public class Action_Teleport : MonoBehaviour, IActionable
         var left = new Vector2(pos.x - width, pos.y);
         var right = new Vector2(pos.x + width, pos.y);
 
-        if (GroundChecks(left)) {
+        if (!GroundChecks(pos))
+            return Vector2.zero;
+
+        if (GroundChecks(left) && !WallCheck(left)) {
             return left;
-        } else if (GroundChecks(right)){
+        } else if (GroundChecks(right) && !WallCheck(right)) {
             return right;
         }
         
@@ -123,13 +127,23 @@ public class Action_Teleport : MonoBehaviour, IActionable
     {
         var groundLayer = 1 << LayerMask.NameToLayer("Ground");
         var halfWidth = _collider.bounds.size.x * 0.5f;
-        var left = new Vector2(newPos.x - halfWidth, newPos.y);
-        var right = new Vector2(newPos.x + halfWidth, newPos.y);
-        var centerHit = Physics2D.Raycast(newPos, Vector2.down, GroundCheckDistance, groundLayer);
+        var center = new Vector2(newPos.x, newPos.y + 1f);
+        var left = new Vector2(center.x - halfWidth, center.y);
+        var right = new Vector2(center.x + halfWidth, center.y);
+        var centerHit = Physics2D.Raycast(center, Vector2.down, GroundCheckDistance, groundLayer);
         var leftHit = Physics2D.Raycast(left, Vector2.down, GroundCheckDistance, groundLayer);
         var rightHit = Physics2D.Raycast(right, Vector2.down, GroundCheckDistance, groundLayer);
 
         return (leftHit && rightHit && centerHit);
+    }
+
+    bool WallCheck(Vector2 newPos)
+    {
+        var groundLayer = 1 << LayerMask.NameToLayer("Ground");
+        var leftHit = Physics2D.Raycast(newPos, Vector2.left, WallCheckDistance, groundLayer);
+        var rightHit = Physics2D.Raycast(newPos, Vector2.right, WallCheckDistance, groundLayer);
+
+        return (leftHit || rightHit);
     }
 
     public bool CanActivate(Vector2 direction)

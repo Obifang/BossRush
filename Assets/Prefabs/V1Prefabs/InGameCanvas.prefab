@@ -2797,7 +2797,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -24.999756, y: 0}
+  m_AnchoredPosition: {x: -24.999878, y: 0}
   m_SizeDelta: {x: -470, y: -420}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2129557704
@@ -5183,7 +5183,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7483027485834424457
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5328,6 +5328,7 @@ GameObject:
   - component: {fileID: 1228139568}
   - component: {fileID: 1228139569}
   - component: {fileID: 1900394697439111605}
+  - component: {fileID: 350647787}
   m_Layer: 5
   m_Name: InGameCanvas
   m_TagString: Untagged
@@ -5456,6 +5457,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eaaadbf73aeac547b02e35150cddad5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerPrefab: {fileID: 6523489968355155387, guid: b5e84a2baa435184a9099d482c8274f6, type: 3}
   Player: {fileID: 0}
   MusicToPlayOnWin: WinMusic
   MusicToPlayOnGameover: GameoverMusic
@@ -5472,7 +5474,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MasterSoundEffectVolume: 30
-  MasterMusicVolume: 20
+  MasterMusicVolume: 10
   NumberOfAudioSourcesInPool: 10
   SoundEffects:
   - NameOfEffect: BasicPlayerAttack
@@ -5574,13 +5576,13 @@ MonoBehaviour:
   - NameOfEffect: WinMusic
     SoundEffect: {fileID: 8300000, guid: 12161e75b614af946b9e7027b07c9d6e, type: 3}
     OverrideAudioSourceSettings: 1
-    Volume: 1
+    Volume: 0.2
     Pitch: 1
     Reverb: 1
   - NameOfEffect: GameoverMusic
     SoundEffect: {fileID: 8300000, guid: 0ad1b077e7158834a99780228d94293b, type: 3}
     OverrideAudioSourceSettings: 1
-    Volume: 1
+    Volume: 0.2
     Pitch: 1
     Reverb: 1
   - NameOfEffect: PlayerHit
@@ -5628,6 +5630,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b88685240b4c264db8605c0764b1062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &350647787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7483027485928193770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2c71b13abe11ad408b0e2a335e868ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _move:
+    m_Name: Move
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 197b8d24-4237-4696-b530-5cb089c75ed9
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+  _attack:
+    m_Name: Attack
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 9b6c7da2-abdb-4de4-877c-51a459be5789
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+  _jump:
+    m_Name: Jump
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 49bdbc7f-0761-4198-b74c-94da302b64b3
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+  _block:
+    m_Name: Block
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: cf6f80b6-c93b-4ec4-8f0e-f50eb395dd29
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+  _dash:
+    m_Name: Dash
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 119a1bee-747f-4071-9b41-af0b64338be7
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+  _pause:
+    m_Name: Pause
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 7a725fa1-0e52-4953-9c60-e14ed58fcdc7
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
 --- !u!1 &7483027485933884856
 GameObject:
   m_ObjectHideFlags: 0
@@ -5814,7 +5876,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7483027485976240776}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 827939ee70d674f4284607ac3faa6474, type: 3}
   m_Name: 
@@ -6034,7 +6096,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7483027486344109714
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6568,7 +6630,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7483027487221642236
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6643,7 +6705,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7483027487265283057
 RectTransform:
   m_ObjectHideFlags: 0

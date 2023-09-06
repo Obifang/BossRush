@@ -14,6 +14,7 @@ public class Action_Block : MonoBehaviour, IActionable
     public LayerMask HitableLayers;
     public float DefenseRange;
     public float DamageBlocked;
+    public float StaminaReducedByOnBlock = 2.0f;
     public float Duration = 1f;
     public int FrameCheckCount = 2;
     public int FramesInActiveWhenTakingDamage = 5;
@@ -120,6 +121,7 @@ public class Action_Block : MonoBehaviour, IActionable
             _animator.SetBool(BlockedAttackAnimationName, true);
             _animator.SetBool("BlockHit", true);
             Manager_Audio.Instance.PlaySoundEffect(OnBlockSoundEffect);
+            _stamina.ReduceStamina(StaminaReducedByOnBlock);
             _stamina.IncreaseStamina(1);
         } else if (facingDir < 0) {
             _animator.SetBool(AssociatedAnimationName, false);

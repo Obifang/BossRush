@@ -391,10 +391,11 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         }
 
         //_rb.AddForce(dir * force, ForceMode2D.Impulse);
-        _timer -= Time.fixedDeltaTime;
+        _timer -= Time.deltaTime;
 
         if (_timer > 0f) {
-            _rb.velocity = _knockbackDir * _knockbackForce;
+           // _rb.velocity = _knockbackDir * _knockbackForce; //Old way - New used to deal with player being pushed out of wall.
+            _rb.AddForce((_knockbackDir * _knockbackForce) - _rb.velocity, ForceMode2D.Impulse);
         } else if (_timer <= 0f) {
             _timer = 0f;
             _rb.velocity = Vector2.zero;

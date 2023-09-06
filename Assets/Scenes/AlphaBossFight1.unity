@@ -476,6 +476,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &476338268 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5571806837384868353, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+  m_PrefabInstance: {fileID: 4470536186196553678}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &488441037
 GameObject:
   m_ObjectHideFlags: 0
@@ -13496,16 +13501,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 671348849}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: 1054132383583890850, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: 3710738434707379630, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 2064916234097673511, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: -1967631576421560919, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 8056856818456041789, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: 3279352641294131588, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: 3837173908680883260, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 4502412055082496612, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 4754684134866288074, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 1025543830046995696, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
 --- !u!114 &671348851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29463,6 +29476,7 @@ MonoBehaviour:
     m_Bits: 8
   DefenseRange: 0
   DamageBlocked: 1
+  StaminaReducedByOnBlock: 2
   Duration: 1
   FrameCheckCount: 2
   FramesInActiveWhenTakingDamage: 15
@@ -30037,13 +30051,61 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: e009315dc708cb045b923de1478c9223, type: 2}
+    - target: {fileID: 2059334350, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+      propertyPath: HitboxCollider
+      value: 
+      objectReference: {fileID: 476338268}
+    - target: {fileID: 2059334350, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+      propertyPath: GroundCheckDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2059334350, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+      propertyPath: LayersToIgnore.m_Bits
+      value: 1983
+      objectReference: {fileID: 0}
+    - target: {fileID: 2059334352, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+      propertyPath: HitboxCollider
+      value: 
+      objectReference: {fileID: 476338268}
+    - target: {fileID: 2059334352, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+      propertyPath: GroundCheckDistance
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2059334358, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
       propertyPath: TransformToSeek
       value: 
       objectReference: {fileID: 923462272}
+    - target: {fileID: 2059334365, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+      propertyPath: PatternThresholds.Array.data[0].PatternsIndex.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2059334365, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+      propertyPath: PatternThresholds.Array.data[0].PatternsIndex.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2059334365, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+      propertyPath: PatternThresholds.Array.data[0].PatternsIndex.Array.data[1]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2059334365, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+      propertyPath: PatternThresholds.Array.data[0].PatternsIndex.Array.data[2]
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5571806837788766923, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+      propertyPath: Damage
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5571806837788766923, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+      propertyPath: StaminaReduction
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5571806837788766930, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
       propertyPath: m_Name
       value: BossDemo2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5571806837788766930, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5571806837788766933, guid: f8efbbac84692664d9f74c97f322d42b, type: 3}
       propertyPath: m_RootOrder
@@ -30291,6 +30353,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player - RE
       objectReference: {fileID: 0}
+    - target: {fileID: 5534113864823592834, guid: 2a21988c282792c4f869fe38375a4174, type: 3}
+      propertyPath: StaminaUsage
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5534113864823592837, guid: 2a21988c282792c4f869fe38375a4174, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -30334,6 +30400,14 @@ PrefabInstance:
     - target: {fileID: 5534113864823592837, guid: 2a21988c282792c4f869fe38375a4174, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5534113864823592845, guid: 2a21988c282792c4f869fe38375a4174, type: 3}
+      propertyPath: DamageBlocked
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5534113864823592845, guid: 2a21988c282792c4f869fe38375a4174, type: 3}
+      propertyPath: StaminaReducedByOnBlock
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a21988c282792c4f869fe38375a4174, type: 3}

@@ -24,7 +24,7 @@ public class Manager_UI : MonoBehaviour
     public void Awake()
     {
         if (Instance != null && Instance != this) {
-            Destroy(this);
+            Destroy(this.gameObject);
         } else {
             Instance = this;
             DontDestroyOnLoad(this);
@@ -45,7 +45,8 @@ public class Manager_UI : MonoBehaviour
             Manager_GameState.Instance.PauseCalled += EnablePauseMenu;
             Manager_GameState.Instance.ResumeCalled += DisablePauseMenu;
             Manager_GameState.Instance.ResumeCalled += DisableOptionsMenu;
-            SceneManager.sceneLoaded += OnSceneChange;
+            Manager_GameState.Instance.OnStartCalled += OnSceneChange;
+            
         }
 
         if (Manager_GameState.Instance.Player != null) {
@@ -75,10 +76,10 @@ public class Manager_UI : MonoBehaviour
         PlayerStaminaUI.Setup();
     }
 
-    private void OnSceneChange(Scene scene, LoadSceneMode sceneMode)
+    private void OnSceneChange()
     {
         var player = Manager_GameState.Instance.Player;
-
+        
         if (player != null && player.isActiveAndEnabled) {
             EnableInGameUI();
             DeathUI.SetActive(false);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class Manager_GameState : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class Manager_GameState : MonoBehaviour
         Gameover,
         Win
     }
-
+    public GameObject PlayerPrefab;
     public Controller_Player Player;
     public string MusicToPlayOnWin;
     public string MusicToPlayOnGameover;
@@ -41,15 +42,19 @@ public class Manager_GameState : MonoBehaviour
     {
         SceneManager.sceneLoaded += SetupLevel;
         GetPlayerData();
+        PlayerPrefab = Instantiate(PlayerPrefab);
+        PlayerPrefab.SetActive(false);
         if (Player != null) {
             ChangeGameState(GameState.Playing);
         }
+
+        Manager_Input.Instance._pause.performed += Pause;
     }
 
     public void Awake()
     {
         if (Instance != null && Instance != this) {
-            Destroy(this);
+            Destroy(this.gameObject);
         } else {
             Instance = this;
             DontDestroyOnLoad(this);
@@ -82,8 +87,8 @@ public class Manager_GameState : MonoBehaviour
         _currentGamestate = state;
         switch (state) {
             case GameState.Start:
-                OnStart();
                 GetPlayerData();
+                OnStart();
                 break;
             case GameState.Playing:
                 break;
@@ -124,6 +129,7 @@ public class Manager_GameState : MonoBehaviour
             PauseCalled.Invoke();
         }
         Time.timeScale = 0;
+        Manager_Input.Instance.PlayerControls.Player.Disable();
     }
 
     public void ResumeGame()
@@ -133,10 +139,15 @@ public class Manager_GameState : MonoBehaviour
             ResumeCalled.Invoke();
         }
         Time.timeScale = 1;
+        Manager_Input.Instance.PlayerControls.Player.Enable();
     }
 
     public void Gameover()
     {
+        if (_currentGamestate == GameState.Win) {
+            return;
+        }
+
         _currentGamestate = GameState.Gameover;
         if (GameoverCalled != null) {
             GameoverCalled.Invoke();
@@ -149,6 +160,10 @@ public class Manager_GameState : MonoBehaviour
 
     private void Win()
     {
+        if (_currentGamestate == GameState.Gameover) {
+            return;
+        }
+
         _currentGamestate = GameState.Win;
         if (WinCalled != null) {
             WinCalled.Invoke();
@@ -168,13 +183,22 @@ public class Manager_GameState : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        /*if (Input.GetKeyDown(KeyCode.Escape)) {
             Debug.Log(_currentGamestate);
             if (_currentGamestate == GameState.Paused) {
                 ResumeGame();
             } else if (_currentGamestate == GameState.Playing || Player != null) {
                 PauseGame();
             }
+        }*/
+    }
+
+    private void Pause(InputAction.CallbackContext context)
+    {
+        if (_currentGamestate == GameState.Paused) {
+            ResumeGame();
+        } else if (_currentGamestate == GameState.Playing || Player != null) {
+            PauseGame();
         }
     }
 }
