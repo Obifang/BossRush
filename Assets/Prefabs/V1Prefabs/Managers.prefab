@@ -1,0 +1,183 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &781506807182975535
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 781506807182975533}
+  - component: {fileID: 781506807182975532}
+  - component: {fileID: 1892324648259829327}
+  - component: {fileID: 1196439560810131260}
+  m_Layer: 0
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &781506807182975533
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 781506807182975535}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 346, y: 8.650007, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &781506807182975532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 781506807182975535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2eaaadbf73aeac547b02e35150cddad5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player: {fileID: 0}
+--- !u!114 &1892324648259829327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 781506807182975535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27617035dc1be6346ab4cdd506a57ec0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MasterSoundEffectVolume: 0
+  MasterMusicVolume: 0
+  NumberOfAudioSourcesInPool: 10
+  SoundEffects:
+  - NameOfEffect: BasicPlayerAttack
+    SoundEffect: {fileID: 8300000, guid: 039de2dec46304d4aa8bc73b62fcb607, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 0.5
+    Pitch: 1
+    Reverb: 1
+  - NameOfEffect: ShieldBlockMetal
+    SoundEffect: {fileID: 8300000, guid: b07eee8176f32b740991bde932b4ef51, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 0.25
+    Pitch: 0.5
+    Reverb: 1
+  - NameOfEffect: BasicBossAttack
+    SoundEffect: {fileID: 8300000, guid: 039de2dec46304d4aa8bc73b62fcb607, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 1
+    Pitch: 0.39
+    Reverb: 1
+  - NameOfEffect: PlayerWalking
+    SoundEffect: {fileID: 8300000, guid: 15e8a59eea4518f4890338c5f6473400, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 0.9
+    Pitch: 0.77
+    Reverb: 1
+  - NameOfEffect: PlayerJump
+    SoundEffect: {fileID: 8300000, guid: 15e8a59eea4518f4890338c5f6473400, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 1
+    Pitch: 0.5
+    Reverb: 1
+  - NameOfEffect: PlayerDoubleJump
+    SoundEffect: {fileID: 8300000, guid: 26e7d886b0a467545be62512cad6cf16, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 1
+    Pitch: 0.4
+    Reverb: 1
+  - NameOfEffect: PlayerDash
+    SoundEffect: {fileID: 8300000, guid: 15e8a59eea4518f4890338c5f6473400, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 1
+    Pitch: 0.3
+    Reverb: 1.1
+  - NameOfEffect: PlayerSlidingJump
+    SoundEffect: {fileID: 8300000, guid: 15e8a59eea4518f4890338c5f6473400, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 1
+    Pitch: 0.35
+    Reverb: 1
+  - NameOfEffect: LandOnGround
+    SoundEffect: {fileID: 8300000, guid: 460a435378c906141a75f5e67ca62bd3, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 0.2
+    Pitch: 0.6
+    Reverb: 1
+  - NameOfEffect: BossTeleportIn
+    SoundEffect: {fileID: 8300000, guid: 498315cc87e6e414a9a39fb69f7f5e19, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 0.2
+    Pitch: 0.6
+    Reverb: 1
+  - NameOfEffect: BossTeleportOut
+    SoundEffect: {fileID: 8300000, guid: 29bdb8a7bf27d034295f75829e06d0cd, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 0.2
+    Pitch: 0.6
+    Reverb: 1
+  - NameOfEffect: BossStep
+    SoundEffect: {fileID: 8300000, guid: dc4a05bab93179348b3e2608bba9934a, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 0.1
+    Pitch: 0.2
+    Reverb: 1
+  - NameOfEffect: ChargeSpell
+    SoundEffect: {fileID: 8300000, guid: e6ec18b9a7bce5048aa8d2614fb0b728, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 1
+    Pitch: 1
+    Reverb: 1
+  - NameOfEffect: ActivateSpell
+    SoundEffect: {fileID: 8300000, guid: fc4ee839fb71f6443967c76de3323c5c, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 1
+    Pitch: 1
+    Reverb: 1
+  - NameOfEffect: QuickBossAttack
+    SoundEffect: {fileID: 8300000, guid: 039de2dec46304d4aa8bc73b62fcb607, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 1
+    Pitch: 0.49
+    Reverb: 1
+  - NameOfEffect: BossDash
+    SoundEffect: {fileID: 8300000, guid: 26e7d886b0a467545be62512cad6cf16, type: 3}
+    OverrideAudioSourceSettings: 1
+    Volume: 1
+    Pitch: 0.5
+    Reverb: 1
+  Music:
+  - NameOfMusic: BattleMusic
+    MusicClip: {fileID: 8300000, guid: 76aff8a02819b194c909b0f5c172bf32, type: 3}
+    Loop: 1
+    PlayOnSceneStart: 1
+    SceneNameToStart: AlphaBossFight1
+  - NameOfMusic: MainMenu
+    MusicClip: {fileID: 8300000, guid: 524f83edd5e6e3e4f85664e4ca197a0d, type: 3}
+    Loop: 1
+    PlayOnSceneStart: 1
+    SceneNameToStart: StartScreen
+--- !u!114 &1196439560810131260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 781506807182975535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b88685240b4c264db8605c0764b1062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

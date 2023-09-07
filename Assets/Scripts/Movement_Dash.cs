@@ -11,7 +11,8 @@ public class Movement_Dash : MonoBehaviour, IActionable
     public float DashCooldown = 1.0f;
     public int FramesImmortalFor = 0;
     public int FramesBeforeImmortalStart = 0;
-
+    public float StaminaUsage = 0;
+    public string SoundEffect;
     public int GetID { get => ID; }
     public string GetName { get => Name; }
     public bool IsActive { get => _isDashing; }
@@ -25,12 +26,14 @@ public class Movement_Dash : MonoBehaviour, IActionable
     private int _preImmortalFrameCounter;
     private IHasState<MovementState> _hasState;
     private Health _health;
+    private Controller_Combat _combatController;
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _health = GetComponent<Health>();
+        _combatController = GetComponent<Controller_Combat>();
     }
 
     // Update is called once per frame
@@ -68,15 +71,12 @@ public class Movement_Dash : MonoBehaviour, IActionable
 
     public void Dash(float horizontalValue)
     {
-        if (_isDashing || _currentCooldown > 0f) {
-            return;
-        }
         ShouldIgnoreLayers(true);
 
         _isDashing = true;
         _currentCooldown = DashCooldown;
         _animator.SetTrigger(AnimationName);
-
+        Manager_Audio.Instance.PlaySoundEffect(SoundEffect);
         if (DashUI.instance != null) {
             DashUI.instance.Dashed(DashCooldown);
         }
@@ -106,6 +106,17 @@ public class Movement_Dash : MonoBehaviour, IActionable
 
     public void Activate(Vector2 direction)
     {
+        var success = _combatController.UseStamina(StaminaUsage);
+
+        if (!success) {
+            Deactivate(Vector2.zero);
+            return;
+        }
+
+        if (_isDashing || _currentCooldown > 0f) {
+            return;
+        }
+
         Dash(direction.x);
     }
 

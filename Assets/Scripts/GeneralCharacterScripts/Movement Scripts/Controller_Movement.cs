@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Data;
 
 public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
 {
@@ -19,8 +20,20 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     public float StrafeSpeedModifier;
     public float GroundCheckDistance = 2.0f;
     public bool AllowDoubleJump;
+    public bool BounceOffOtherCharacters = false;
+    public LayerMask LayerToBounceOff;
+    public float KnockbackForce = 0f;
+    public float Duration = 1.0f;
+
     public string JumpActionName = "Jump";
     public string DashActionName = "Dash";
+    public string PlayerRunSound = "PlayerWalking";
+    public string JumpSound = "PlayerJump";
+    public string SlidingJumpSound = "PlayerJump";
+    public string DoubleJumpSound = "PlayerJump";
+    public string DashSound = "PlayerDash";
+    public string LandingSound = "LandOnGround";
+
 
     private bool _grounded = false;
     private bool _sliding = false;
@@ -39,6 +52,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     private SlidingSide _directionWhenWallSliding;
     private SlidingSide _slidingDirection;
     private bool _doubleJumped;
+    
 
     private Sensor _groundSensor;
     private Sensor _wallSensorR1;
@@ -66,6 +80,9 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     // Update is called once per frame
     void Update()
     {
+        if (_movementState == MovementState.Locked || _movementState == MovementState.Knockback) {
+            return;
+        }
         //Falling
         if (!_grounded && IsFalling() && _movementState != MovementState.WallSlide) {
             UpdateState(MovementState.Falling);
@@ -81,9 +98,14 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         }
     }
 
+    public void PlayFootstepSound()
+    {
+        Manager_Audio.Instance.PlaySoundEffect(PlayerRunSound);
+    }
+
     public void UpdateState(MovementState mS)
     {
-        if (_movementState == mS)
+        if (_movementState == mS || _movementState == MovementState.Locked)
             return;
 
         _previousState = _movementState;
@@ -127,6 +149,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     {
         switch (ms) {
             case MovementState.Locked:
+                StopMoving();
                 break;
             case MovementState.Idle:
                 _animator.SetInteger("AnimState", 0);
@@ -158,6 +181,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                 _directionWhenWallSliding = _slidingDirection;
                 break;
             case MovementState.WallJump:
+                Manager_Audio.Instance.PlaySoundEffect(SlidingJumpSound);
                 break;
             case MovementState.Strafe:
                 break;
@@ -186,6 +210,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
                 break;
             case MovementState.Falling:
                 if (!IsFalling() && _grounded) {
+                    Manager_Audio.Instance.PlaySoundEffect(LandingSound);
                     if (_horizontal == 0) {
                         UpdateState(MovementState.Idle);
                         StopMovingHorizontally();
@@ -224,6 +249,19 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         }
     }
 
+    public void LockMovementForDuration(float duration)
+    {
+        StopMoving();
+        UpdateState(MovementState.Locked);
+        StartCoroutine(StartCooldown(duration));
+    }
+
+    private IEnumerator StartCooldown(float value)
+    {
+        yield return new WaitForSecondsRealtime(value);
+        _movementState = MovementState.Idle;
+    }
+
     private void IsPerformingAction()
     {
         if (!_actionHandler.IsActive)
@@ -232,7 +270,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
 
     private bool IsFalling()
     {
-        if (_rb.velocity.y < 0.0f) {
+        if (_rb.velocity.y < 0.0f && !_grounded) {
             return true;
         } else {
             return false;
@@ -258,7 +296,7 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         _rb.velocity = new Vector2(dir, _rb.velocity.y) * StrafeSpeedModifier;
         if (_horizontal == 0 && _vertical == 0) {
             if (_animator != null) {
-                UpdateState(MovementState.Idle);
+                //UpdateState(MovementState.Idle);
             }
         }
     }
@@ -288,12 +326,13 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
             return;
         }
 
-        var result = _actionHandler.ActivateActionByName(new Vector2(_horizontal, _vertical), JumpActionName);
+        var result = _actionHandler.ActivateAction(new Vector2(_horizontal, _vertical), JumpActionName);
 
         if (result) {
-            if (!_sliding)
+            if (!_sliding) {
                 UpdateState(MovementState.Jumping);
-            else if (_movementState == MovementState.WallSlide)
+                Manager_Audio.Instance.PlaySoundEffect(JumpSound);
+            } else if (_movementState == MovementState.WallSlide)
                 UpdateState(MovementState.WallJump);
         }
     }
@@ -302,12 +341,13 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     {
         CanDoubleJump = false;
 
-        var result = _actionHandler.ActivateActionByName(new Vector2(_horizontal, _vertical), JumpActionName);
+        var result = _actionHandler.ActivateAction(new Vector2(_horizontal, _vertical), JumpActionName);
 
         if (result) {
-            if (!_sliding)
+            if (!_sliding) {
                 UpdateState(MovementState.Jumping);
-            else if (_movementState == MovementState.WallSlide)
+                Manager_Audio.Instance.PlaySoundEffect(DoubleJumpSound);
+            } else if (_movementState == MovementState.WallSlide)
                 UpdateState(MovementState.WallJump);
         }
     }
@@ -315,9 +355,11 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     public void Dash(float facingDirection)
     {
         if (_movementState != MovementState.Dashing) {
-            var result = _actionHandler.ActivateActionByName(new Vector2(facingDirection, _vertical), DashActionName);
-            if (result)
+            var result = _actionHandler.ActivateAction(new Vector2(facingDirection, _vertical), DashActionName);
+            if (result) {
                 UpdateState(MovementState.Dashing);
+                Manager_Audio.Instance.PlaySoundEffect(DashSound);
+            }
         }
         
         if (!_actionHandler.IsActive) {
@@ -349,10 +391,11 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         }
 
         //_rb.AddForce(dir * force, ForceMode2D.Impulse);
-        _timer -= Time.fixedDeltaTime;
+        _timer -= Time.deltaTime;
 
         if (_timer > 0f) {
-            _rb.velocity = _knockbackDir * _knockbackForce;
+           // _rb.velocity = _knockbackDir * _knockbackForce; //Old way - New used to deal with player being pushed out of wall.
+            _rb.AddForce((_knockbackDir * _knockbackForce) - _rb.velocity, ForceMode2D.Impulse);
         } else if (_timer <= 0f) {
             _timer = 0f;
             _rb.velocity = Vector2.zero;
@@ -410,7 +453,6 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
         Debug.DrawLine(left, new Vector3(left.x, left.y - GroundCheckDistance), Color.red);
         Debug.DrawLine(center, new Vector3(center.x, center.y - GroundCheckDistance), Color.red);
         Debug.DrawLine(right, new Vector3(right.x, right.y - GroundCheckDistance), Color.red);
-        Debug.Log((leftHit || rightHit || centerHit));
         _grounded = (leftHit || rightHit || centerHit);
     }
 
@@ -436,4 +478,27 @@ public class Controller_Movement : MonoBehaviour, IHasState<MovementState>
     {
         return _previousState;
     }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (_movementState == MovementState.Knockback) {
+            return;
+        }
+        if (1 << collision.gameObject.layer == LayerToBounceOff) {
+            KnockBack(CalculateDirection(collision), KnockbackForce, Duration);
+        }
+    }
+
+    Vector2 CalculateDirection(Collision2D collision)
+    {
+        Vector2 direction = Vector2.zero;
+
+        var dirFromContact = (transform.position.x - collision.transform.position.x);
+        Debug.Log("Player Position: " + transform.position + " | Collision Point: " + collision.contacts[0].point);
+
+        direction.x = dirFromContact;
+
+        return direction.normalized;
+    }
+
 }

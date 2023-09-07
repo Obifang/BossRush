@@ -15,10 +15,15 @@ public class HealthUI : MonoBehaviour
 
     void Start()
     {
+        Setup();
+        _camera = Camera.main;
+    }
+
+    public void Setup()
+    {
         Slider.maxValue = HealthObject.MaxHealthValue;
         Slider.value = HealthObject.StartingHealthValue;
         HealthObject.ChangeInHealth += AdjustHealthValue;
-        _camera = Camera.main;
     }
 
     private void Update()

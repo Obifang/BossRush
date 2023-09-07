@@ -7,6 +7,7 @@ using static UnityEngine.GraphicsBuffer;
 public class Attack : MonoBehaviour, IActionable
 {
     public string AssociatedAnimationName;
+    public string SoundEffectOnActionName;
     public LayerMask HitableLayers;
     public Transform AttackPoint;
     public float AttackRange;
@@ -30,6 +31,8 @@ public class Attack : MonoBehaviour, IActionable
     private Animator _animator;
     private Stamina _stamina;
     private BaseController _baseController;
+    private Controller_Combat _combatController;
+    private AudioSource _audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +42,8 @@ public class Attack : MonoBehaviour, IActionable
         Flippable = GetComponent<IFlippable>();
         Flippable.Fliped += FlipAttackPoint;
         _baseController = GetComponent<BaseController>();
+        _combatController = GetComponent<Controller_Combat>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     void FlipAttackPoint(bool value)
@@ -69,31 +74,27 @@ public class Attack : MonoBehaviour, IActionable
 
     private IEnumerator Use()
     {
-        if (_stamina != null) {
-            if (_stamina.GetCurrentStamina - StaminaUsage <= 0) {
-                yield break;
-            }
-            _stamina.ReduceStamina(StaminaUsage);
+        var success = _combatController.UseStamina(StaminaUsage);
+
+        if (!success) {
+            Deactivate(Vector2.zero);
+            yield break;
         }
 
         if (AssociatedAnimationName != "") {
             _animator.SetTrigger(AssociatedAnimationName);
             _animator.speed = 1 / (1 / AttackSpeed);
         }
+
+        
+
         yield return new WaitForSeconds(ApplyDamageAfterTime / AttackSpeed);
         Collider2D [] hitObjects = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, HitableLayers);
-
-        foreach(Collider2D hitObject in hitObjects) {
+        Manager_Audio.Instance.PlaySoundEffect(SoundEffectOnActionName);
+        foreach (Collider2D hitObject in hitObjects) {
             if (hitObject.TryGetComponent<Controller_Combat>(out Controller_Combat combat)) {
                 combat.ApplyDamage(Damage, StaminaReduction, transform);
             }
-            /* if (hitObject.TryGetComponent<Health>(out Health health)) {
-                 health.CalculateHealthChange(Damage);
-             }
-
-             if (hitObject.TryGetComponent<Stamina>(out Stamina stamina)) {
-                 stamina.ReduceStamina(1.0f);
-             }*/
         }
     }
 
@@ -117,6 +118,10 @@ public class Attack : MonoBehaviour, IActionable
 
     public bool CanActivate(Vector2 direction)
     {
+        if (_stamina.GetCurrentStamina < StaminaUsage) {
+            return false;
+        }
+
         if (direction.x <= 1 && direction.x >= -1) {
             return true;
         }
