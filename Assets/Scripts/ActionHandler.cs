@@ -58,7 +58,7 @@ public class ActionHandler : MonoBehaviour
 
         _currentAction = _actionsByID[id];
         _currentAction.Activate(direction);
-        ActionMonitorer.Instance.Broadcast(gameObject, _currentAction.GetID.ToString());
+        //ActionMonitorer.Instance.Broadcast(gameObject, _currentAction.GetID.ToString());
         return true;
     }
 

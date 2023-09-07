@@ -17,6 +17,8 @@ public class Controller_Player : BaseController
         _movement = GetComponent<Controller_Movement>();
         PlayerControls = Manager_Input.Instance.PlayerControls;
 
+        
+
         Manager_Input.Instance.AddPerformedCallback("Attack", Attack);
         Manager_Input.Instance.AddPerformedCallback("Jump", Jump);
         Manager_Input.Instance.AddPerformedCallback("Dash", Dash);
@@ -112,5 +114,14 @@ public class Controller_Player : BaseController
     public override void SetActive(bool value)
     {
         this.enabled = value;
+    }
+
+    private void OnDestroy()
+    {
+        Manager_Input.Instance.RemovePerformedCallback("Attack", Attack);
+        Manager_Input.Instance.RemovePerformedCallback("Jump", Jump);
+        Manager_Input.Instance.RemovePerformedCallback("Dash", Dash);
+        Manager_Input.Instance.RemovePerformedCallback("Block", _ => Block(true));
+        Manager_Input.Instance.RemoveCanceledCallback("Block", _ => Block(false));
     }
 }

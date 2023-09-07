@@ -1141,6 +1141,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1815813874, guid: c5e64fc84a03e5b48a25584c7761a235, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
+    - target: {fileID: 1815813874, guid: c5e64fc84a03e5b48a25584c7761a235, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
     - target: {fileID: 1815813875, guid: c5e64fc84a03e5b48a25584c7761a235, type: 3}
       propertyPath: lengthInSec
       value: 2
@@ -1188,7 +1196,7 @@ PrefabInstance:
     - target: {fileID: 8311815555223698148, guid: c5e64fc84a03e5b48a25584c7761a235, type: 3}
       propertyPath: MaterialToFlash
       value: 
-      objectReference: {fileID: 2100000, guid: db09f1e7158bfe84babe773c730952af, type: 2}
+      objectReference: {fileID: 2100000, guid: 12b171fae5839804a8ed5d6f20b23e0f, type: 2}
     - target: {fileID: 8311815555223698148, guid: c5e64fc84a03e5b48a25584c7761a235, type: 3}
       propertyPath: PlayHurtAnimationWhenTakingDamage
       value: 0

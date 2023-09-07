@@ -2390,7 +2390,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1089423499
@@ -6762,6 +6762,7 @@ MonoBehaviour:
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
+    m_Flags: 0
   _attack:
     m_Name: Attack
     m_Type: 0
@@ -6770,6 +6771,7 @@ MonoBehaviour:
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
+    m_Flags: 0
   _jump:
     m_Name: Jump
     m_Type: 0
@@ -6778,6 +6780,7 @@ MonoBehaviour:
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
+    m_Flags: 0
   _block:
     m_Name: Block
     m_Type: 0
@@ -6786,6 +6789,7 @@ MonoBehaviour:
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
+    m_Flags: 0
   _dash:
     m_Name: Dash
     m_Type: 0
@@ -6794,6 +6798,7 @@ MonoBehaviour:
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
+    m_Flags: 0
   _pause:
     m_Name: Pause
     m_Type: 0
@@ -6802,6 +6807,7 @@ MonoBehaviour:
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!114 &50636248
 MonoBehaviour:
   m_ObjectHideFlags: 0

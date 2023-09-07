@@ -41,9 +41,10 @@ public class Manager_GameState : MonoBehaviour
     public void Start()
     {
         SceneManager.sceneLoaded += SetupLevel;
-        GetPlayerData();
+        
         PlayerPrefab = Instantiate(PlayerPrefab);
         PlayerPrefab.SetActive(false);
+        GetPlayerData();
         if (Player != null) {
             ChangeGameState(GameState.Playing);
         }
@@ -92,6 +93,7 @@ public class Manager_GameState : MonoBehaviour
                 OnStart();
                 break;
             case GameState.Playing:
+                Manager_Input.Instance._playerInput.currentActionMap.Enable();
                 break;
             case GameState.Paused:
                 if (_currentGamestate != GameState.Paused) {
@@ -171,7 +173,7 @@ public class Manager_GameState : MonoBehaviour
         if (WinCalled != null) {
             WinCalled.Invoke();
         }
-
+        Manager_Input.Instance._playerInput.currentActionMap.Disable();
         Player.SetActive(false);
         _playerMovementController.UpdateState(MovementState.Locked);
         Manager_Audio.Instance.StopMusic();

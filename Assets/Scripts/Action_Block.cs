@@ -143,7 +143,7 @@ public class Action_Block : MonoBehaviour, IActionable
 
     public void Deactivate(Vector2 direction)
     {
-        StopAllCoroutines();
+        //StopAllCoroutines();
         IsActive = false;
         if (_currentState == BlockState.Staggered) {
             return;

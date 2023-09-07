@@ -45,6 +45,15 @@ public class Manager_Input : MonoBehaviour
     {
         _playerInput.actions[actionName].canceled += action;
     }
+    public void RemovePerformedCallback(string actionName, Action<CallbackContext> action)
+    {
+        _playerInput.actions[actionName].performed -= action;
+    }
+
+    public void RemoveCanceledCallback(string actionName, Action<CallbackContext> action)
+    {
+        _playerInput.actions[actionName].canceled -= action;
+    }
 
     private void OnEnable()
     {
@@ -57,7 +66,6 @@ public class Manager_Input : MonoBehaviour
         _playerInput.actions["Block"].Enable();
 
         _playerInput.actions["Pause"].Enable();
-
 
         /*_move = PlayerControls.Player.Move;
         _move.Enable();
@@ -77,7 +85,10 @@ public class Manager_Input : MonoBehaviour
     public void UpdateKeybinds()
     {
         //string rebinds = PlayerPrefs.GetString("Player");
-        _playerInput = GetComponent<PlayerInput>();
+        if (_playerInput == null) {
+            _playerInput = GetComponent<PlayerInput>();
+        }
+        
         _playerInput.currentActionMap.Enable();
 
         //InputActionRebindingExtensions.LoadBindingOverridesFromJson(PlayerControls, rebinds);
@@ -85,6 +96,9 @@ public class Manager_Input : MonoBehaviour
 
     private void OnDisable()
     {
+        if (_playerInput == null) {
+            _playerInput = GetComponent<PlayerInput>();
+        }
         _playerInput.actions["Attack"].Disable();
         _playerInput.actions["Move"].Disable();
         _playerInput.actions["Dash"].Disable();
